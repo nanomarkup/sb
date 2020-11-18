@@ -9,6 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/sapplications/sbuilder/src/cli"
+	"github.com/sapplications/sbuilder/src/sb/app"
+
 	"github.com/sapplications/sbuilder/src/smod"
 )
 
@@ -39,6 +42,42 @@ func (g *Generator) Generate(config *smod.ConfigFile) error {
 	}
 	// generate a golang file and save current configuration
 	return g.generateConfigFile()
+}
+
+func (g *Generator) Clean() error {
+	// get current configuration if it is missing
+	defer cli.Recover()
+	var c smod.ConfigFile
+	cli.Check(c.LoadFromFile(app.ModFileName))
+	if g.Configuration == "" {
+		g.Configuration, _ = check(g.Configuration, &c)
+	}
+	// remove the configuration file
+	if dir, err := os.Getwd(); err == nil {
+		filePath := filepath.Join(dir, configFileName)
+		if _, err := os.Stat(filePath); err == nil {
+			cli.Check(os.Remove(filePath))
+		}
+	}
+	// remove the deps file and configuration folder if it is empty
+	if g.Configuration == "" {
+		return nil
+	}
+	if main := c.Items["main"]; main != nil {
+		if _, found := main[g.Configuration]; found {
+			if dir, err := os.Getwd(); err == nil {
+				filePath := filepath.Join(dir, g.Configuration, depsFileName)
+				if _, err := os.Stat(filePath); err == nil {
+					cli.Check(os.Remove(filePath))
+				}
+				filePath = filepath.Join(dir, g.Configuration)
+				if empty, _ := cli.IsDirEmpty(filePath); empty {
+					cli.Check(os.Remove(filePath))
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func (g *Generator) entryPoint(config *smod.ConfigFile) (string, error) {

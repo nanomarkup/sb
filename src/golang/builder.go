@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/sapplications/sbuilder/src/cli"
 	"github.com/sapplications/sbuilder/src/smod"
 )
 
@@ -58,4 +59,13 @@ func (b *Builder) Build(config *smod.ConfigFile) error {
 		return err
 	}
 	return nil
+}
+
+func (b *Builder) Clean() error {
+	defer cli.Recover()
+	// clean the application
+	cmd := exec.Command("go", "clean")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
