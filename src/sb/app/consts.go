@@ -13,3 +13,17 @@ const (
 	// ModFileName constant returns smart module file name
 	ModFileName = "smod.sm"
 )
+
+var Langs = struct {
+	Go string
+}{
+	"go",
+}
+
+var suppLangs = map[string]bool{
+	Langs.Go: true,
+}
+
+var versions = map[string]bool{
+	"1.0": true,
+}
