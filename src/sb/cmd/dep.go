@@ -79,7 +79,7 @@ var depCmd = &cobra.Command{
 					Sb:   app.Version,
 					Lang: args[1],
 					Items: map[string]map[string]string{
-						"main": nil,
+						"main": map[string]string{},
 					},
 				}
 				cli.Check(c.SaveToFile(app.ModFileName))

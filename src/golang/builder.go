@@ -3,7 +3,6 @@ package golang
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/sapplications/sbuilder/src/cli"
@@ -52,20 +51,10 @@ func (b *Builder) Build(config *smod.ConfigFile) error {
 		}
 	}
 	// build the application
-	cmd := exec.Command("go", "build")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-	return nil
+	return goBuild("", "")
 }
 
 func (b *Builder) Clean() error {
 	defer cli.Recover()
-	// clean the application
-	cmd := exec.Command("go", "clean")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	return goClean("")
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/sapplications/sbuilder/src/smod"
@@ -40,6 +41,25 @@ func check(configuration string, config *smod.ConfigFile) (string, error) {
 		return "", fmt.Errorf("The selected \"%s\" configuration is not found", configuration)
 	}
 	return configuration, nil
+}
+
+func goBuild(src, dst string) error {
+	args := []string{"build"}
+	if dst != "" {
+		args = append(args, "-o", dst)
+	}
+	args = append(args, src)
+	cmd := exec.Command("go", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func goClean(src string) error {
+	cmd := exec.Command("go", "clean", src)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func readConfiguration(filePath string) (string, error) {
