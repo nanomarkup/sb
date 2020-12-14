@@ -11,7 +11,7 @@ const (
 	// AppVersion constant returns application version
 	AppVersion = AppName + " version " + Version
 	// ModFileName constant returns smart module file name
-	ModFileName = "smod.sm"
+	ModFileName = "main.sb"
 )
 
 var Langs = struct {

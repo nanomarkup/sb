@@ -1,0 +1,6 @@
+sb 1.0
+lang go
+
+main require (
+	release github.com/sapplications/sbuilder/src/sb/cmd.Execute()
+)

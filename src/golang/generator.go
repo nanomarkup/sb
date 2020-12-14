@@ -218,7 +218,7 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 			if it.kind == itemKind.Struct {
 				imports[it.path+it.pkg] = true
 				// create a new item and initialize it
-				code = append(code, fmt.Sprintf("func Use%s%s() {\n", strings.Title(it.pkg), it.name))
+				code = append(code, fmt.Sprintf("func Use%s%s() %s.%s {\n", strings.Title(it.pkg), it.name, it.pkg, it.name))
 				code = append(code, fmt.Sprintf("\tvar v %s.%s\n", it.pkg, it.name))
 				for k, v := range it.deps {
 					switch v.kind {
@@ -231,6 +231,7 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 						code = append(code, fmt.Sprintf("\tv.%s = %s\n", k, v.original))
 					}
 				}
+				code = append(code, fmt.Sprintf("\treturn v\n"))
 				code = append(code, "}\n")
 			}
 		}
