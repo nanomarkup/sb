@@ -3,19 +3,15 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import (
-	"fmt"
+import "github.com/spf13/cobra"
 
-	"github.com/sapplications/sbuilder/src/sb/app"
-	"github.com/spf13/cobra"
-)
+type VersionCmd struct {
+	Run func()
+	cobra.Command
+}
 
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print Smart Builder version",
-	Long:  `Version prints the current Smart Builder version.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(app.AppVersion)
-	},
+func (v *VersionCmd) init() {
+	v.Command.Run = func(cmd *cobra.Command, args []string) {
+		v.Run()
+	}
 }

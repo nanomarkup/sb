@@ -93,7 +93,7 @@ func (c *ConfigFile) LoadFromFile(filePath string) error {
 		// process the line
 		line = strings.Trim(line, "\t \n \r")
 		if line != "" {
-			slice = strings.Split(line, " ")
+			slice = split(line)
 			if len(slice) == 0 {
 				continue
 			}

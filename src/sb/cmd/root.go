@@ -46,7 +46,6 @@ func init() {
 	rootCmd.AddCommand(genCmd)
 	rootCmd.AddCommand(buildCmd)
 	rootCmd.AddCommand(cleanCmd)
-	rootCmd.AddCommand(versionCmd)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,

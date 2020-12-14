@@ -2,5 +2,16 @@ sb 1.0
 lang go
 
 main require (
-	release github.com/sapplications/sbuilder/src/sb/cmd.Execute()
+	release github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilder
+)
+
+github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilder require (
+	Version github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd
+)
+
+github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd require (
+	Use "version"
+	Short "Print Smart Builder version"
+	Long "Version prints the current Smart Builder version."
+	Run github.com/sapplications/sbuilder/src/sb/app.PrintVersion()
 )

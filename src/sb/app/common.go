@@ -9,6 +9,10 @@ import (
 	"github.com/sapplications/sbuilder/src/smod"
 )
 
+func PrintVersion() {
+	fmt.Println(AppVersion)
+}
+
 func CheckConfiguration(configuration string, config *smod.ConfigFile) error {
 	// check version
 	if _, found := versions[config.Sb]; !found {

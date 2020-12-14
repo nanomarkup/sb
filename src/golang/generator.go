@@ -156,7 +156,8 @@ func (g *Generator) generateDepsFile(entryPoint string, config *smod.ConfigFile)
 		case itemKind.Func:
 			writer.WriteString(fmt.Sprintf("\t%s.%s\n", entry.pkg, entry.name))
 		case itemKind.Struct:
-			writer.WriteString(fmt.Sprintf("\tUse%s%s()\n", strings.Title(entry.pkg), entry.name))
+			writer.WriteString(fmt.Sprintf("\tapp := Use%s%s()\n", strings.Title(entry.pkg), entry.name))
+			writer.WriteString(fmt.Sprintf("\tapp.Execute()\n"))
 		case itemKind.String:
 			writer.WriteString(fmt.Sprintf("\tfmt.Println(%s)\n", entry.original))
 		}
@@ -207,35 +208,39 @@ func (g *Generator) generateConfigFile() error {
 func (g *Generator) generateItems(entryPoint string, list items) ([]string, []string) {
 	code := []string{}
 	imports := map[string]bool{}
-	it, found := list[entryPoint]
-	// add entry point package to the import section
-	if it.kind != itemKind.String {
-		imports[it.path+it.pkg] = true
-	}
+	// get all type of struct items to process
+	its := map[string]bool{}
+	g.getStructItems(entryPoint, list, its)
 	// generate code for all type of struct items
-	for {
-		if found {
-			if it.kind == itemKind.Struct {
+	for i := range its {
+		if it, found := list[i]; found {
+			switch it.kind {
+			case itemKind.Func:
+				imports[it.path+it.pkg] = true
+			case itemKind.Struct:
 				imports[it.path+it.pkg] = true
 				// create a new item and initialize it
 				code = append(code, fmt.Sprintf("func Use%s%s() %s.%s {\n", strings.Title(it.pkg), it.name, it.pkg, it.name))
-				code = append(code, fmt.Sprintf("\tvar v %s.%s\n", it.pkg, it.name))
-				for k, v := range it.deps {
-					switch v.kind {
-					case itemKind.Func:
-						imports[v.path+v.pkg] = true
-						code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, v.pkg, strings.Replace(v.name, "()", "", 1)))
-						// case itemKind.Struct:
-						// 	code = append(code, fmt.Sprintf("\t%s = %s", k, v.original))
-					case itemKind.String:
-						code = append(code, fmt.Sprintf("\tv.%s = %s\n", k, v.original))
+				if len(it.deps) == 0 {
+					code = append(code, fmt.Sprintf("\treturn %s.%s{}\n", it.pkg, it.name))
+				} else {
+					code = append(code, fmt.Sprintf("\tvar v %s.%s\n", it.pkg, it.name))
+					for k, v := range it.deps {
+						switch v.kind {
+						case itemKind.Func:
+							imports[v.path+v.pkg] = true
+							code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, v.pkg, strings.Replace(v.name, "()", "", 1)))
+						case itemKind.Struct:
+							code = append(code, fmt.Sprintf("\tv.%s = Use%s%s()\n", k, strings.Title(v.pkg), v.name))
+						case itemKind.String:
+							code = append(code, fmt.Sprintf("\tv.%s = %s\n", k, v.original))
+						}
 					}
+					code = append(code, fmt.Sprintf("\treturn v\n"))
 				}
-				code = append(code, fmt.Sprintf("\treturn v\n"))
 				code = append(code, "}\n")
 			}
 		}
-		break
 	}
 	// map -> slice
 	imp := []string{}
@@ -243,4 +248,18 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 		imp = append(imp, key)
 	}
 	return code, imp
+}
+
+func (g *Generator) getStructItems(original string, list items, result map[string]bool) {
+	if result[original] {
+		return
+	}
+	if it, found := list[original]; found && it.kind == itemKind.Struct {
+		result[original] = true
+		for _, v := range it.deps {
+			if v.kind == itemKind.Struct {
+				g.getStructItems(v.original, list, result)
+			}
+		}
+	}
 }
