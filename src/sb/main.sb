@@ -2,16 +2,24 @@ sb 1.0
 lang go
 
 main require (
-	release github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilder
+	release github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole
 )
 
-github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilder require (
+github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole require (
+	Clean github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd
 	Version github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd
+)
+
+github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd require (
+	Use "clean"
+	Short "Remove generated files"
+	Long "Clean removes the generated and built files.\n\n'clean' removes files for the current configuration.\n'clean [configuration]'	removes files for a custom configuration."
+	Clean *github.com/sapplications/sbuilder/src/sb/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd require (
 	Use "version"
 	Short "Print Smart Builder version"
 	Long "Version prints the current Smart Builder version."
-	Run github.com/sapplications/sbuilder/src/sb/app.PrintVersion()
+	Version *github.com/sapplications/sbuilder/src/sb/app.SmartBuilder
 )

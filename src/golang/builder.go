@@ -10,6 +10,7 @@ import (
 )
 
 type Builder struct {
+	ModuleName    string
 	Configuration string
 }
 
@@ -34,6 +35,7 @@ func (b *Builder) Build(config *smod.ConfigFile) error {
 		}
 	}
 	g := Generator{
+		b.ModuleName,
 		b.Configuration,
 	}
 	// generate a golang file and save current configuration

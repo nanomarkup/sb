@@ -5,13 +5,19 @@ package cmd
 
 import "github.com/spf13/cobra"
 
+type IVersion interface {
+	PrintVersion()
+}
+
 type VersionCmd struct {
-	Run func()
+	Version IVersion
 	cobra.Command
 }
 
 func (v *VersionCmd) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
-		v.Run()
+		if v.Version != nil {
+			v.Version.PrintVersion()
+		}
 	}
 }

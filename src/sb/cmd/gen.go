@@ -38,6 +38,7 @@ var genCmd = &cobra.Command{
 		switch c.Lang {
 		case app.Langs.Go:
 			var gen = golang.Generator{
+				app.ModFileName,
 				configuration,
 			}
 			if err := gen.Generate(&c); err != nil {

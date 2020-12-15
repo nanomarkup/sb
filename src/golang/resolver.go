@@ -55,8 +55,8 @@ func (r *resolver) getItems() (list items) {
 }
 
 func (r *resolver) getItem(itemName string, list items) *item {
-	if _, found := list[itemName]; found {
-		return nil
+	if it, found := list[itemName]; found {
+		return &it
 	}
 	// parse item and add it to the list
 	pkg := ""

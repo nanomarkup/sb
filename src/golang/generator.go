@@ -10,11 +10,11 @@ import (
 	"strings"
 
 	"github.com/sapplications/sbuilder/src/cli"
-	"github.com/sapplications/sbuilder/src/sb/app"
 	"github.com/sapplications/sbuilder/src/smod"
 )
 
 type Generator struct {
+	ModuleName    string
 	Configuration string
 }
 
@@ -48,13 +48,18 @@ func (g *Generator) Clean() error {
 	// get current configuration if it is missing
 	defer cli.Recover()
 	var c smod.ConfigFile
-	cli.Check(c.LoadFromFile(app.ModFileName))
+	cli.Check(c.LoadFromFile(g.ModuleName))
 	if g.Configuration == "" {
 		g.Configuration, _ = check(g.Configuration, &c)
 	}
-	// remove the configuration file
 	if dir, err := os.Getwd(); err == nil {
+		// remove the configuration file
 		filePath := filepath.Join(dir, configFileName)
+		if _, err := os.Stat(filePath); err == nil {
+			cli.Check(os.Remove(filePath))
+		}
+		// remove the main file
+		filePath = filepath.Join(dir, mainFileName)
 		if _, err := os.Stat(filePath); err == nil {
 			cli.Check(os.Remove(filePath))
 		}
@@ -212,19 +217,33 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 	its := map[string]bool{}
 	g.getStructItems(entryPoint, list, its)
 	// generate code for all type of struct items
+	fullNameDefine := ""
+	fullNameReturn := ""
 	for i := range its {
 		if it, found := list[i]; found {
 			switch it.kind {
 			case itemKind.Func:
 				imports[it.path+it.pkg] = true
 			case itemKind.Struct:
-				imports[it.path+it.pkg] = true
+				fullNameDefine = it.name
+				fullNameReturn = it.name
+				if len(it.path) > 0 {
+					if it.path[0] == '*' {
+						fullNameDefine = fmt.Sprintf("*%s.%s", it.pkg, it.name)
+						fullNameReturn = fmt.Sprintf("&%s.%s", it.pkg, it.name)
+						imports[it.path[1:]+it.pkg] = true
+					} else {
+						fullNameDefine = fmt.Sprintf("%s.%s", it.pkg, it.name)
+						fullNameReturn = fullNameDefine
+						imports[it.path+it.pkg] = true
+					}
+				}
 				// create a new item and initialize it
-				code = append(code, fmt.Sprintf("func Use%s%s() %s.%s {\n", strings.Title(it.pkg), it.name, it.pkg, it.name))
+				code = append(code, fmt.Sprintf("func Use%s%s() %s {\n", strings.Title(it.pkg), it.name, fullNameDefine))
 				if len(it.deps) == 0 {
-					code = append(code, fmt.Sprintf("\treturn %s.%s{}\n", it.pkg, it.name))
+					code = append(code, fmt.Sprintf("\treturn %s{}\n", fullNameReturn))
 				} else {
-					code = append(code, fmt.Sprintf("\tvar v %s.%s\n", it.pkg, it.name))
+					code = append(code, fmt.Sprintf("\tvar v %s\n", fullNameDefine))
 					for k, v := range it.deps {
 						switch v.kind {
 						case itemKind.Func:

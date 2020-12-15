@@ -38,6 +38,7 @@ var buildCmd = &cobra.Command{
 		switch c.Lang {
 		case app.Langs.Go:
 			var builder = golang.Builder{
+				app.ModFileName,
 				configuration,
 			}
 			if err := builder.Build(&c); err != nil {
