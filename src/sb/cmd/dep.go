@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/sapplications/sbuilder/src/cli"
@@ -13,6 +12,19 @@ import (
 	"github.com/sapplications/sbuilder/src/smod"
 	"github.com/spf13/cobra"
 )
+
+type IManager interface {
+	Init(lang string)
+	AddItem(item string) error
+	AddDependency(item, dependency, resolver string, update bool) error
+	DeleteItem(item string) error
+	DeleteDependency(item, dependency string) error
+}
+
+type DepCmd struct {
+	Manager IManager
+	cobra.Command
+}
 
 var subCmds = struct {
 	init string
@@ -28,25 +40,20 @@ var subCmds = struct {
 	"list",
 }
 
-// depCmd represents the mod command
-var depCmd = &cobra.Command{
-	Use:   "dep",
-	Short: "Manage dependencies",
-	Long: `Manages application dependencies and configurations for generating items to build application.
-	
-"dep init [language]" generates a smart module in the current directory, in effect creating a new application rooted at the current directory.
-"dep add --name [item]" adds a new item.
-"dep add --name [item] --dep [dependency] --resolver [resolver]" adds a new dependency item to the existing item.
-"dep del --name [item]" deletes the item with all dependencies.
-"dep del --name [item] --dep [dependency]" deletes item's dependency.
-"dep edit --name [item] --dep [dependency] --resolver [resolver]" adds/updates dependency to/in the existing item.
-"dep list --name [item]" prints item's dependencies.
-"dep list --name [item] --dep [dependency]" prints resolver of dependency item.
-"dep list --version" prints module version.
-"dep list --lang" prints module language.
-"dep list --all" prints module file.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// check input arguments
+var depCmdFlags struct {
+	item     *string
+	dep      *string
+	resolver *string
+	version  *bool
+	lang     *bool
+	all      *bool
+}
+
+func (v *DepCmd) init() {
+	v.Command.Run = func(cmd *cobra.Command, args []string) {
+		if v.Manager == nil {
+			return
+		}
 		if len(args) == 0 {
 			cli.PrintError("Subcommand is required")
 			return
@@ -56,12 +63,6 @@ var depCmd = &cobra.Command{
 		var itemStr = strings.Trim(*depCmdFlags.item, "\t \n")
 		var depStr = strings.Trim(*depCmdFlags.dep, "\t \n")
 		var resolverStr = strings.Trim(*depCmdFlags.resolver, "\t \n")
-		// load module
-		var c smod.ConfigFile
-		switch subCmd {
-		case subCmds.add, subCmds.del, subCmds.edit, subCmds.list:
-			cli.Check(c.LoadFromFile(app.ModFileName))
-		}
 		// handle subcommands
 		switch subCmd {
 		case subCmds.init:
@@ -69,22 +70,7 @@ var depCmd = &cobra.Command{
 				cli.PrintError("Language parameter is required")
 				return
 			}
-			// create a module file
-			if _, err := os.Stat(app.ModFileName); err == nil {
-				cli.PrintError(fmt.Sprintf("%s already exists", app.ModFileName))
-			} else if !os.IsNotExist(err) {
-				cli.PrintError(err)
-			} else {
-				c = smod.ConfigFile{
-					Sb:   app.Version,
-					Lang: args[1],
-					Items: map[string]map[string]string{
-						"main": map[string]string{},
-					},
-				}
-				cli.Check(c.SaveToFile(app.ModFileName))
-				fmt.Printf("%s file has been created", app.ModFileName)
-			}
+			v.Manager.Init(args[1])
 		case subCmds.add:
 			if itemStr == "" {
 				cli.PrintError("\"--name\" parameter is required")
@@ -95,9 +81,9 @@ var depCmd = &cobra.Command{
 				return
 			}
 			if depStr == "" {
-				cli.Check(c.AddItem(itemStr))
+				cli.Check(v.Manager.AddItem(itemStr))
 			} else {
-				cli.Check(c.AddDependency(itemStr, depStr, resolverStr, false))
+				cli.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, false))
 			}
 		case subCmds.del:
 			if itemStr == "" {
@@ -105,9 +91,9 @@ var depCmd = &cobra.Command{
 				return
 			}
 			if depStr == "" {
-				cli.Check(c.DeleteItem(itemStr))
+				cli.Check(v.Manager.DeleteItem(itemStr))
 			} else {
-				cli.Check(c.DeleteDependency(itemStr, depStr))
+				cli.Check(v.Manager.DeleteDependency(itemStr, depStr))
 			}
 		case subCmds.edit:
 			if itemStr == "" {
@@ -122,12 +108,14 @@ var depCmd = &cobra.Command{
 				cli.PrintError("\"--resolver\" parameter is required")
 				return
 			}
-			cli.Check(c.AddDependency(itemStr, depStr, resolverStr, true))
+			cli.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, true))
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
 				cli.PrintError("\"--name\" parameter is required")
 				return
 			}
+			var c smod.ConfigFile
+			cli.Check(c.LoadFromFile(app.ModFileName))
 			if *depCmdFlags.all {
 				fmt.Println(c.String())
 			} else {
@@ -158,28 +146,11 @@ var depCmd = &cobra.Command{
 			cli.PrintError(fmt.Sprintf("Unknown \"%s\" subcommand", args[0]))
 			return
 		}
-		// save the changes into module file
-		switch subCmd {
-		case subCmds.add, subCmds.del, subCmds.edit:
-			cli.Check(c.SaveToFile(app.ModFileName))
-		}
-	},
-}
-
-var depCmdFlags struct {
-	item     *string
-	dep      *string
-	resolver *string
-	version  *bool
-	lang     *bool
-	all      *bool
-}
-
-func init() {
-	depCmdFlags.item = depCmd.Flags().StringP("name", "n", "", "item name")
-	depCmdFlags.dep = depCmd.Flags().StringP("dep", "d", "", "dependency name")
-	depCmdFlags.resolver = depCmd.Flags().StringP("resolver", "r", "", "resolver")
-	depCmdFlags.version = depCmd.Flags().BoolP("version", "v", false, "print version")
-	depCmdFlags.lang = depCmd.Flags().BoolP("lang", "l", false, "print language")
-	depCmdFlags.all = depCmd.Flags().BoolP("all", "a", false, "print module")
+	}
+	depCmdFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
+	depCmdFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
+	depCmdFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
+	depCmdFlags.version = v.Command.Flags().BoolP("version", "v", false, "print version")
+	depCmdFlags.lang = v.Command.Flags().BoolP("lang", "l", false, "print language")
+	depCmdFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
 }

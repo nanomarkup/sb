@@ -243,7 +243,7 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 				if len(it.deps) == 0 {
 					code = append(code, fmt.Sprintf("\treturn %s{}\n", fullNameReturn))
 				} else {
-					code = append(code, fmt.Sprintf("\tvar v %s\n", fullNameDefine))
+					code = append(code, fmt.Sprintf("\tv := %s{}\n", fullNameReturn))
 					for k, v := range it.deps {
 						switch v.kind {
 						case itemKind.Func:
@@ -257,7 +257,7 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 					}
 					code = append(code, fmt.Sprintf("\treturn v\n"))
 				}
-				code = append(code, "}\n")
+				code = append(code, "}\n\n")
 			}
 		}
 	}

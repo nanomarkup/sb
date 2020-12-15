@@ -6,10 +6,18 @@ main require (
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole require (
+	Dep github.com/sapplications/sbuilder/src/sb/cmd.DepCmd
 	Gen github.com/sapplications/sbuilder/src/sb/cmd.GenCmd
 	Build github.com/sapplications/sbuilder/src/sb/cmd.BuildCmd
 	Clean github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd
 	Version github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd
+)
+
+github.com/sapplications/sbuilder/src/sb/cmd.DepCmd require (
+	Use "dep"
+	Short "Manage dependencies"
+	Long "Manages application dependencies and configurations for generating items to build application.\n\n'dep init [language]' generates a smart module in the current directory, in effect creating a new application rooted at the current directory.\n'dep add --name [item]' adds a new item.\n'dep add --name [item] --dep [dependency] --resolver [resolver]' adds a new dependency item to the existing item.\n'dep del --name [item]' deletes the item with all dependencies.\n'dep del --name [item] --dep [dependency]' deletes item's dependency.\n'dep edit --name [item] --dep [dependency] --resolver [resolver]' adds/updates dependency to/in the existing item.\n'dep list --name [item]' prints item's dependencies.\n'dep list --name [item] --dep [dependency]' prints resolver of dependency item.\n'dep list --version' prints module version.\n'dep list --lang' prints module language.\n'dep list --all' prints module file."
+	Manager *github.com/sapplications/sbuilder/src/sb/app.DepManager
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.GenCmd require (
