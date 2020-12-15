@@ -6,9 +6,17 @@ main require (
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole require (
+	Gen github.com/sapplications/sbuilder/src/sb/cmd.GenCmd
 	Build github.com/sapplications/sbuilder/src/sb/cmd.BuildCmd
 	Clean github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd
 	Version github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd
+)
+
+github.com/sapplications/sbuilder/src/sb/cmd.GenCmd require (
+	Use "gen"
+	Short "Generate configuration"
+	Long "Generates all items for the selected configuration.\n\n'gen' generates all items for the current configuration (update).\n'gen [configuration]' generates all items for a custom configuration."
+	Gen *github.com/sapplications/sbuilder/src/sb/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.BuildCmd require (

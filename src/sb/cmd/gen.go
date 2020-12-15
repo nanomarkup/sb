@@ -3,49 +3,27 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import (
-	"fmt"
+import "github.com/spf13/cobra"
 
-	"github.com/sapplications/sbuilder/src/cli"
-	"github.com/sapplications/sbuilder/src/golang"
-	"github.com/sapplications/sbuilder/src/sb/app"
-	"github.com/sapplications/sbuilder/src/smod"
-	"github.com/spf13/cobra"
-)
+type IGen interface {
+	Generate(configuration string)
+}
 
-// generateCmd represents the generate command
-var genCmd = &cobra.Command{
-	Use:   "gen",
-	Short: "Generate configuration",
-	Long: `Generates all items for the selected configuration. 
+type GenCmd struct {
+	Gen IGen
+	cobra.Command
+}
 
-"gen" generates all items for the current configuration (update).
-"gen [configuration]" generates all items for a custom configuration.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		var configuration = ""
-		if len(args) > 0 {
-			configuration = args[0]
-		}
-		defer cli.Recover()
-		// check configuration
-		var c smod.ConfigFile
-		cli.Check(c.LoadFromFile(app.ModFileName))
-		if err := app.CheckConfiguration(configuration, &c); err != nil {
-			cli.PrintError(err)
+func (v *GenCmd) init() {
+	v.Command.Run = func(cmd *cobra.Command, args []string) {
+		if v.Gen == nil {
 			return
 		}
-		// process configuration
-		switch c.Lang {
-		case app.Langs.Go:
-			var gen = golang.Generator{
-				app.ModFileName,
-				configuration,
-			}
-			if err := gen.Generate(&c); err != nil {
-				cli.PrintError(err)
-			}
-		default:
-			cli.PrintError(fmt.Errorf("\"%s\" language is not supported"))
+		if len(args) > 0 {
+			v.Gen.Generate(args[0])
+		} else {
+			v.Gen.Generate("")
 		}
-	},
+
+	}
 }
