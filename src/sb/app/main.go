@@ -84,7 +84,7 @@ func (sb *SmartBuilder) Clean(configuration string) {
 			ModFileName,
 			configuration,
 		}
-		if err := builder.Clean(); err != nil {
+		if err := builder.Clean(&c); err != nil {
 			cli.PrintError(err)
 		}
 	default:

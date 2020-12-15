@@ -2,10 +2,8 @@ package golang
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -20,28 +18,16 @@ type Generator struct {
 
 func (g *Generator) Generate(config *smod.ConfigFile) error {
 	var err error
-	useCurrentConfig := g.Configuration == ""
 	if g.Configuration, err = check(g.Configuration, config); err != nil {
 		return err
 	}
+	// generate a golang file and save all dependencies
 	entry, err := g.entryPoint(config)
 	if err != nil {
 		return err
+	} else {
+		return g.generateDepsFile(entry, config)
 	}
-	if !useCurrentConfig {
-		// delete the configuration golang file
-		if _, err := os.Stat(configFileName); err == nil {
-			if err := os.Remove(configFileName); err != nil {
-				return err
-			}
-		}
-	}
-	// generate a golang file and save all dependencies
-	if err := g.generateDepsFile(entry, config); err != nil {
-		return err
-	}
-	// generate a golang file and save current configuration
-	return g.generateConfigFile()
 }
 
 func (g *Generator) Clean() error {
@@ -52,33 +38,27 @@ func (g *Generator) Clean() error {
 	if g.Configuration == "" {
 		g.Configuration, _ = check(g.Configuration, &c)
 	}
-	if dir, err := os.Getwd(); err == nil {
-		// remove the configuration file
-		filePath := filepath.Join(dir, configFileName)
-		if _, err := os.Stat(filePath); err == nil {
-			cli.Check(os.Remove(filePath))
-		}
-		// remove the main file
-		filePath = filepath.Join(dir, mainFileName)
-		if _, err := os.Stat(filePath); err == nil {
-			cli.Check(os.Remove(filePath))
-		}
-	}
-	// remove the deps file and configuration folder if it is empty
 	if g.Configuration == "" {
 		return nil
 	}
 	if main := c.Items["main"]; main != nil {
 		if _, found := main[g.Configuration]; found {
 			if dir, err := os.Getwd(); err == nil {
-				filePath := filepath.Join(dir, g.Configuration, depsFileName)
+				folderPath := filepath.Join(dir, g.Configuration)
+				// remove the main file
+				filePath := filepath.Join(folderPath, mainFileName)
 				if _, err := os.Stat(filePath); err == nil {
 					cli.Check(os.Remove(filePath))
 				}
-				filePath = filepath.Join(dir, g.Configuration)
-				if empty, _ := cli.IsDirEmpty(filePath); empty {
+				// remove the deps file
+				filePath = filepath.Join(folderPath, depsFileName)
+				if _, err := os.Stat(filePath); err == nil {
 					cli.Check(os.Remove(filePath))
 				}
+				// remove the configuration folder if it is empty
+				// if empty, _ := cli.IsDirEmpty(folderPath); empty {
+				// 	cli.Check(os.Remove(folderPath))
+				// }
 			}
 		}
 	}
@@ -100,7 +80,12 @@ func (g *Generator) entryPoint(config *smod.ConfigFile) (string, error) {
 }
 
 func (g *Generator) generateMainFile() error {
-	file, err := os.Create(mainFileName)
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	filePath := filepath.Join(wd, g.Configuration, mainFileName)
+	file, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
@@ -109,6 +94,7 @@ func (g *Generator) generateMainFile() error {
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
 	writer.WriteString("package main\n\n")
+	writer.WriteString(fmt.Sprintf("const Configuration = \"%s\"\n\n", g.Configuration))
 	writer.WriteString("func main() {\n")
 	writer.WriteString("\tExecute()\n")
 	writer.WriteString("}\n")
@@ -145,7 +131,7 @@ func (g *Generator) generateDepsFile(entryPoint string, config *smod.ConfigFile)
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
-	writer.WriteString(fmt.Sprintf("package %s\n\n", g.Configuration))
+	writer.WriteString(fmt.Sprintf("package main\n\n"))
 	// write the import section
 	if len(imports) > 0 {
 		writer.WriteString("import (\n")
@@ -174,39 +160,6 @@ func (g *Generator) generateDepsFile(entryPoint string, config *smod.ConfigFile)
 			writer.WriteString(fmt.Sprintf("%s", v))
 		}
 	}
-	return nil
-}
-
-func (g *Generator) generateConfigFile() error {
-	// get package paths
-	var out bytes.Buffer
-	var paths []string
-	cmd := exec.Command("go", "list")
-	cmd.Stdout = &out
-	if err := cmd.Run(); err == nil {
-		paths = strings.Split(string(out.Bytes()), "\n")
-	}
-	if len(paths) > 0 && strings.HasPrefix(paths[0], "_") {
-		// use a local import path
-		paths = []string{"."}
-	}
-	// create a golang config file
-	file, err := os.Create(configFileName)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	writer := bufio.NewWriter(file)
-	defer writer.Flush()
-	writer.WriteString("package main\n\n")
-	if len(paths) > 0 {
-		writer.WriteString(fmt.Sprintf("import \"%s/%s\"\n\n", paths[0], g.Configuration))
-	}
-	writer.WriteString(fmt.Sprintf("const Configuration = \"%s\"\n\n", g.Configuration))
-	writer.WriteString("func Execute() {\n")
-	writer.WriteString(fmt.Sprintf("\t%s.Execute()\n", g.Configuration))
-	writer.WriteString("}\n")
 	return nil
 }
 

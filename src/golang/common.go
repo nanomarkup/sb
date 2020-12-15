@@ -17,30 +17,23 @@ func check(configuration string, config *smod.ConfigFile) (string, error) {
 	if main == nil {
 		return "", fmt.Errorf("The main item is not found")
 	}
-	// read the current configuration if it is not specified
+	// read the current configuration if it is not specified and only one is exist
 	if configuration == "" {
-		if _, err := os.Stat(configFileName); err == nil {
-			configuration, _ = readConfiguration(configFileName)
-		} else if os.IsNotExist(err) {
-			// check the number of configurations
-			// if it is 1 then select it
-			if len(main) != 1 {
-				return "", fmt.Errorf("The configuration is not specified")
-			}
-			// select the existing configuration
-			for key := range main {
-				configuration = key
-				break
-			}
-		} else {
-			return "", err
+		if len(main) != 1 {
+			return "", fmt.Errorf("The configuration is not specified")
 		}
+		// select the existing configuration
+		for key := range main {
+			return key, nil
+		}
+	} else {
+		// check the configuration is exist
+		if _, found := main[configuration]; !found {
+			return "", fmt.Errorf("The selected \"%s\" configuration is not found", configuration)
+		}
+		return configuration, nil
 	}
-	// check the configuration is exist
-	if _, found := main[configuration]; !found {
-		return "", fmt.Errorf("The selected \"%s\" configuration is not found", configuration)
-	}
-	return configuration, nil
+	return "", fmt.Errorf("The configuration is not found")
 }
 
 func goBuild(src, dst string) error {
