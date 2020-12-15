@@ -44,7 +44,6 @@ func init() {
 	cobra.EnableCommandSorting = false
 	rootCmd.AddCommand(depCmd)
 	rootCmd.AddCommand(genCmd)
-	rootCmd.AddCommand(buildCmd)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,

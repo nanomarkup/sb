@@ -11,6 +11,30 @@ import (
 type SmartBuilder struct {
 }
 
+func (sb *SmartBuilder) Build(configuration string) {
+	defer cli.Recover()
+	// check configuration
+	var c smod.ConfigFile
+	cli.Check(c.LoadFromFile(ModFileName))
+	if err := CheckConfiguration(configuration, &c); err != nil {
+		cli.PrintError(err)
+		return
+	}
+	// process configuration
+	switch c.Lang {
+	case Langs.Go:
+		var builder = golang.Builder{
+			ModFileName,
+			configuration,
+		}
+		if err := builder.Build(&c); err != nil {
+			cli.PrintError(err)
+		}
+	default:
+		cli.PrintError(fmt.Errorf("\"%s\" language is not supported"))
+	}
+}
+
 func (sb *SmartBuilder) Clean(configuration string) {
 	defer cli.Recover()
 	// check configuration

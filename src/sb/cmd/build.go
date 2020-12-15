@@ -3,49 +3,27 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import (
-	"fmt"
+import "github.com/spf13/cobra"
 
-	"github.com/sapplications/sbuilder/src/cli"
-	"github.com/sapplications/sbuilder/src/golang"
-	"github.com/sapplications/sbuilder/src/sb/app"
-	"github.com/sapplications/sbuilder/src/smod"
-	"github.com/spf13/cobra"
-)
+type IBuild interface {
+	Build(configuration string)
+}
 
-// buildCmd represents the build command
-var buildCmd = &cobra.Command{
-	Use:   "build",
-	Short: "Build application",
-	Long: `Builds an application using the generated items. 
+type BuildCmd struct {
+	Build IBuild
+	cobra.Command
+}
 
-"build" builds an application for the current configuration (rebuild).
-"build [configuration]" builds an application for a custom configuration.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		var configuration = ""
-		if len(args) > 0 {
-			configuration = args[0]
-		}
-		defer cli.Recover()
-		// check configuration
-		var c smod.ConfigFile
-		cli.Check(c.LoadFromFile(app.ModFileName))
-		if err := app.CheckConfiguration(configuration, &c); err != nil {
-			cli.PrintError(err)
+func (v *BuildCmd) init() {
+	v.Command.Run = func(cmd *cobra.Command, args []string) {
+		if v.Build == nil {
 			return
 		}
-		// process configuration
-		switch c.Lang {
-		case app.Langs.Go:
-			var builder = golang.Builder{
-				app.ModFileName,
-				configuration,
-			}
-			if err := builder.Build(&c); err != nil {
-				cli.PrintError(err)
-			}
-		default:
-			cli.PrintError(fmt.Errorf("\"%s\" language is not supported"))
+		if len(args) > 0 {
+			v.Build.Build(args[0])
+		} else {
+			v.Build.Build("")
 		}
-	},
+
+	}
 }

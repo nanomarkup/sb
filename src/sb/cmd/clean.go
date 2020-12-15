@@ -3,9 +3,7 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import (
-	"github.com/spf13/cobra"
-)
+import "github.com/spf13/cobra"
 
 type IClean interface {
 	Clean(configuration string)

@@ -6,8 +6,16 @@ main require (
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole require (
+	Build github.com/sapplications/sbuilder/src/sb/cmd.BuildCmd
 	Clean github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd
 	Version github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd
+)
+
+github.com/sapplications/sbuilder/src/sb/cmd.BuildCmd require (
+	Use "build"
+	Short "Build application"
+	Long "Builds an application using the generated items.\n\n'build' builds an application for the current configuration (rebuild).\n'build [configuration]' builds an application for a custom configuration."
+	Build *github.com/sapplications/sbuilder/src/sb/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd require (
