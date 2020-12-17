@@ -6,8 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/sapplications/sbuilder/src/cli"
 )
 
 type Generator struct {
@@ -32,7 +30,6 @@ func (g *Generator) Clean(сonfiguration string) error {
 		return err
 	}
 	// get current configuration if it is missing
-	defer cli.Recover()
 	if сonfiguration == "" {
 		return fmt.Errorf("The configuration is not specified")
 	}
@@ -43,16 +40,16 @@ func (g *Generator) Clean(сonfiguration string) error {
 				// remove the main file
 				filePath := filepath.Join(folderPath, mainFileName)
 				if _, err := os.Stat(filePath); err == nil {
-					cli.Check(os.Remove(filePath))
+					os.Remove(filePath)
 				}
 				// remove the deps file
 				filePath = filepath.Join(folderPath, depsFileName)
 				if _, err := os.Stat(filePath); err == nil {
-					cli.Check(os.Remove(filePath))
+					os.Remove(filePath)
 				}
 				// remove the configuration folder if it is empty
 				// if empty, _ := cli.IsDirEmpty(folderPath); empty {
-				// 	cli.Check(os.Remove(folderPath))
+				// 	os.Remove(folderPath)
 				// }
 			}
 		}

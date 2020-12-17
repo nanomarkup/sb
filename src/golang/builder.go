@@ -5,8 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/sapplications/sbuilder/src/cli"
 )
 
 type Builder struct {
@@ -51,7 +49,6 @@ func (b *Builder) Clean(configuration string) error {
 	if err := checkConfiguration(configuration); err != nil {
 		return err
 	}
-	defer cli.Recover()
 	// check the golang file with all dependencies is exist
 	wd, _ := os.Getwd()
 	folderPath := filepath.Join(wd, configuration)

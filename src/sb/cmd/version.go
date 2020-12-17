@@ -3,10 +3,14 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
 
 type IVersion interface {
-	PrintVersion()
+	Version() string
 }
 
 type VersionCmd struct {
@@ -17,7 +21,7 @@ type VersionCmd struct {
 func (v *VersionCmd) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Version != nil {
-			v.Version.PrintVersion()
+			fmt.Println(v.Version.Version())
 		}
 	}
 }

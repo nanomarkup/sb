@@ -6,7 +6,7 @@ package cmd
 import "github.com/spf13/cobra"
 
 type IClean interface {
-	Clean(configuration string)
+	Clean(configuration string) error
 }
 
 type CleanCmd struct {

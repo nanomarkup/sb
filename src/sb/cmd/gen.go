@@ -6,7 +6,7 @@ package cmd
 import "github.com/spf13/cobra"
 
 type IGen interface {
-	Generate(configuration string)
+	Generate(configuration string) error 
 }
 
 type GenCmd struct {

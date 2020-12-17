@@ -7,14 +7,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sapplications/sbuilder/src/cli"
+	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/sb/app"
 	"github.com/sapplications/sbuilder/src/smod"
 	"github.com/spf13/cobra"
 )
 
 type IManager interface {
-	Init(lang string)
+	Init(lang string) error
 	AddItem(item string) error
 	AddDependency(item, dependency, resolver string, update bool) error
 	DeleteItem(item string) error
@@ -55,10 +55,10 @@ func (v *DepCmd) init() {
 			return
 		}
 		if len(args) == 0 {
-			cli.PrintError("Subcommand is required")
+			common.PrintError("Subcommand is required")
 			return
 		}
-		defer cli.Recover()
+		defer common.Recover()
 		var subCmd = args[0]
 		var itemStr = strings.Trim(*depCmdFlags.item, "\t \n")
 		var depStr = strings.Trim(*depCmdFlags.dep, "\t \n")
@@ -67,55 +67,55 @@ func (v *DepCmd) init() {
 		switch subCmd {
 		case subCmds.init:
 			if len(args) < 2 {
-				cli.PrintError("Language parameter is required")
+				common.PrintError("Language parameter is required")
 				return
 			}
 			v.Manager.Init(args[1])
 		case subCmds.add:
 			if itemStr == "" {
-				cli.PrintError("\"--name\" parameter is required")
+				common.PrintError("\"--name\" parameter is required")
 				return
 			}
 			if depStr != "" && resolverStr == "" {
-				cli.PrintError("\"--resolver\" parameter is required")
+				common.PrintError("\"--resolver\" parameter is required")
 				return
 			}
 			if depStr == "" {
-				cli.Check(v.Manager.AddItem(itemStr))
+				common.Check(v.Manager.AddItem(itemStr))
 			} else {
-				cli.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, false))
+				common.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, false))
 			}
 		case subCmds.del:
 			if itemStr == "" {
-				cli.PrintError("\"--name\" parameter is required")
+				common.PrintError("\"--name\" parameter is required")
 				return
 			}
 			if depStr == "" {
-				cli.Check(v.Manager.DeleteItem(itemStr))
+				common.Check(v.Manager.DeleteItem(itemStr))
 			} else {
-				cli.Check(v.Manager.DeleteDependency(itemStr, depStr))
+				common.Check(v.Manager.DeleteDependency(itemStr, depStr))
 			}
 		case subCmds.edit:
 			if itemStr == "" {
-				cli.PrintError("\"--name\" parameter is required")
+				common.PrintError("\"--name\" parameter is required")
 				return
 			}
 			if depStr == "" {
-				cli.PrintError("\"--dep\" parameter is required")
+				common.PrintError("\"--dep\" parameter is required")
 				return
 			}
 			if resolverStr == "" {
-				cli.PrintError("\"--resolver\" parameter is required")
+				common.PrintError("\"--resolver\" parameter is required")
 				return
 			}
-			cli.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, true))
+			common.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, true))
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
-				cli.PrintError("\"--name\" parameter is required")
+				common.PrintError("\"--name\" parameter is required")
 				return
 			}
 			var c smod.ConfigFile
-			cli.Check(c.LoadFromFile(app.ModFileName))
+			common.Check(c.LoadFromFile(app.ModFileName))
 			if *depCmdFlags.all {
 				fmt.Println(c.String())
 			} else {
@@ -128,7 +128,7 @@ func (v *DepCmd) init() {
 				if itemStr != "" {
 					var item = c.Items()[itemStr]
 					if item == nil {
-						cli.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
+						common.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
 					} else {
 						if depStr == "" {
 							fmt.Printf(c.Item(itemStr))
@@ -136,14 +136,14 @@ func (v *DepCmd) init() {
 							if _, found := item[depStr]; found {
 								fmt.Printf(c.Dependency(itemStr, depStr))
 							} else {
-								cli.PrintError(fmt.Sprintf("\"%s\" dependency item does not exist", depStr))
+								common.PrintError(fmt.Sprintf("\"%s\" dependency item does not exist", depStr))
 							}
 						}
 					}
 				}
 			}
 		default:
-			cli.PrintError(fmt.Sprintf("Unknown \"%s\" subcommand", args[0]))
+			common.PrintError(fmt.Sprintf("Unknown \"%s\" subcommand", args[0]))
 			return
 		}
 	}

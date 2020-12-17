@@ -6,7 +6,7 @@ package cmd
 import "github.com/spf13/cobra"
 
 type IBuild interface {
-	Build(configuration string)
+	Build(configuration string) error
 }
 
 type BuildCmd struct {
