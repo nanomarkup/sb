@@ -7,7 +7,8 @@ main require (
 
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
 	Module *github.com/sapplications/sbuilder/src/smod.ConfigFile
-	GoBuilder *github.com/sapplications/sbuilder/src/golang.Builder 
+	GoBuilder *github.com/sapplications/sbuilder/src/golang.Builder
+	GoGenerator *github.com/sapplications/sbuilder/src/golang.Generator
 )
 
 github.com/sapplications/sbuilder/src/cmd.SmartBuilderConsole require (
