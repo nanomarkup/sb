@@ -19,10 +19,6 @@ github.com/sapplications/sbuilder/src/cmd.SmartBuilderConsole require (
 	Version github.com/sapplications/sbuilder/src/cmd.VersionCmd
 )
 
-github.com/sapplications/sbuilder/src/golang.Builder require (
-
-)
-
 github.com/sapplications/sbuilder/src/app.DepManager require (
 	Module *github.com/sapplications/sbuilder/src/smod.ConfigFile
 )

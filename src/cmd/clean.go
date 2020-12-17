@@ -3,7 +3,10 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/sapplications/sbuilder/src/common"
+	"github.com/spf13/cobra"
+)
 
 type IClean interface {
 	Clean(configuration string) error
@@ -19,11 +22,12 @@ func (v *CleanCmd) init() {
 		if v.Clean == nil {
 			return
 		}
+		configuration := ""
 		if len(args) > 0 {
-			v.Clean.Clean(args[0])
-		} else {
-			v.Clean.Clean("")
+			configuration = args[0]
 		}
-
+		if err := v.Clean.Clean(configuration); err != nil {
+			common.PrintError(err)
+		}
 	}
 }

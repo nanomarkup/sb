@@ -3,10 +3,13 @@
 // Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/sapplications/sbuilder/src/common"
+	"github.com/spf13/cobra"
+)
 
 type IGen interface {
-	Generate(configuration string) error 
+	Generate(configuration string) error
 }
 
 type GenCmd struct {
@@ -19,11 +22,12 @@ func (v *GenCmd) init() {
 		if v.Gen == nil {
 			return
 		}
+		configuration := ""
 		if len(args) > 0 {
-			v.Gen.Generate(args[0])
-		} else {
-			v.Gen.Generate("")
+			configuration = args[0]
 		}
-
+		if err := v.Gen.Generate(configuration); err != nil {
+			common.PrintError(err)
+		}
 	}
 }
