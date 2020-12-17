@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/sapplications/sbuilder/src/common"
-	"github.com/sapplications/sbuilder/src/sb/app"
+	"github.com/sapplications/sbuilder/src/app"
 	"github.com/sapplications/sbuilder/src/smod"
 	"github.com/spf13/cobra"
 )
