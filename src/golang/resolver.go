@@ -7,8 +7,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"github.com/sapplications/sbuilder/src/smod"
 )
 
 type item struct {
@@ -35,7 +33,7 @@ var itemKind = struct {
 type resolver struct {
 	configuration string
 	entryPoint    string
-	config        *smod.ConfigFile
+	items         map[string]map[string]string
 }
 
 func (r *resolver) resolve() (items, error) {
@@ -100,17 +98,24 @@ func (r *resolver) getItem(itemName string, list items) *item {
 		itemName,
 		make(items),
 	}
-	// process item dependencies
+	// process a simple item dependencies
+	simpleItemName := itemName
+	if itemName[0] == '*' {
+		simpleItemName = itemName[1:]
+	}
 	var refIt *item
-	deps := r.config.Items[itemName]
+	deps := r.items[simpleItemName]
 	for dep, res := range deps {
 		refIt = r.getItem(res, list)
 		if refIt != nil {
 			it.deps[dep] = *refIt
 		}
 	}
-	// add item to the result set and return it
-	list[itemName] = it
+	// add simple and ref items to the result set and return it
+	list[simpleItemName] = it
+	if itemName[0] == '*' {
+		list[itemName] = it
+	}
 	return &it
 }
 

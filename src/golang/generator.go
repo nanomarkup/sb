@@ -8,43 +8,38 @@ import (
 	"strings"
 
 	"github.com/sapplications/sbuilder/src/cli"
-	"github.com/sapplications/sbuilder/src/smod"
 )
 
 type Generator struct {
-	ModuleName    string
-	Configuration string
+	Items map[string]map[string]string
 }
 
-func (g *Generator) Generate(config *smod.ConfigFile) error {
-	var err error
-	if g.Configuration, err = check(g.Configuration, config); err != nil {
+func (g *Generator) Generate(сonfiguration string) error {
+	if err := checkConfiguration(сonfiguration); err != nil {
 		return err
 	}
 	// generate a golang file and save all dependencies
-	entry, err := g.entryPoint(config)
+	entry, err := g.entryPoint(сonfiguration)
 	if err != nil {
 		return err
 	} else {
-		return g.generateDepsFile(entry, config)
+		return g.generateDepsFile(сonfiguration, entry)
 	}
 }
 
-func (g *Generator) Clean() error {
+func (g *Generator) Clean(сonfiguration string) error {
+	if err := checkConfiguration(сonfiguration); err != nil {
+		return err
+	}
 	// get current configuration if it is missing
 	defer cli.Recover()
-	var c smod.ConfigFile
-	cli.Check(c.LoadFromFile(g.ModuleName))
-	if g.Configuration == "" {
-		g.Configuration, _ = check(g.Configuration, &c)
+	if сonfiguration == "" {
+		return fmt.Errorf("The configuration is not specified")
 	}
-	if g.Configuration == "" {
-		return nil
-	}
-	if main := c.Items["main"]; main != nil {
-		if _, found := main[g.Configuration]; found {
+	if main, err := readMain(g.Items); err == nil {
+		if _, found := main[сonfiguration]; found {
 			if dir, err := os.Getwd(); err == nil {
-				folderPath := filepath.Join(dir, g.Configuration)
+				folderPath := filepath.Join(dir, сonfiguration)
 				// remove the main file
 				filePath := filepath.Join(folderPath, mainFileName)
 				if _, err := os.Stat(filePath); err == nil {
@@ -65,26 +60,26 @@ func (g *Generator) Clean() error {
 	return nil
 }
 
-func (g *Generator) entryPoint(config *smod.ConfigFile) (string, error) {
+func (g *Generator) entryPoint(сonfiguration string) (string, error) {
 	// read the main item
-	main := config.Items["main"]
-	if main == nil {
-		return "", fmt.Errorf("The main item is not found")
+	main, err := readMain(g.Items)
+	if err != nil {
+		return "", err
 	}
 	// read the configuration
-	entry, found := main[g.Configuration]
+	entry, found := main[сonfiguration]
 	if !found {
-		return "", fmt.Errorf("The selected \"%s\" configuration is not found", g.Configuration)
+		return "", fmt.Errorf("The selected \"%s\" configuration is not found", сonfiguration)
 	}
 	return entry, nil
 }
 
-func (g *Generator) generateMainFile() error {
+func (g *Generator) generateMainFile(сonfiguration string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
-	filePath := filepath.Join(wd, g.Configuration, mainFileName)
+	filePath := filepath.Join(wd, сonfiguration, mainFileName)
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -94,19 +89,19 @@ func (g *Generator) generateMainFile() error {
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
 	writer.WriteString("package main\n\n")
-	writer.WriteString(fmt.Sprintf("const Configuration = \"%s\"\n\n", g.Configuration))
+	writer.WriteString(fmt.Sprintf("const Configuration = \"%s\"\n\n", сonfiguration))
 	writer.WriteString("func main() {\n")
 	writer.WriteString("\tExecute()\n")
 	writer.WriteString("}\n")
 	return nil
 }
 
-func (g *Generator) generateDepsFile(entryPoint string, config *smod.ConfigFile) error {
+func (g *Generator) generateDepsFile(сonfiguration, entryPoint string) error {
 	// check and get info about all dependencies
 	r := resolver{
-		g.Configuration,
+		сonfiguration,
 		entryPoint,
-		config,
+		g.Items,
 	}
 	list, err := r.resolve()
 	if err != nil {
@@ -119,7 +114,7 @@ func (g *Generator) generateDepsFile(entryPoint string, config *smod.ConfigFile)
 	}
 	// save dependencies to a file
 	wd, _ := os.Getwd()
-	root := filepath.Join(wd, g.Configuration)
+	root := filepath.Join(wd, сonfiguration)
 	if _, err := os.Stat(root); os.IsNotExist(err) {
 		os.Mkdir(root, os.ModePerm)
 	}
@@ -170,6 +165,7 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 	its := map[string]bool{}
 	g.getStructItems(entryPoint, list, its)
 	// generate code for all type of struct items
+	funcName := ""
 	fullNameDefine := ""
 	fullNameReturn := ""
 	for i := range its {
@@ -178,10 +174,12 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 			case itemKind.Func:
 				imports[it.path+it.pkg] = true
 			case itemKind.Struct:
+				funcName = fmt.Sprintf("Use%s%s", strings.Title(it.pkg), it.name)
 				fullNameDefine = it.name
 				fullNameReturn = it.name
 				if len(it.path) > 0 {
 					if it.path[0] == '*' {
+						funcName = funcName + "Ref"
 						fullNameDefine = fmt.Sprintf("*%s.%s", it.pkg, it.name)
 						fullNameReturn = fmt.Sprintf("&%s.%s", it.pkg, it.name)
 						imports[it.path[1:]+it.pkg] = true
@@ -192,7 +190,7 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 					}
 				}
 				// create a new item and initialize it
-				code = append(code, fmt.Sprintf("func Use%s%s() %s {\n", strings.Title(it.pkg), it.name, fullNameDefine))
+				code = append(code, fmt.Sprintf("func %s() %s {\n", funcName, fullNameDefine))
 				if len(it.deps) == 0 {
 					code = append(code, fmt.Sprintf("\treturn %s{}\n", fullNameReturn))
 				} else {
@@ -203,7 +201,11 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 							imports[v.path+v.pkg] = true
 							code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, v.pkg, strings.Replace(v.name, "()", "", 1)))
 						case itemKind.Struct:
-							code = append(code, fmt.Sprintf("\tv.%s = Use%s%s()\n", k, strings.Title(v.pkg), v.name))
+							funcName = fmt.Sprintf("Use%s%s", strings.Title(v.pkg), v.name)
+							if len(v.path) > 0 && v.path[0] == '*' {
+								funcName = funcName + "Ref"
+							}
+							code = append(code, fmt.Sprintf("\tv.%s = %s()\n", k, funcName))
 						case itemKind.String:
 							code = append(code, fmt.Sprintf("\tv.%s = %s\n", k, v.original))
 						}

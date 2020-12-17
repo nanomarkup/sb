@@ -30,21 +30,50 @@ var attrs = struct {
 }
 
 type ConfigFile struct {
-	Sb    string
-	Lang  string
-	Items map[string]map[string]string
+	sb    string
+	lang  string
+	items map[string]map[string]string
+}
+
+func (c *ConfigFile) Init(version, language string) {
+	c.sb = version
+	c.lang = language
+	c.items = map[string]map[string]string{
+		"main": map[string]string{},
+	}
+}
+
+func (c *ConfigFile) Main() (map[string]string, error) {
+	main := c.items["main"]
+	if main == nil {
+		return nil, fmt.Errorf("The main item is not found")
+	} else {
+		return main, nil
+	}
+}
+
+func (c *ConfigFile) Sb() string {
+	return c.sb
+}
+
+func (c *ConfigFile) Lang() string {
+	return c.lang
+}
+
+func (c *ConfigFile) Items() map[string]map[string]string {
+	return c.items
 }
 
 func (c *ConfigFile) AddItem(item string) error {
-	if _, found := c.Items[item]; found {
+	if _, found := c.items[item]; found {
 		return fmt.Errorf("\"%s\" item already exists", item)
 	}
-	c.Items[item] = map[string]string{}
+	c.items[item] = map[string]string{}
 	return nil
 }
 
 func (c *ConfigFile) AddDependency(item, dependency, resolver string, update bool) error {
-	curr, found := c.Items[item]
+	curr, found := c.items[item]
 	if !found {
 		return fmt.Errorf("\"%s\" item does not exist", item)
 	}
@@ -56,21 +85,19 @@ func (c *ConfigFile) AddDependency(item, dependency, resolver string, update boo
 }
 
 func (c *ConfigFile) DeleteItem(item string) error {
-	delete(c.Items, item)
+	delete(c.items, item)
 	return nil
 }
 
 func (c *ConfigFile) DeleteDependency(item, dependency string) error {
-	if curr, found := c.Items[item]; found {
+	if curr, found := c.items[item]; found {
 		delete(curr, dependency)
 	}
 	return nil
 }
 
 func (c *ConfigFile) LoadFromFile(filePath string) error {
-	if c.Items == nil {
-		c.Items = map[string]map[string]string{}
-	}
+	c.items = map[string]map[string]string{}
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -107,7 +134,7 @@ func (c *ConfigFile) LoadFromFile(filePath string) error {
 				} else if slice[0] != attrs.sb {
 					return fmt.Errorf("the first token should be \"%s\"", attrs.sb)
 				}
-				c.Sb = slice[1]
+				c.sb = slice[1]
 			} else if index == 2 {
 				// check and initialize lang version
 				if len(slice) != 2 {
@@ -115,7 +142,7 @@ func (c *ConfigFile) LoadFromFile(filePath string) error {
 				} else if slice[0] != attrs.lang {
 					return fmt.Errorf("the second token should be \"%s\"", attrs.lang)
 				}
-				c.Lang = slice[1]
+				c.lang = slice[1]
 			} else {
 				// process items
 				length = len(slice)
@@ -127,7 +154,7 @@ func (c *ConfigFile) LoadFromFile(filePath string) error {
 					} else if length != 2 {
 						return fmt.Errorf("cannot parse the dependency token of " + filePath)
 					} else {
-						c.Items[item][slice[0]] = slice[1]
+						c.items[item][slice[0]] = slice[1]
 					}
 				} else {
 					// add new item
@@ -139,7 +166,7 @@ func (c *ConfigFile) LoadFromFile(filePath string) error {
 						return fmt.Errorf("invalid token")
 					} else {
 						item = slice[0]
-						c.Items[item] = map[string]string{}
+						c.items[item] = map[string]string{}
 						if (slice[1] == "require(") || (length > 2 && strings.TrimSuffix(slice[2], "\n") == "(") {
 							bracketOpened = true
 						}
@@ -174,8 +201,8 @@ func (c *ConfigFile) String() string {
 	res.WriteString(c.Version())
 	res.WriteString(c.Language())
 	// sort items
-	sorted := make([]string, 0, len(c.Items))
-	for item := range c.Items {
+	sorted := make([]string, 0, len(c.items))
+	for item := range c.items {
 		sorted = append(sorted, item)
 	}
 	sort.Strings(sorted)
@@ -195,7 +222,7 @@ func (c *ConfigFile) Language() string {
 }
 
 func (c *ConfigFile) Item(item string) string {
-	var deps = c.Items[item]
+	var deps = c.items[item]
 	if deps == nil {
 		return ""
 	}
@@ -216,7 +243,7 @@ func (c *ConfigFile) Item(item string) string {
 }
 
 func (c *ConfigFile) Dependency(item, dep string) string {
-	if deps := c.Items[item]; deps != nil {
+	if deps := c.items[item]; deps != nil {
 		if res, found := deps[dep]; found {
 			return fmt.Sprintf(attrs.depFmt, dep, res)
 		}

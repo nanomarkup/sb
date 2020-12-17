@@ -126,7 +126,7 @@ func (v *DepCmd) init() {
 					fmt.Printf(c.Language())
 				}
 				if itemStr != "" {
-					var item = c.Items[itemStr]
+					var item = c.Items()[itemStr]
 					if item == nil {
 						cli.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
 					} else {

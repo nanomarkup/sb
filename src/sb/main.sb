@@ -5,12 +5,25 @@ main require (
 	release github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole
 )
 
+github.com/sapplications/sbuilder/src/sb/app.SmartBuilder require (
+	Module *github.com/sapplications/sbuilder/src/smod.ConfigFile
+	GoBuilder *github.com/sapplications/sbuilder/src/golang.Builder 
+)
+
 github.com/sapplications/sbuilder/src/sb/cmd.SmartBuilderConsole require (
 	Dep github.com/sapplications/sbuilder/src/sb/cmd.DepCmd
 	Gen github.com/sapplications/sbuilder/src/sb/cmd.GenCmd
 	Build github.com/sapplications/sbuilder/src/sb/cmd.BuildCmd
 	Clean github.com/sapplications/sbuilder/src/sb/cmd.CleanCmd
 	Version github.com/sapplications/sbuilder/src/sb/cmd.VersionCmd
+)
+
+github.com/sapplications/sbuilder/src/golang.Builder require (
+
+)
+
+github.com/sapplications/sbuilder/src/sb/app.DepManager require (
+	Module *github.com/sapplications/sbuilder/src/smod.ConfigFile
 )
 
 github.com/sapplications/sbuilder/src/sb/cmd.DepCmd require (

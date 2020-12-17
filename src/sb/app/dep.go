@@ -5,10 +5,11 @@ import (
 	"os"
 
 	"github.com/sapplications/sbuilder/src/cli"
-	"github.com/sapplications/sbuilder/src/smod"
+	"github.com/sapplications/sbuilder/src/services"
 )
 
 type DepManager struct {
+	Module services.IModule
 }
 
 func (d *DepManager) Init(lang string) {
@@ -17,42 +18,32 @@ func (d *DepManager) Init(lang string) {
 	} else if !os.IsNotExist(err) {
 		cli.PrintError(err)
 	} else {
-		c := smod.ConfigFile{
-			Sb:   Version,
-			Lang: lang,
-			Items: map[string]map[string]string{
-				"main": map[string]string{},
-			},
-		}
-		cli.Check(c.SaveToFile(ModFileName))
+		d.Module.Init(Version, lang)
+		cli.Check(d.Module.SaveToFile(ModFileName))
 		fmt.Printf("%s file has been created", ModFileName)
 	}
 }
 
 func (d *DepManager) AddItem(item string) error {
-	var c smod.ConfigFile
-	cli.Check(c.LoadFromFile(ModFileName))
-	cli.Check(c.AddItem(item))
-	return c.SaveToFile(ModFileName)
+	cli.Check(d.Module.LoadFromFile(ModFileName))
+	cli.Check(d.Module.AddItem(item))
+	return d.Module.SaveToFile(ModFileName)
 }
 
 func (d *DepManager) AddDependency(item, dependency, resolver string, update bool) error {
-	var c smod.ConfigFile
-	cli.Check(c.LoadFromFile(ModFileName))
-	cli.Check(c.AddDependency(item, dependency, resolver, update))
-	return c.SaveToFile(ModFileName)
+	cli.Check(d.Module.LoadFromFile(ModFileName))
+	cli.Check(d.Module.AddDependency(item, dependency, resolver, update))
+	return d.Module.SaveToFile(ModFileName)
 }
 
 func (d *DepManager) DeleteItem(item string) error {
-	var c smod.ConfigFile
-	cli.Check(c.LoadFromFile(ModFileName))
-	cli.Check(c.DeleteItem(item))
-	return c.SaveToFile(ModFileName)
+	cli.Check(d.Module.LoadFromFile(ModFileName))
+	cli.Check(d.Module.DeleteItem(item))
+	return d.Module.SaveToFile(ModFileName)
 }
 
 func (d *DepManager) DeleteDependency(item, dependency string) error {
-	var c smod.ConfigFile
-	cli.Check(c.LoadFromFile(ModFileName))
-	cli.Check(c.DeleteDependency(item, dependency))
-	return c.SaveToFile(ModFileName)
+	cli.Check(d.Module.LoadFromFile(ModFileName))
+	cli.Check(d.Module.DeleteDependency(item, dependency))
+	return d.Module.SaveToFile(ModFileName)
 }
