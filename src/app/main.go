@@ -25,7 +25,7 @@ func (sb *SmartBuilder) Generate(configuration string) error {
 	switch sb.Module.Lang() {
 	case Langs.Go:
 		sb.GoGenerator.Init(sb.Module.Items())
-		if err := sb.Generate(configuration); err != nil {
+		if err := sb.GoGenerator.Generate(configuration); err != nil {
 			return err
 		}
 	default:
