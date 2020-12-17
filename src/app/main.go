@@ -4,13 +4,13 @@ import (
 	"fmt"
 
 	"github.com/sapplications/sbuilder/src/common"
+	"github.com/sapplications/sbuilder/src/golang"
 	"github.com/sapplications/sbuilder/src/services"
 )
 
 type SmartBuilder struct {
-	Module      services.IModule
-	GoBuilder   services.IBuilder
-	GoGenerator services.IGenerator
+	Module    services.IModule
+	GoBuilder services.IBuilder
 }
 
 func (sb *SmartBuilder) Generate(configuration string) error {
@@ -24,8 +24,10 @@ func (sb *SmartBuilder) Generate(configuration string) error {
 	// process configuration
 	switch sb.Module.Lang() {
 	case Langs.Go:
-		sb.GoGenerator.Init(sb.Module.Items())
-		if err := sb.Generate(configuration); err != nil {
+		var gen = golang.Generator{
+			sb.Module.Items(),
+		}
+		if err := gen.Generate(configuration); err != nil {
 			return err
 		}
 	default:
@@ -67,8 +69,10 @@ func (sb *SmartBuilder) Clean(configuration string) error {
 	switch sb.Module.Lang() {
 	case Langs.Go:
 		// remove the generated files
-		sb.GoGenerator.Init(sb.Module.Items())
-		if err := sb.GoGenerator.Clean(configuration); err != nil {
+		var gen = golang.Generator{
+			sb.Module.Items(),
+		}
+		if err := gen.Clean(configuration); err != nil {
 			return err
 		}
 		// remove the built files

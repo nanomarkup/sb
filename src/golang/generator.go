@@ -9,11 +9,7 @@ import (
 )
 
 type Generator struct {
-	items map[string]map[string]string
-}
-
-func (g *Generator) Init(items map[string]map[string]string) {
-	g.items = items
+	Items map[string]map[string]string
 }
 
 func (g *Generator) Generate(сonfiguration string) error {
@@ -37,7 +33,7 @@ func (g *Generator) Clean(сonfiguration string) error {
 	if сonfiguration == "" {
 		return fmt.Errorf("The configuration is not specified")
 	}
-	if main, err := readMain(g.items); err == nil {
+	if main, err := readMain(g.Items); err == nil {
 		if _, found := main[сonfiguration]; found {
 			if dir, err := os.Getwd(); err == nil {
 				folderPath := filepath.Join(dir, сonfiguration)
@@ -63,7 +59,7 @@ func (g *Generator) Clean(сonfiguration string) error {
 
 func (g *Generator) entryPoint(сonfiguration string) (string, error) {
 	// read the main item
-	main, err := readMain(g.items)
+	main, err := readMain(g.Items)
 	if err != nil {
 		return "", err
 	}
@@ -102,7 +98,7 @@ func (g *Generator) generateDepsFile(сonfiguration, entryPoint string) error {
 	r := resolver{
 		сonfiguration,
 		entryPoint,
-		g.items,
+		g.Items,
 	}
 	list, err := r.resolve()
 	if err != nil {
