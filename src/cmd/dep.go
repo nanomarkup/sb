@@ -7,22 +7,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/app"
+	"github.com/sapplications/sbuilder/src/common"
+	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/sapplications/sbuilder/src/smod"
 	"github.com/spf13/cobra"
 )
 
-type IManager interface {
-	Init(lang string) error
-	AddItem(item string) error
-	AddDependency(item, dependency, resolver string, update bool) error
-	DeleteItem(item string) error
-	DeleteDependency(item, dependency string) error
-}
-
-type DepCmd struct {
-	Manager IManager
+type DepManager struct {
+	Manager cmd.DepManager
 	cobra.Command
 }
 
@@ -40,7 +33,7 @@ var subCmds = struct {
 	"list",
 }
 
-var depCmdFlags struct {
+var depFlags struct {
 	item     *string
 	dep      *string
 	resolver *string
@@ -49,7 +42,7 @@ var depCmdFlags struct {
 	all      *bool
 }
 
-func (v *DepCmd) init() {
+func (v *DepManager) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Manager == nil {
 			return
@@ -60,9 +53,9 @@ func (v *DepCmd) init() {
 		}
 		defer common.Recover()
 		var subCmd = args[0]
-		var itemStr = strings.Trim(*depCmdFlags.item, "\t \n")
-		var depStr = strings.Trim(*depCmdFlags.dep, "\t \n")
-		var resolverStr = strings.Trim(*depCmdFlags.resolver, "\t \n")
+		var itemStr = strings.Trim(*depFlags.item, "\t \n")
+		var depStr = strings.Trim(*depFlags.dep, "\t \n")
+		var resolverStr = strings.Trim(*depFlags.resolver, "\t \n")
 		// handle subcommands
 		switch subCmd {
 		case subCmds.init:
@@ -116,13 +109,13 @@ func (v *DepCmd) init() {
 			}
 			var c smod.ConfigFile
 			common.Check(c.LoadFromFile(app.ModFileName))
-			if *depCmdFlags.all {
+			if *depFlags.all {
 				fmt.Println(c.String())
 			} else {
-				if *depCmdFlags.version {
+				if *depFlags.version {
 					fmt.Printf(c.Version())
 				}
-				if *depCmdFlags.lang {
+				if *depFlags.lang {
 					fmt.Printf(c.Language())
 				}
 				if itemStr != "" {
@@ -147,10 +140,10 @@ func (v *DepCmd) init() {
 			return
 		}
 	}
-	depCmdFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
-	depCmdFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
-	depCmdFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
-	depCmdFlags.version = v.Command.Flags().BoolP("version", "v", false, "print version")
-	depCmdFlags.lang = v.Command.Flags().BoolP("lang", "l", false, "print language")
-	depCmdFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
+	depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
+	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
+	depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
+	depFlags.version = v.Command.Flags().BoolP("version", "v", false, "print version")
+	depFlags.lang = v.Command.Flags().BoolP("lang", "l", false, "print language")
+	depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
 }

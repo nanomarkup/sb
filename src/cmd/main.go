@@ -1,23 +1,23 @@
 package cmd
 
 type SmartBuilderConsole struct {
-	Dep     DepCmd
-	Gen     GenCmd
-	Build   BuildCmd
-	Clean   CleanCmd
-	Version VersionCmd
+	Reader     Reader
+	Builder    Builder
+	Cleaner    Cleaner
+	Generator  Generator
+	DepManager DepManager
 }
 
 func (sb *SmartBuilderConsole) Execute() {
-	sb.Dep.init()
-	sb.Gen.init()
-	sb.Build.init()
-	sb.Clean.init()
-	sb.Version.init()
-	rootCmd.AddCommand(&sb.Dep.Command)
-	rootCmd.AddCommand(&sb.Gen.Command)
-	rootCmd.AddCommand(&sb.Build.Command)
-	rootCmd.AddCommand(&sb.Clean.Command)
-	rootCmd.AddCommand(&sb.Version.Command)
+	sb.Reader.init()
+	sb.Builder.init()
+	sb.Cleaner.init()
+	sb.Generator.init()
+	sb.DepManager.init()
+	rootCmd.AddCommand(&sb.DepManager.Command)
+	rootCmd.AddCommand(&sb.Generator.Command)
+	rootCmd.AddCommand(&sb.Builder.Command)
+	rootCmd.AddCommand(&sb.Cleaner.Command)
+	rootCmd.AddCommand(&sb.Reader.Command)
 	Execute()
 }

@@ -6,22 +6,19 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type IVersion interface {
-	Version() string
-}
-
-type VersionCmd struct {
-	Version IVersion
+type Reader struct {
+	Reader cmd.Reader
 	cobra.Command
 }
 
-func (v *VersionCmd) init() {
+func (v *Reader) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
-		if v.Version != nil {
-			fmt.Println(v.Version.Version())
+		if v.Reader != nil {
+			fmt.Println(v.Reader.Version())
 		}
 	}
 }

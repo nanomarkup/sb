@@ -1,6 +1,6 @@
 package services
 
-type IModule interface {
+type Module interface {
 	Sb() string
 	Lang() string
 	Items() map[string]map[string]string

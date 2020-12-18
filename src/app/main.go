@@ -8,9 +8,9 @@ import (
 )
 
 type SmartBuilder struct {
-	Module      services.IModule
-	GoBuilder   services.IBuilder
-	GoGenerator services.IGenerator
+	Module      services.Module
+	GoBuilder   services.Builder
+	GoGenerator services.Generator
 }
 
 func (sb *SmartBuilder) Generate(configuration string) error {

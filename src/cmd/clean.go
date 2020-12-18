@@ -5,19 +5,16 @@ package cmd
 
 import (
 	"github.com/sapplications/sbuilder/src/common"
+	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type IClean interface {
-	Clean(configuration string) error
-}
-
-type CleanCmd struct {
-	Clean IClean
+type Cleaner struct {
+	Clean cmd.Cleaner
 	cobra.Command
 }
 
-func (v *CleanCmd) init() {
+func (v *Cleaner) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Clean == nil {
 			return

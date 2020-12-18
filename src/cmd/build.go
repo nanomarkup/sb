@@ -5,19 +5,16 @@ package cmd
 
 import (
 	"github.com/sapplications/sbuilder/src/common"
+	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type IBuild interface {
-	Build(configuration string) error
-}
-
-type BuildCmd struct {
-	Build IBuild
+type Builder struct {
+	Build cmd.Builder
 	cobra.Command
 }
 
-func (v *BuildCmd) init() {
+func (v *Builder) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Build == nil {
 			return

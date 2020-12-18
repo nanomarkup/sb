@@ -5,19 +5,16 @@ package cmd
 
 import (
 	"github.com/sapplications/sbuilder/src/common"
+	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type IGen interface {
-	Generate(configuration string) error
-}
-
-type GenCmd struct {
-	Gen IGen
+type Generator struct {
+	Gen cmd.Generator
 	cobra.Command
 }
 
-func (v *GenCmd) init() {
+func (v *Generator) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Gen == nil {
 			return

@@ -9,7 +9,7 @@ import (
 )
 
 type DepManager struct {
-	Module services.IModule
+	Module services.Module
 }
 
 func (d *DepManager) Init(lang string) error {
