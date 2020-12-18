@@ -52,9 +52,9 @@ func (g *Generator) Clean(сonfiguration string) error {
 					os.Remove(filePath)
 				}
 				// remove the configuration folder if it is empty
-				// if empty, _ := cli.IsDirEmpty(folderPath); empty {
-				// 	os.Remove(folderPath)
-				// }
+				if empty, _ := isDirEmpty(folderPath); empty {
+					os.Remove(folderPath)
+				}
 			}
 		}
 	}

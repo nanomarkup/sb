@@ -66,14 +66,14 @@ func (sb *SmartBuilder) Clean(configuration string) error {
 	// process configuration
 	switch sb.Module.Lang() {
 	case Langs.Go:
-		// remove the generated files
-		sb.GoGenerator.Init(sb.Module.Items())
-		if err := sb.GoGenerator.Clean(configuration); err != nil {
-			return err
-		}
 		// remove the built files
 		sb.GoBuilder.Init(sb.Module.Items())
 		if err := sb.GoBuilder.Clean(configuration); err != nil {
+			return err
+		}
+		// remove the generated files
+		sb.GoGenerator.Init(sb.Module.Items())
+		if err := sb.GoGenerator.Clean(configuration); err != nil {
 			return err
 		}
 	default:

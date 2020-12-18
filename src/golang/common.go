@@ -2,6 +2,7 @@ package golang
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 )
@@ -37,4 +38,18 @@ func goClean(src string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
+}
+
+func isDirEmpty(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	_, err = f.Readdirnames(1)
+	if err == io.EOF {
+		return true, nil
+	}
+	return false, nil
 }
