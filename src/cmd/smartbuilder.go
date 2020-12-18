@@ -1,6 +1,6 @@
 package cmd
 
-type SmartBuilderConsole struct {
+type SmartBuilder struct {
 	Reader     Reader
 	Builder    Builder
 	Cleaner    Cleaner
@@ -8,7 +8,7 @@ type SmartBuilderConsole struct {
 	DepManager DepManager
 }
 
-func (sb *SmartBuilderConsole) Execute() {
+func (sb *SmartBuilder) Execute() {
 	sb.Reader.init()
 	sb.Builder.init()
 	sb.Cleaner.init()

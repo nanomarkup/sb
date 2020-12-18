@@ -2,7 +2,7 @@ sb 1.0
 lang go
 
 main require (
-	release github.com/sapplications/sbuilder/src/cmd.SmartBuilderConsole
+	release github.com/sapplications/sbuilder/src/cmd.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
@@ -11,7 +11,7 @@ github.com/sapplications/sbuilder/src/app.SmartBuilder require (
 	GoGenerator *github.com/sapplications/sbuilder/src/golang.Generator
 )
 
-github.com/sapplications/sbuilder/src/cmd.SmartBuilderConsole require (	
+github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (	
 	Reader github.com/sapplications/sbuilder/src/cmd.Reader
 	Builder github.com/sapplications/sbuilder/src/cmd.Builder
 	Cleaner github.com/sapplications/sbuilder/src/cmd.Cleaner
