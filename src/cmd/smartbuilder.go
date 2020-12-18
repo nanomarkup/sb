@@ -1,6 +1,13 @@
 package cmd
 
+import (
+	"fmt"
+
+	"github.com/spf13/cobra"
+)
+
 type SmartBuilder struct {
+	Runner     Runner
 	Reader     Reader
 	Builder    Builder
 	Cleaner    Cleaner
@@ -14,10 +21,16 @@ func (sb *SmartBuilder) Execute() {
 	sb.Cleaner.init()
 	sb.Generator.init()
 	sb.DepManager.init()
-	rootCmd.AddCommand(&sb.DepManager.Command)
-	rootCmd.AddCommand(&sb.Generator.Command)
-	rootCmd.AddCommand(&sb.Builder.Command)
-	rootCmd.AddCommand(&sb.Cleaner.Command)
-	rootCmd.AddCommand(&sb.Reader.Command)
-	Execute()
+	sb.Runner.AddCommand(&sb.DepManager.Command)
+	sb.Runner.AddCommand(&sb.Generator.Command)
+	sb.Runner.AddCommand(&sb.Builder.Command)
+	sb.Runner.AddCommand(&sb.Cleaner.Command)
+	sb.Runner.AddCommand(&sb.Reader.Command)
+	if err := sb.Runner.Execute(); err != nil {
+		fmt.Println(err)
+	}
+}
+
+func init() {
+	cobra.EnableCommandSorting = false
 }
