@@ -31,9 +31,9 @@ var itemKind = struct {
 }
 
 type resolver struct {
-	configuration string
-	entryPoint    string
-	items         map[string]map[string]string
+	application string
+	entryPoint  string
+	items       map[string]map[string]string
 }
 
 func (r *resolver) resolve() (items, error) {
@@ -152,7 +152,7 @@ func (r *resolver) getDetails(list items) (string, error) {
 	unit = append(unit, "}")
 	// generate a main unit and run it
 	wd, _ := os.Getwd()
-	root := filepath.Join(wd, r.configuration, "deps")
+	root := filepath.Join(wd, r.application, "deps")
 	if _, err := os.Stat(root); os.IsNotExist(err) {
 		os.Mkdir(root, os.ModePerm)
 	}

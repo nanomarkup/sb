@@ -15,13 +15,13 @@ func (b *Builder) Init(items map[string]map[string]string) {
 	b.items = items
 }
 
-func (b *Builder) Build(configuration string) error {
-	if err := checkConfiguration(configuration); err != nil {
+func (b *Builder) Build(application string) error {
+	if err := checkApplication(application); err != nil {
 		return err
 	}
 	// check the golang file with all dependencies is exist
 	wd, _ := os.Getwd()
-	folderPath := filepath.Join(wd, configuration)
+	folderPath := filepath.Join(wd, application)
 	filePath := filepath.Join(folderPath, depsFileName)
 	if _, err := os.Stat(filePath); err != nil {
 		return fmt.Errorf("\"%s\" does not exist. Please use a \"generate\" command to create it.", filePath)
@@ -33,7 +33,7 @@ func (b *Builder) Build(configuration string) error {
 	filePath = filepath.Join(folderPath, mainFileName)
 	if _, err := os.Stat(filePath); err != nil {
 		if os.IsNotExist(err) {
-			if err := g.generateMainFile(configuration); err != nil {
+			if err := g.generateMainFile(application); err != nil {
 				return err
 			}
 		} else {
@@ -45,13 +45,13 @@ func (b *Builder) Build(configuration string) error {
 	return goBuild(folderPath, names[len(names)-1]+".exe")
 }
 
-func (b *Builder) Clean(configuration string) error {
-	if err := checkConfiguration(configuration); err != nil {
+func (b *Builder) Clean(application string) error {
+	if err := checkApplication(application); err != nil {
 		return err
 	}
 	// check the golang file with all dependencies is exist
 	wd, _ := os.Getwd()
-	folderPath := filepath.Join(wd, configuration)
+	folderPath := filepath.Join(wd, application)
 	if _, err := os.Stat(folderPath); err != nil {
 		if os.IsNotExist(err) {
 			return nil

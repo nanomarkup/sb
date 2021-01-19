@@ -107,7 +107,7 @@ func (v *DepManager) init() {
 				common.PrintError("\"--name\" parameter is required")
 				return
 			}
-			var c smod.ConfigFile
+			var c smod.Module
 			common.Check(c.LoadFromFile(app.ModFileName))
 			if *depFlags.all {
 				fmt.Println(c.String())

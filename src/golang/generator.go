@@ -16,31 +16,31 @@ func (g *Generator) Init(items map[string]map[string]string) {
 	g.items = items
 }
 
-func (g *Generator) Generate(сonfiguration string) error {
-	if err := checkConfiguration(сonfiguration); err != nil {
+func (g *Generator) Generate(application string) error {
+	if err := checkApplication(application); err != nil {
 		return err
 	}
 	// generate a golang file and save all dependencies
-	entry, err := g.entryPoint(сonfiguration)
+	entry, err := g.entryPoint(application)
 	if err != nil {
 		return err
 	} else {
-		return g.generateDepsFile(сonfiguration, entry)
+		return g.generateDepsFile(application, entry)
 	}
 }
 
-func (g *Generator) Clean(сonfiguration string) error {
-	if err := checkConfiguration(сonfiguration); err != nil {
+func (g *Generator) Clean(application string) error {
+	if err := checkApplication(application); err != nil {
 		return err
 	}
-	// get current configuration if it is missing
-	if сonfiguration == "" {
-		return fmt.Errorf("The configuration is not specified")
+	// get current application if it is missing
+	if application == "" {
+		return fmt.Errorf("The application is not specified")
 	}
 	if main, err := readMain(g.items); err == nil {
-		if _, found := main[сonfiguration]; found {
+		if _, found := main[application]; found {
 			if dir, err := os.Getwd(); err == nil {
-				folderPath := filepath.Join(dir, сonfiguration)
+				folderPath := filepath.Join(dir, application)
 				// remove the main file
 				filePath := filepath.Join(folderPath, mainFileName)
 				if _, err := os.Stat(filePath); err == nil {
@@ -51,7 +51,7 @@ func (g *Generator) Clean(сonfiguration string) error {
 				if _, err := os.Stat(filePath); err == nil {
 					os.Remove(filePath)
 				}
-				// remove the configuration folder if it is empty
+				// remove the application folder if it is empty
 				if empty, _ := isDirEmpty(folderPath); empty {
 					os.Remove(folderPath)
 				}
@@ -61,26 +61,26 @@ func (g *Generator) Clean(сonfiguration string) error {
 	return nil
 }
 
-func (g *Generator) entryPoint(сonfiguration string) (string, error) {
+func (g *Generator) entryPoint(application string) (string, error) {
 	// read the main item
 	main, err := readMain(g.items)
 	if err != nil {
 		return "", err
 	}
-	// read the configuration
-	entry, found := main[сonfiguration]
+	// read the application
+	entry, found := main[application]
 	if !found {
-		return "", fmt.Errorf("The selected \"%s\" configuration is not found", сonfiguration)
+		return "", fmt.Errorf("The selected \"%s\" application is not found", application)
 	}
 	return entry, nil
 }
 
-func (g *Generator) generateMainFile(сonfiguration string) error {
+func (g *Generator) generateMainFile(application string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
-	filePath := filepath.Join(wd, сonfiguration, mainFileName)
+	filePath := filepath.Join(wd, application, mainFileName)
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -90,17 +90,17 @@ func (g *Generator) generateMainFile(сonfiguration string) error {
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
 	writer.WriteString("package main\n\n")
-	writer.WriteString(fmt.Sprintf("const Configuration = \"%s\"\n\n", сonfiguration))
+	writer.WriteString(fmt.Sprintf("const AppName = \"%s\"\n\n", application))
 	writer.WriteString("func main() {\n")
 	writer.WriteString("\tExecute()\n")
 	writer.WriteString("}\n")
 	return nil
 }
 
-func (g *Generator) generateDepsFile(сonfiguration, entryPoint string) error {
+func (g *Generator) generateDepsFile(application, entryPoint string) error {
 	// check and get info about all dependencies
 	r := resolver{
-		сonfiguration,
+		application,
 		entryPoint,
 		g.items,
 	}
@@ -115,7 +115,7 @@ func (g *Generator) generateDepsFile(сonfiguration, entryPoint string) error {
 	}
 	// save dependencies to a file
 	wd, _ := os.Getwd()
-	root := filepath.Join(wd, сonfiguration)
+	root := filepath.Join(wd, application)
 	if _, err := os.Stat(root); os.IsNotExist(err) {
 		os.Mkdir(root, os.ModePerm)
 	}

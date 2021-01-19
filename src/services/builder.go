@@ -2,6 +2,6 @@ package services
 
 type Builder interface {
 	Init(items map[string]map[string]string)
-	Build(configuration string) error
-	Clean(configuration string) error
+	Build(application string) error
+	Clean(application string) error
 }

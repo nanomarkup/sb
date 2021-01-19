@@ -19,11 +19,11 @@ func (v *Generator) init() {
 		if v.Gen == nil {
 			return
 		}
-		configuration := ""
+		application := ""
 		if len(args) > 0 {
-			configuration = args[0]
+			application = args[0]
 		}
-		if err := v.Gen.Generate(configuration); err != nil {
+		if err := v.Gen.Generate(application); err != nil {
 			common.PrintError(err)
 		}
 	}

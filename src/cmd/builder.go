@@ -19,11 +19,11 @@ func (v *Builder) init() {
 		if v.Build == nil {
 			return
 		}
-		configuration := ""
+		application := ""
 		if len(args) > 0 {
-			configuration = args[0]
+			application = args[0]
 		}
-		if err := v.Build.Build(configuration); err != nil {
+		if err := v.Build.Build(application); err != nil {
 			common.PrintError(err)
 		}
 	}

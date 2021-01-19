@@ -1,5 +1,5 @@
 package cmd
 
 type Generator interface {
-	Generate(configuration string) error
+	Generate(application string) error
 }

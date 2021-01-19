@@ -19,11 +19,11 @@ func (v *Cleaner) init() {
 		if v.Clean == nil {
 			return
 		}
-		configuration := ""
+		application := ""
 		if len(args) > 0 {
-			configuration = args[0]
+			application = args[0]
 		}
-		if err := v.Clean.Clean(configuration); err != nil {
+		if err := v.Clean.Clean(application); err != nil {
 			common.PrintError(err)
 		}
 	}

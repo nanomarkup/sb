@@ -29,13 +29,13 @@ var attrs = struct {
 	"%s %s\n",
 }
 
-type ConfigFile struct {
+type Module struct {
 	sb    string
 	lang  string
 	items map[string]map[string]string
 }
 
-func (c *ConfigFile) Init(version, language string) {
+func (c *Module) Init(version, language string) {
 	c.sb = version
 	c.lang = language
 	c.items = map[string]map[string]string{
@@ -43,7 +43,7 @@ func (c *ConfigFile) Init(version, language string) {
 	}
 }
 
-func (c *ConfigFile) Main() (map[string]string, error) {
+func (c *Module) Main() (map[string]string, error) {
 	main := c.items["main"]
 	if main == nil {
 		return nil, fmt.Errorf("The main item is not found")
@@ -52,19 +52,19 @@ func (c *ConfigFile) Main() (map[string]string, error) {
 	}
 }
 
-func (c *ConfigFile) Sb() string {
+func (c *Module) Sb() string {
 	return c.sb
 }
 
-func (c *ConfigFile) Lang() string {
+func (c *Module) Lang() string {
 	return c.lang
 }
 
-func (c *ConfigFile) Items() map[string]map[string]string {
+func (c *Module) Items() map[string]map[string]string {
 	return c.items
 }
 
-func (c *ConfigFile) AddItem(item string) error {
+func (c *Module) AddItem(item string) error {
 	if _, found := c.items[item]; found {
 		return fmt.Errorf("\"%s\" item already exists", item)
 	}
@@ -72,7 +72,7 @@ func (c *ConfigFile) AddItem(item string) error {
 	return nil
 }
 
-func (c *ConfigFile) AddDependency(item, dependency, resolver string, update bool) error {
+func (c *Module) AddDependency(item, dependency, resolver string, update bool) error {
 	curr, found := c.items[item]
 	if !found {
 		return fmt.Errorf("\"%s\" item does not exist", item)
@@ -84,19 +84,19 @@ func (c *ConfigFile) AddDependency(item, dependency, resolver string, update boo
 	return nil
 }
 
-func (c *ConfigFile) DeleteItem(item string) error {
+func (c *Module) DeleteItem(item string) error {
 	delete(c.items, item)
 	return nil
 }
 
-func (c *ConfigFile) DeleteDependency(item, dependency string) error {
+func (c *Module) DeleteDependency(item, dependency string) error {
 	if curr, found := c.items[item]; found {
 		delete(curr, dependency)
 	}
 	return nil
 }
 
-func (c *ConfigFile) LoadFromFile(filePath string) error {
+func (c *Module) LoadFromFile(filePath string) error {
 	c.items = map[string]map[string]string{}
 
 	file, err := os.Open(filePath)
@@ -183,7 +183,7 @@ func (c *ConfigFile) LoadFromFile(filePath string) error {
 	return nil
 }
 
-func (c *ConfigFile) SaveToFile(filePath string) error {
+func (c *Module) SaveToFile(filePath string) error {
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -196,7 +196,7 @@ func (c *ConfigFile) SaveToFile(filePath string) error {
 	return err
 }
 
-func (c *ConfigFile) String() string {
+func (c *Module) String() string {
 	var res bytes.Buffer
 	res.WriteString(c.Version())
 	res.WriteString(c.Language())
@@ -213,15 +213,15 @@ func (c *ConfigFile) String() string {
 	return res.String()
 }
 
-func (c *ConfigFile) Version() string {
+func (c *Module) Version() string {
 	return fmt.Sprintf(attrs.sbFmt, c.Sb)
 }
 
-func (c *ConfigFile) Language() string {
+func (c *Module) Language() string {
 	return fmt.Sprintf(attrs.langFmt, c.Lang)
 }
 
-func (c *ConfigFile) Item(item string) string {
+func (c *Module) Item(item string) string {
 	var deps = c.items[item]
 	if deps == nil {
 		return ""
@@ -242,7 +242,7 @@ func (c *ConfigFile) Item(item string) string {
 	return res.String()
 }
 
-func (c *ConfigFile) Dependency(item, dep string) string {
+func (c *Module) Dependency(item, dep string) string {
 	if deps := c.items[item]; deps != nil {
 		if res, found := deps[dep]; found {
 			return fmt.Sprintf(attrs.depFmt, dep, res)

@@ -6,7 +6,7 @@ main require (
 )
 
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
-	Module *github.com/sapplications/sbuilder/src/smod.ConfigFile
+	Module *github.com/sapplications/sbuilder/src/smod.Module
 	GoBuilder *github.com/sapplications/sbuilder/src/golang.Builder
 	GoGenerator *github.com/sapplications/sbuilder/src/golang.Generator
 )
@@ -21,40 +21,40 @@ github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (
 )
 
 github.com/sapplications/sbuilder/src/app.DepManager require (
-	Module *github.com/sapplications/sbuilder/src/smod.ConfigFile
+	Module *github.com/sapplications/sbuilder/src/smod.Module
 )
 
 github.com/sapplications/sbuilder/src/cmd.DepManager require (
 	Use "dep"
 	Short "Manage dependencies"
-	Long "Manages application dependencies and configurations for generating items to build application.\n\n'dep init [language]' generates a smart module in the current directory, in effect creating a new application rooted at the current directory.\n'dep add --name [item]' adds a new item.\n'dep add --name [item] --dep [dependency] --resolver [resolver]' adds a new dependency item to the existing item.\n'dep del --name [item]' deletes the item with all dependencies.\n'dep del --name [item] --dep [dependency]' deletes item's dependency.\n'dep edit --name [item] --dep [dependency] --resolver [resolver]' adds/updates dependency to/in the existing item.\n'dep list --name [item]' prints item's dependencies.\n'dep list --name [item] --dep [dependency]' prints resolver of dependency item.\n'dep list --version' prints module version.\n'dep list --lang' prints module language.\n'dep list --all' prints module file."
+	Long "Manages application dependencies for generating items to build application.\n\n'dep init [language]' generates a smart module in the current directory, in effect creating a new application rooted at the current directory.\n'dep add --name [item]' adds a new item.\n'dep add --name [item] --dep [dependency] --resolver [resolver]' adds a new dependency item to the existing item.\n'dep del --name [item]' deletes the item with all dependencies.\n'dep del --name [item] --dep [dependency]' deletes item's dependency.\n'dep edit --name [item] --dep [dependency] --resolver [resolver]' adds/updates dependency to/in the existing item.\n'dep list --name [item]' prints item's dependencies.\n'dep list --name [item] --dep [dependency]' prints resolver of dependency item.\n'dep list --version' prints module version.\n'dep list --lang' prints module language.\n'dep list --all' prints module file."
 	Manager *github.com/sapplications/sbuilder/src/app.DepManager
 )
 
 github.com/sapplications/sbuilder/src/cmd.Runner require (
 	Use "sb"
 	Short "Smart Builder (c)"
-	Long "Smart Builder is the next generation of building applications using configuration data and independent bussiness components."
+	Long "Smart Builder is the next generation of building applications using independent bussiness components."
 )
 
 github.com/sapplications/sbuilder/src/cmd.Generator require (
 	Use "gen"
-	Short "Generate configuration"
-	Long "Generates all items for the selected configuration.\n\n'gen' generates all items for the current configuration (update).\n'gen [configuration]' generates all items for a custom configuration."
+	Short "Generate application"
+	Long "Generates all items for the selected application.\n\n'gen' generates all items for the current application (update).\n'gen [application]' generates all items for a custom application."
 	Gen *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.Builder require (
 	Use "build"
 	Short "Build application"
-	Long "Builds an application using the generated items.\n\n'build' builds an application for the current configuration (rebuild).\n'build [configuration]' builds an application for a custom configuration."
+	Long "Builds an application using the generated items.\n\n'build' builds an application for the current application (rebuild).\n'build [application]' builds an application for a custom application."
 	Build *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.Cleaner require (
 	Use "clean"
 	Short "Remove generated files"
-	Long "Clean removes the generated and built files.\n\n'clean' removes files for the current configuration.\n'clean [configuration]'	removes files for a custom configuration."
+	Long "Clean removes the generated and built files.\n\n'clean' removes files for the current application.\n'clean [application]'	removes files for a custom application."
 	Clean *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 

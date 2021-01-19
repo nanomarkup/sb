@@ -7,9 +7,9 @@ import (
 	"os/exec"
 )
 
-func checkConfiguration(configuration string) error {
-	if configuration == "" {
-		return fmt.Errorf("The configuration is not specified")
+func checkApplication(application string) error {
+	if application == "" {
+		return fmt.Errorf("The application is not specified")
 	}
 	return nil
 }
