@@ -52,5 +52,11 @@ func (b *Builder) Clean(configuration string) error {
 	// check the golang file with all dependencies is exist
 	wd, _ := os.Getwd()
 	folderPath := filepath.Join(wd, configuration)
+	if _, err := os.Stat(folderPath); err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
 	return goClean(folderPath)
 }
