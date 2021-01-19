@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type Builder struct {
@@ -41,8 +40,8 @@ func (b *Builder) Build(application string) error {
 		}
 	}
 	// build the application
-	names := strings.Split(wd, "\\")
-	return goBuild(folderPath, names[len(names)-1]+".exe")
+	filePath = filepath.Join(folderPath, application+".exe")
+	return goBuild(folderPath, filePath)
 }
 
 func (b *Builder) Clean(application string) error {

@@ -2,7 +2,7 @@ sb 1.0
 lang go
 
 main require (
-	release github.com/sapplications/sbuilder/src/cmd.SmartBuilder
+	sb github.com/sapplications/sbuilder/src/cmd.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
