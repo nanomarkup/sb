@@ -35,16 +35,16 @@ type Module struct {
 	items map[string]map[string]string
 }
 
-func (c *Module) Init(version, language string) {
-	c.sb = version
-	c.lang = language
-	c.items = map[string]map[string]string{
+func (m *Module) Init(version, language string) {
+	m.sb = version
+	m.lang = language
+	m.items = map[string]map[string]string{
 		"main": map[string]string{},
 	}
 }
 
-func (c *Module) Main() (map[string]string, error) {
-	main := c.items["main"]
+func (m *Module) Main() (map[string]string, error) {
+	main := m.items["main"]
 	if main == nil {
 		return nil, fmt.Errorf("The main item is not found")
 	} else {
@@ -52,28 +52,28 @@ func (c *Module) Main() (map[string]string, error) {
 	}
 }
 
-func (c *Module) Sb() string {
-	return c.sb
+func (m *Module) Sb() string {
+	return m.sb
 }
 
-func (c *Module) Lang() string {
-	return c.lang
+func (m *Module) Lang() string {
+	return m.lang
 }
 
-func (c *Module) Items() map[string]map[string]string {
-	return c.items
+func (m *Module) Items() map[string]map[string]string {
+	return m.items
 }
 
-func (c *Module) AddItem(item string) error {
-	if _, found := c.items[item]; found {
+func (m *Module) AddItem(item string) error {
+	if _, found := m.items[item]; found {
 		return fmt.Errorf("\"%s\" item already exists", item)
 	}
-	c.items[item] = map[string]string{}
+	m.items[item] = map[string]string{}
 	return nil
 }
 
-func (c *Module) AddDependency(item, dependency, resolver string, update bool) error {
-	curr, found := c.items[item]
+func (m *Module) AddDependency(item, dependency, resolver string, update bool) error {
+	curr, found := m.items[item]
 	if !found {
 		return fmt.Errorf("\"%s\" item does not exist", item)
 	}
@@ -84,20 +84,29 @@ func (c *Module) AddDependency(item, dependency, resolver string, update bool) e
 	return nil
 }
 
-func (c *Module) DeleteItem(item string) error {
-	delete(c.items, item)
+func (m *Module) DeleteItem(item string) error {
+	delete(m.items, item)
 	return nil
 }
 
-func (c *Module) DeleteDependency(item, dependency string) error {
-	if curr, found := c.items[item]; found {
+func (m *Module) DeleteDependency(item, dependency string) error {
+	if curr, found := m.items[item]; found {
 		delete(curr, dependency)
 	}
 	return nil
 }
 
-func (c *Module) LoadFromFile(filePath string) error {
-	c.items = map[string]map[string]string{}
+func (m *Module) Load() error {
+	m.sb = ""
+	m.lang = ""
+	m.items = map[string]map[string]string{}
+	// read and check all modules in the working directory
+
+	return nil
+}
+
+func (m *Module) loadFromFile(filePath string) error {
+	m.items = map[string]map[string]string{}
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -134,7 +143,7 @@ func (c *Module) LoadFromFile(filePath string) error {
 				} else if slice[0] != attrs.sb {
 					return fmt.Errorf("the first token should be \"%s\"", attrs.sb)
 				}
-				c.sb = slice[1]
+				m.sb = slice[1]
 			} else if index == 2 {
 				// check and initialize lang version
 				if len(slice) != 2 {
@@ -142,7 +151,7 @@ func (c *Module) LoadFromFile(filePath string) error {
 				} else if slice[0] != attrs.lang {
 					return fmt.Errorf("the second token should be \"%s\"", attrs.lang)
 				}
-				c.lang = slice[1]
+				m.lang = slice[1]
 			} else {
 				// process items
 				length = len(slice)
@@ -154,7 +163,7 @@ func (c *Module) LoadFromFile(filePath string) error {
 					} else if length != 2 {
 						return fmt.Errorf("cannot parse the dependency token of " + filePath)
 					} else {
-						c.items[item][slice[0]] = slice[1]
+						m.items[item][slice[0]] = slice[1]
 					}
 				} else {
 					// add new item
@@ -166,7 +175,7 @@ func (c *Module) LoadFromFile(filePath string) error {
 						return fmt.Errorf("invalid token")
 					} else {
 						item = slice[0]
-						c.items[item] = map[string]string{}
+						m.items[item] = map[string]string{}
 						if (slice[1] == "require(") || (length > 2 && strings.TrimSuffix(slice[2], "\n") == "(") {
 							bracketOpened = true
 						}
@@ -183,7 +192,7 @@ func (c *Module) LoadFromFile(filePath string) error {
 	return nil
 }
 
-func (c *Module) SaveToFile(filePath string) error {
+func (m *Module) SaveToFile(filePath string) error {
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -192,37 +201,37 @@ func (c *Module) SaveToFile(filePath string) error {
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
-	_, err = writer.WriteString(c.String())
+	_, err = writer.WriteString(m.String())
 	return err
 }
 
-func (c *Module) String() string {
+func (m *Module) String() string {
 	var res bytes.Buffer
-	res.WriteString(c.Version())
-	res.WriteString(c.Language())
+	res.WriteString(m.Version())
+	res.WriteString(m.Language())
 	// sort items
-	sorted := make([]string, 0, len(c.items))
-	for item := range c.items {
+	sorted := make([]string, 0, len(m.items))
+	for item := range m.items {
 		sorted = append(sorted, item)
 	}
 	sort.Strings(sorted)
 	// add items
 	for _, item := range sorted {
-		res.WriteString("\n" + c.Item(item))
+		res.WriteString("\n" + m.Item(item))
 	}
 	return res.String()
 }
 
-func (c *Module) Version() string {
-	return fmt.Sprintf(attrs.sbFmt, c.Sb)
+func (m *Module) Version() string {
+	return fmt.Sprintf(attrs.sbFmt, m.Sb)
 }
 
-func (c *Module) Language() string {
-	return fmt.Sprintf(attrs.langFmt, c.Lang)
+func (m *Module) Language() string {
+	return fmt.Sprintf(attrs.langFmt, m.Lang)
 }
 
-func (c *Module) Item(item string) string {
-	var deps = c.items[item]
+func (m *Module) Item(item string) string {
+	var deps = m.items[item]
 	if deps == nil {
 		return ""
 	}
@@ -242,8 +251,8 @@ func (c *Module) Item(item string) string {
 	return res.String()
 }
 
-func (c *Module) Dependency(item, dep string) string {
-	if deps := c.items[item]; deps != nil {
+func (m *Module) Dependency(item, dep string) string {
+	if deps := m.items[item]; deps != nil {
 		if res, found := deps[dep]; found {
 			return fmt.Sprintf(attrs.depFmt, dep, res)
 		}

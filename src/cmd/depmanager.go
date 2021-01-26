@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sapplications/sbuilder/src/app"
 	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/sapplications/sbuilder/src/smod"
@@ -108,7 +107,7 @@ func (v *DepManager) init() {
 				return
 			}
 			var c smod.Module
-			common.Check(c.LoadFromFile(app.ModFileName))
+			common.Check(c.Load())
 			if *depFlags.all {
 				fmt.Println(c.String())
 			} else {

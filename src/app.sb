@@ -1,0 +1,12 @@
+sb 1.0
+lang go
+
+github.com/sapplications/sbuilder/src/app.SmartBuilder require (
+	Module *github.com/sapplications/sbuilder/src/smod.Module
+	GoBuilder *github.com/sapplications/sbuilder/src/golang.Builder
+	GoGenerator *github.com/sapplications/sbuilder/src/golang.Generator
+)
+
+github.com/sapplications/sbuilder/src/app.DepManager require (
+	Module *github.com/sapplications/sbuilder/src/smod.Module
+)

@@ -16,7 +16,7 @@ type SmartBuilder struct {
 func (sb *SmartBuilder) Generate(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.LoadFromFile(ModFileName))
+	common.Check(sb.Module.Load())
 	application, err := sb.checkApplication(application)
 	if err != nil {
 		return err
@@ -37,7 +37,7 @@ func (sb *SmartBuilder) Generate(application string) error {
 func (sb *SmartBuilder) Build(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.LoadFromFile(ModFileName))
+	common.Check(sb.Module.Load())
 	application, err := sb.checkApplication(application)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func (sb *SmartBuilder) Build(application string) error {
 func (sb *SmartBuilder) Clean(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.LoadFromFile(ModFileName))
+	common.Check(sb.Module.Load())
 	application, err := sb.checkApplication(application)
 	if err != nil {
 		return err

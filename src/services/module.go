@@ -10,6 +10,6 @@ type Module interface {
 	AddDependency(item, dependency, resolver string, update bool) error
 	DeleteItem(item string) error
 	DeleteDependency(item, dependency string) error
-	LoadFromFile(filePath string) error
+	Load() error
 	SaveToFile(filePath string) error
 }

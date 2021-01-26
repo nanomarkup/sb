@@ -1,0 +1,10 @@
+- use a few *.sb files
+    - load all .sb files with the same language
+    - if version is different then error
+    - combine all .sb files    
+    - only one the same item should be exist in a file
+- test the init command when a few modules are exists
+- test the dep command when a few modules are exists
+- add samples
+    - add "hello world" application
+- add tests
