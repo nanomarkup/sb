@@ -8,7 +8,9 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -101,7 +103,47 @@ func (m *Module) Load() error {
 	m.lang = ""
 	m.items = map[string]map[string]string{}
 	// read and check all modules in the working directory
-
+	files, err := ioutil.ReadDir(".")
+	if err != nil {
+		return err
+	}
+	sb := ""
+	lang := ""
+	items := map[string]map[string]string{}
+	mod := Module{}
+	for _, f := range files {
+		fname := f.Name()
+		if filepath.Ext(fname) != ".sb" {
+			continue
+		}
+		// load module
+		if err = mod.loadFromFile(fname); err != nil {
+			return err
+		}
+		// validate the loaded module
+		if sb == "" {
+			sb = mod.sb
+		}
+		if lang == "" {
+			lang = mod.lang
+		}
+		if sb != mod.sb {
+			return fmt.Errorf("the version of \"%s\" module do not match other modules", fname)
+		}
+		if lang != mod.lang {
+			return fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
+		}
+		// populate items
+		for name, data := range mod.items {
+			if _, found := items[name]; found {
+				return fmt.Errorf("\"%s\" item of \"%s\" module already exists", name, fname)
+			}
+			items[name] = data
+		}
+	}
+	m.sb = sb
+	m.lang = lang
+	m.items = items
 	return nil
 }
 
