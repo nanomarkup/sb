@@ -1,15 +1,13 @@
-- use a few *.sb files
-    - load all .sb files with the same language
-    - if more than one language is exist then error
-    - if version is different then error    
-    - combine all .sb files    
-    - only one the same item should be exist in a file
-- add optional lang argument to the gen and then build commands
-- update the dep command to work with multiple modules
+- use global lang argument with the dep command
+- use global lang argument with the gen command
+- use global lang argument with the build command
+- use global lang argument with the clean command
+- use global lang argument with the version command
+- test the dep command with empty folder
 - test the gen command with empty folder
 - test the build command with empty folder
-- test the init command when a few modules are exists
-- test the dep command when a few modules are exists
+- test the clean command with empty folder
+- update the dep command to work with multiple modules
 - add samples
     - add "hello world" application
 - add more tests

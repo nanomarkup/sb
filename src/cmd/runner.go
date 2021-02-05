@@ -10,3 +10,11 @@ import (
 type Runner struct {
 	cobra.Command
 }
+
+var runnerFlags struct {
+	lang string
+}
+
+func (r *Runner) init() {
+	r.PersistentFlags().StringVarP(&runnerFlags.lang, "lang", "l", "", "select language")
+}

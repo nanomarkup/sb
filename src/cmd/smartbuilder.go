@@ -16,6 +16,7 @@ type SmartBuilder struct {
 }
 
 func (sb *SmartBuilder) Execute() {
+	sb.Runner.init()
 	sb.Reader.init()
 	sb.Builder.init()
 	sb.Cleaner.init()

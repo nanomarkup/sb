@@ -36,12 +36,14 @@ var depFlags struct {
 	item     *string
 	dep      *string
 	resolver *string
-	version  *bool
-	lang     *bool
 	all      *bool
 }
 
 func (v *DepManager) init() {
+	depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
+	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
+	depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
+	depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Manager == nil {
 			return
@@ -110,26 +112,18 @@ func (v *DepManager) init() {
 			common.Check(c.Load())
 			if *depFlags.all {
 				fmt.Println(c.String())
-			} else {
-				if *depFlags.version {
-					fmt.Printf(c.Version())
-				}
-				if *depFlags.lang {
-					fmt.Printf(c.Language())
-				}
-				if itemStr != "" {
-					var item = c.Items()[itemStr]
-					if item == nil {
-						common.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
+			} else if itemStr != "" {
+				var item = c.Items()[itemStr]
+				if item == nil {
+					common.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
+				} else {
+					if depStr == "" {
+						fmt.Printf(c.Item(itemStr))
 					} else {
-						if depStr == "" {
-							fmt.Printf(c.Item(itemStr))
+						if _, found := item[depStr]; found {
+							fmt.Printf(c.Dependency(itemStr, depStr))
 						} else {
-							if _, found := item[depStr]; found {
-								fmt.Printf(c.Dependency(itemStr, depStr))
-							} else {
-								common.PrintError(fmt.Sprintf("\"%s\" dependency item does not exist", depStr))
-							}
+							common.PrintError(fmt.Sprintf("\"%s\" dependency item does not exist", depStr))
 						}
 					}
 				}
@@ -139,10 +133,4 @@ func (v *DepManager) init() {
 			return
 		}
 	}
-	depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
-	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
-	depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
-	depFlags.version = v.Command.Flags().BoolP("version", "v", false, "print version")
-	depFlags.lang = v.Command.Flags().BoolP("lang", "l", false, "print language")
-	depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
 }
