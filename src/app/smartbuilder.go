@@ -8,6 +8,7 @@ import (
 )
 
 type SmartBuilder struct {
+	Lang        func() string
 	Module      services.Module
 	GoBuilder   services.Builder
 	GoGenerator services.Generator
@@ -16,7 +17,7 @@ type SmartBuilder struct {
 func (sb *SmartBuilder) Generate(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.Load())
+	common.Check(sb.Module.Load(sb.Lang()))
 	application, err := sb.checkApplication(application)
 	if err != nil {
 		return err
@@ -37,7 +38,7 @@ func (sb *SmartBuilder) Generate(application string) error {
 func (sb *SmartBuilder) Build(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.Load())
+	common.Check(sb.Module.Load(sb.Lang()))
 	application, err := sb.checkApplication(application)
 	if err != nil {
 		return err
@@ -58,7 +59,7 @@ func (sb *SmartBuilder) Build(application string) error {
 func (sb *SmartBuilder) Clean(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.Load())
+	common.Check(sb.Module.Load(sb.Lang()))
 	application, err := sb.checkApplication(application)
 	if err != nil {
 		return err

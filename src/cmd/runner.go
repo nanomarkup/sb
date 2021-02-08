@@ -15,6 +15,11 @@ var runnerFlags struct {
 	lang string
 }
 
+func Language() string {
+	return runnerFlags.lang
+}
+
+
 func (r *Runner) init() {
 	r.PersistentFlags().StringVarP(&runnerFlags.lang, "lang", "l", "", "select language")
 }

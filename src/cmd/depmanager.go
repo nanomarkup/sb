@@ -109,7 +109,7 @@ func (v *DepManager) init() {
 				return
 			}
 			var c smod.Module
-			common.Check(c.Load())
+			common.Check(c.Load(Language()))
 			if *depFlags.all {
 				fmt.Println(c.String())
 			} else if itemStr != "" {

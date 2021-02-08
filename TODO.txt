@@ -1,13 +1,16 @@
 - use global lang argument with the dep command
-- use global lang argument with the gen command
 - use global lang argument with the build command
 - use global lang argument with the clean command
-- use global lang argument with the version command
 - test the dep command with empty folder
 - test the gen command with empty folder
 - test the build command with empty folder
 - test the clean command with empty folder
+- move cmd services into the root package
 - update the dep command to work with multiple modules
+- add a struct initialization into an item use brackets
+- add a field initialization use a function
+- test a global lang parameter
 - add samples
     - add "hello world" application
 - add more tests
+- validate sb data before generate code

@@ -6,13 +6,13 @@ github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (
 	Reader github.com/sapplications/sbuilder/src/cmd.Reader
 	Builder github.com/sapplications/sbuilder/src/cmd.Builder
 	Cleaner github.com/sapplications/sbuilder/src/cmd.Cleaner
-	Generator github.com/sapplications/sbuilder/src/cmd.Generator	
+	Generator github.com/sapplications/sbuilder/src/cmd.Generator
 	DepManager github.com/sapplications/sbuilder/src/cmd.DepManager	
 )
 
 github.com/sapplications/sbuilder/src/cmd.DepManager require (
 	Use "dep init|add|del|edit|list"
-	Example "  dep init go - generate a main.sb module for 'go' language\n  dep add --name hello - add 'hello' item\n  dep add --name hello --dep Writer --resolver ConsoleWriter - add 'Writer' dependency item to 'hello' item\n  dep del --name hello - delete 'hello' item with all dependencies\n  dep del --name hello --dep Writer - delete 'Writer' dependency item from 'hello' item\n  dep edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  dep list --name hello - print 'hello' item data\n  dep list --name hello --dep Writer - print 'Writer' dependency item data\n  dep list --all - print module data"
+	Example "  dep init go - generate a main.sb module for 'go' language\n  dep add --name hello - add 'hello' item\n  dep add --name hello --dep Writer --resolver ConsoleWriter - add 'Writer' dependency item to 'hello' item\n  dep del --name hello - delete 'hello' item with all dependencies\n  dep del --name hello --dep Writer - delete 'Writer' dependency item from 'hello' item\n  dep edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  dep list --name hello - print 'hello' item data\n  dep list --name hello --dep Writer - print 'Writer' dependency item data\n  dep list --all - print all data"
 	Short "Manage dependencies"
 	Long "Manages application dependencies for generating items to build an application."
 	Manager *github.com/sapplications/sbuilder/src/app.DepManager

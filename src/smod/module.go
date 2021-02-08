@@ -98,7 +98,7 @@ func (m *Module) DeleteDependency(item, dependency string) error {
 	return nil
 }
 
-func (m *Module) Load() error {
+func (m *Module) Load(lang string) error {
 	m.sb = ""
 	m.lang = ""
 	m.items = map[string]map[string]string{}
@@ -107,9 +107,9 @@ func (m *Module) Load() error {
 	if err != nil {
 		return err
 	}
-	sb := ""
-	lang := ""
-	items := map[string]map[string]string{}
+	modSb := ""
+	modLang := ""
+	modItems := map[string]map[string]string{}
 	mod := Module{}
 	for _, f := range files {
 		fname := f.Name()
@@ -121,29 +121,33 @@ func (m *Module) Load() error {
 			return err
 		}
 		// validate the loaded module
-		if sb == "" {
-			sb = mod.sb
+		if lang != "" && lang != mod.lang {
+			// skip the loaded module if the language is not right
+			continue
 		}
-		if lang == "" {
-			lang = mod.lang
+		if modSb == "" {
+			modSb = mod.sb
 		}
-		if sb != mod.sb {
+		if modLang == "" {
+			modLang = mod.lang
+		}
+		if modSb != mod.sb {
 			return fmt.Errorf("the version of \"%s\" module do not match other modules", fname)
 		}
-		if lang != mod.lang {
+		if modLang != mod.lang {
 			return fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
 		}
 		// populate items
 		for name, data := range mod.items {
-			if _, found := items[name]; found {
+			if _, found := modItems[name]; found {
 				return fmt.Errorf("\"%s\" item of \"%s\" module already exists", name, fname)
 			}
-			items[name] = data
+			modItems[name] = data
 		}
 	}
-	m.sb = sb
-	m.lang = lang
-	m.items = items
+	m.sb = modSb
+	m.lang = modLang
+	m.items = modItems
 	return nil
 }
 
@@ -234,7 +238,7 @@ func (m *Module) loadFromFile(filePath string) error {
 	return nil
 }
 
-func (m *Module) SaveToFile(filePath string) error {
+func (m *Module) Save(filePath string) error {
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
