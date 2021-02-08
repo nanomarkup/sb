@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services"
@@ -14,10 +13,9 @@ type DepManager struct {
 }
 
 func (d *DepManager) Init(lang string) error {
-	if _, err := os.Stat(ModFileName); err == nil {
-		return fmt.Errorf("%s already exists", ModFileName)
-	} else if !os.IsNotExist(err) {
-		return err
+	common.Check(d.Module.Load(lang))
+	if _, err := d.Module.Main(); err == nil {
+		return fmt.Errorf("The main item of %s language already exists", lang)
 	} else {
 		d.Module.Init(Version, lang)
 		if err := d.Module.Save(ModFileName); err != nil {

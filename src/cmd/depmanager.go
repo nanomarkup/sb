@@ -64,7 +64,7 @@ func (v *DepManager) init() {
 				common.PrintError("Language parameter is required")
 				return
 			}
-			v.Manager.Init(args[1])
+			common.Check(v.Manager.Init(args[1]))
 		case subCmds.add:
 			if itemStr == "" {
 				common.PrintError("\"--name\" parameter is required")

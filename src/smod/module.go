@@ -269,11 +269,11 @@ func (m *Module) String() string {
 }
 
 func (m *Module) Version() string {
-	return fmt.Sprintf(attrs.sbFmt, m.Sb)
+	return fmt.Sprintf(attrs.sbFmt, m.sb)
 }
 
 func (m *Module) Language() string {
-	return fmt.Sprintf(attrs.langFmt, m.Lang)
+	return fmt.Sprintf(attrs.langFmt, m.lang)
 }
 
 func (m *Module) Item(item string) string {
