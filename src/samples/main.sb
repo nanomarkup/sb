@@ -1,0 +1,5 @@
+module go
+
+main require (
+    helloworld "Hello World!"
+)
