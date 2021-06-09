@@ -1,3 +1,6 @@
+- remove sb and lang attribute. use "module X" where X is language
+
+
 - update the dep command to work with multiple modules, select a module if the number of modules more than one
 - test the dep command with empty folder
 - test the gen command with empty folder

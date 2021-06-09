@@ -15,7 +15,8 @@ github.com/sapplications/sbuilder/src/cmd.DepManager require (
 	Example "  dep init go - generate a main.sb module for 'go' language\n  dep add --name hello - add 'hello' item\n  dep add --name hello --dep Writer --resolver ConsoleWriter - add 'Writer' dependency item to 'hello' item\n  dep del --name hello - delete 'hello' item with all dependencies\n  dep del --name hello --dep Writer - delete 'Writer' dependency item from 'hello' item\n  dep edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  dep list --name hello - print 'hello' item data\n  dep list --name hello --dep Writer - print 'Writer' dependency item data\n  dep list --all - print all data"
 	Short "Manage dependencies"
 	Long "Manages application dependencies for generating items to build an application."
-	Manager *github.com/sapplications/sbuilder/src/app.DepManager
+	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Formatter *github.com/sapplications/sbuilder/src/smodule.Formatter
 )
 
 github.com/sapplications/sbuilder/src/cmd.Runner require (
@@ -29,7 +30,7 @@ github.com/sapplications/sbuilder/src/cmd.Generator require (
 	Example "  gen - generate all items for the current application\n  gen hello - generate all items for 'hello' application"
 	Short "Generate application"
 	Long "Generates all items for an application."
-	Gen *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Generator *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.Builder require (
@@ -37,7 +38,7 @@ github.com/sapplications/sbuilder/src/cmd.Builder require (
 	Example "  build - build the current application\n  build hello - build 'hello' application"
 	Short "Build application"
 	Long "Builds an application using the generated items."
-	Build *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Builder *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.Cleaner require (
@@ -45,7 +46,7 @@ github.com/sapplications/sbuilder/src/cmd.Cleaner require (
 	Example "  clean - remove files for the current application\n  clean hello - remove files for 'hello' application"
 	Short "Remove generated files"
 	Long "Removes generated/compiled files."
-	Clean *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Cleaner *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.Reader require (

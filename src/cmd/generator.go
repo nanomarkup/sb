@@ -10,20 +10,20 @@ import (
 )
 
 type Generator struct {
-	Gen cmd.Generator
+	Generator cmd.Generator
 	cobra.Command
 }
 
 func (v *Generator) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
-		if v.Gen == nil {
+		if v.Generator == nil {
 			return
 		}
 		application := ""
 		if len(args) > 0 {
 			application = args[0]
 		}
-		if err := v.Gen.Generate(application); err != nil {
+		if err := v.Generator.Generate(application); err != nil {
 			common.PrintError(err)
 		}
 	}

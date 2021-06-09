@@ -4,111 +4,154 @@ import (
 	"fmt"
 
 	"github.com/sapplications/sbuilder/src/common"
-	"github.com/sapplications/sbuilder/src/services"
+	"github.com/sapplications/sbuilder/src/services/sbuilder"
+	"github.com/sapplications/sbuilder/src/services/smodule"
 )
 
 type SmartBuilder struct {
 	Lang        func() string
-	Module      services.Module
-	GoBuilder   services.Builder
-	GoGenerator services.Generator
+	Manager     smodule.Manager
+	GoBuilder   sbuilder.Builder
+	GoGenerator sbuilder.Generator
 }
 
-func (sb *SmartBuilder) Generate(application string) error {
+func (b *SmartBuilder) Generate(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.Load(sb.Lang()))
-	application, err := sb.checkApplication(application)
+	mod, err := b.Manager.ReadAll(b.Lang())
+	if err != nil {
+		return err
+	}
+	application, err = b.checkApplication(application, mod)
 	if err != nil {
 		return err
 	}
 	// process application
-	switch sb.Module.Lang() {
+	switch mod.Lang() {
 	case Langs.Go:
-		sb.GoGenerator.Init(sb.Module.Items())
-		if err := sb.GoGenerator.Generate(application); err != nil {
+		b.GoGenerator.Init(mod.Items())
+		if err := b.GoGenerator.Generate(application); err != nil {
 			return err
 		}
 	default:
-		return fmt.Errorf("\"%s\" language is not supported")
+		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
 	}
 	return nil
 }
 
-func (sb *SmartBuilder) Build(application string) error {
+func (b *SmartBuilder) Build(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.Load(sb.Lang()))
-	application, err := sb.checkApplication(application)
+	mod, err := b.Manager.ReadAll(b.Lang())
+	if err != nil {
+		return err
+	}
+	application, err = b.checkApplication(application, mod)
 	if err != nil {
 		return err
 	}
 	// process application
-	switch sb.Module.Lang() {
+	switch mod.Lang() {
 	case Langs.Go:
-		sb.GoBuilder.Init(sb.Module.Items())
-		if err := sb.GoBuilder.Build(application); err != nil {
+		b.GoBuilder.Init(mod.Items())
+		if err := b.GoBuilder.Build(application); err != nil {
 			return err
 		}
 	default:
-		return fmt.Errorf("\"%s\" language is not supported")
+		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
 	}
 	return nil
 }
 
-func (sb *SmartBuilder) Clean(application string) error {
+func (b *SmartBuilder) Clean(application string) error {
 	defer common.Recover()
 	// load and check application
-	common.Check(sb.Module.Load(sb.Lang()))
-	application, err := sb.checkApplication(application)
+	mod, err := b.Manager.ReadAll(b.Lang())
+	if err != nil {
+		return err
+	}
+	application, err = b.checkApplication(application, mod)
 	if err != nil {
 		return err
 	}
 	// process application
-	switch sb.Module.Lang() {
+	switch mod.Lang() {
 	case Langs.Go:
 		// remove the built files
-		sb.GoBuilder.Init(sb.Module.Items())
-		if err := sb.GoBuilder.Clean(application); err != nil {
+		b.GoBuilder.Init(mod.Items())
+		if err := b.GoBuilder.Clean(application); err != nil {
 			return err
 		}
 		// remove the generated files
-		sb.GoGenerator.Init(sb.Module.Items())
-		if err := sb.GoGenerator.Clean(application); err != nil {
+		b.GoGenerator.Init(mod.Items())
+		if err := b.GoGenerator.Clean(application); err != nil {
 			return err
 		}
 	default:
-		return fmt.Errorf("\"%s\" language is not supported")
+		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
 	}
 	return nil
 }
 
-func (sb *SmartBuilder) Version() string {
+func (b *SmartBuilder) Version() string {
 	return AppVersion
 }
 
-func (sb *SmartBuilder) checkApplication(application string) (string, error) {
+func (b *SmartBuilder) Init(lang string) error {
+	return b.Manager.Init(Version, lang)
+}
+
+func (b *SmartBuilder) ReadAll(lang string) (smodule.Reader, error) {
+	defer common.Recover()
+	mod, err := b.Manager.ReadAll(lang)
+	if err != nil {
+		return nil, err
+	}
+	return mod, nil
+}
+
+func (b *SmartBuilder) AddItem(module, item string) error {
+	defer common.Recover()
+	return b.Manager.AddItem(module, item)
+}
+
+func (b *SmartBuilder) AddDependency(module, item, dependency, resolver string, update bool) error {
+	defer common.Recover()
+	return b.Manager.AddDependency(module, item, dependency, resolver, update)
+}
+
+func (b *SmartBuilder) DeleteItem(module, item string) error {
+	defer common.Recover()
+	return b.Manager.DeleteItem(module, item)
+}
+
+func (b *SmartBuilder) DeleteDependency(module, item, dependency string) error {
+	defer common.Recover()
+	return b.Manager.DeleteDependency(module, item, dependency)
+}
+
+func (b *SmartBuilder) checkApplication(application string, reader smodule.Reader) (string, error) {
 	// check version
-	if _, found := versions[sb.Module.Sb()]; !found {
-		return "", fmt.Errorf("The current \"%s\" version is not supported", sb.Module.Sb())
+	if _, found := versions[reader.Sb()]; !found {
+		return "", fmt.Errorf("the current \"%s\" version is not supported", reader.Sb())
 	}
 	// check language
-	if _, found := suppLangs[sb.Module.Lang()]; !found {
-		return "", fmt.Errorf("The current \"%s\" language is not supported", sb.Module.Lang())
+	if _, found := suppLangs[reader.Lang()]; !found {
+		return "", fmt.Errorf("the current \"%s\" language is not supported", reader.Lang())
 	}
 	// read the main item
-	main, err := sb.Module.Main()
+	main, err := reader.Main()
 	if err != nil {
 		return "", err
 	}
 	// check the number of existing applications
 	if len(main) == 0 {
-		return "", fmt.Errorf("Does not found any application in the main")
+		return "", fmt.Errorf("does not found any application in the main")
 	}
 	// read the current application if it is not specified and only one is exist
 	if application == "" {
 		if len(main) != 1 {
-			return "", fmt.Errorf("The application is not specified")
+			return "", fmt.Errorf("the application is not specified")
 		}
 		// select the existing application
 		for key := range main {
@@ -117,7 +160,7 @@ func (sb *SmartBuilder) checkApplication(application string) (string, error) {
 	}
 	// check the application is exist
 	if _, found := main[application]; !found && application != "" {
-		return "", fmt.Errorf("The selected \"%s\" application is not found", application)
+		return "", fmt.Errorf("the selected \"%s\" application is not found", application)
 	}
 	return application, nil
 }

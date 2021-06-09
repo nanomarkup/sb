@@ -10,20 +10,20 @@ import (
 )
 
 type Builder struct {
-	Build cmd.Builder
+	Builder cmd.Builder
 	cobra.Command
 }
 
 func (v *Builder) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
-		if v.Build == nil {
+		if v.Builder == nil {
 			return
 		}
 		application := ""
 		if len(args) > 0 {
 			application = args[0]
 		}
-		if err := v.Build.Build(application); err != nil {
+		if err := v.Builder.Build(application); err != nil {
 			common.PrintError(err)
 		}
 	}

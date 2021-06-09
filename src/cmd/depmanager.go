@@ -9,12 +9,13 @@ import (
 
 	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services/cmd"
-	"github.com/sapplications/sbuilder/src/smod"
+	"github.com/sapplications/sbuilder/src/services/smodule"
 	"github.com/spf13/cobra"
 )
 
 type DepManager struct {
-	Manager cmd.DepManager
+	Manager   cmd.Manager
+	Formatter smodule.Formatter
 	cobra.Command
 }
 
@@ -33,6 +34,7 @@ var subCmds = struct {
 }
 
 var depFlags struct {
+	mod      *string
 	item     *string
 	dep      *string
 	resolver *string
@@ -40,6 +42,7 @@ var depFlags struct {
 }
 
 func (v *DepManager) init() {
+	depFlags.mod = v.Command.Flags().StringP("mod", "m", "", "module name")
 	depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
 	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
 	depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
@@ -54,6 +57,7 @@ func (v *DepManager) init() {
 		}
 		defer common.Recover()
 		var subCmd = args[0]
+		var modStr = strings.Trim(*depFlags.mod, "\t \n")
 		var itemStr = strings.Trim(*depFlags.item, "\t \n")
 		var depStr = strings.Trim(*depFlags.dep, "\t \n")
 		var resolverStr = strings.Trim(*depFlags.resolver, "\t \n")
@@ -66,6 +70,10 @@ func (v *DepManager) init() {
 			}
 			common.Check(v.Manager.Init(args[1]))
 		case subCmds.add:
+			if modStr == "" {
+				common.PrintError("\"--mod\" parameter is required")
+				return
+			}
 			if itemStr == "" {
 				common.PrintError("\"--name\" parameter is required")
 				return
@@ -75,21 +83,29 @@ func (v *DepManager) init() {
 				return
 			}
 			if depStr == "" {
-				common.Check(v.Manager.AddItem(itemStr))
+				common.Check(v.Manager.AddItem(modStr, itemStr))
 			} else {
-				common.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, false))
+				common.Check(v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, false))
 			}
 		case subCmds.del:
+			if modStr == "" {
+				common.PrintError("\"--mod\" parameter is required")
+				return
+			}
 			if itemStr == "" {
 				common.PrintError("\"--name\" parameter is required")
 				return
 			}
 			if depStr == "" {
-				common.Check(v.Manager.DeleteItem(itemStr))
+				common.Check(v.Manager.DeleteItem(modStr, itemStr))
 			} else {
-				common.Check(v.Manager.DeleteDependency(itemStr, depStr))
+				common.Check(v.Manager.DeleteDependency(modStr, itemStr, depStr))
 			}
 		case subCmds.edit:
+			if modStr == "" {
+				common.PrintError("\"--mod\" parameter is required")
+				return
+			}
 			if itemStr == "" {
 				common.PrintError("\"--name\" parameter is required")
 				return
@@ -102,26 +118,26 @@ func (v *DepManager) init() {
 				common.PrintError("\"--resolver\" parameter is required")
 				return
 			}
-			common.Check(v.Manager.AddDependency(itemStr, depStr, resolverStr, true))
+			common.Check(v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, true))
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
 				common.PrintError("\"--name\" parameter is required")
 				return
 			}
-			var c smod.Module
-			common.Check(c.Load(Language()))
+			mod, err := v.Manager.ReadAll(Language())
+			common.Check(err)
 			if *depFlags.all {
-				fmt.Println(c.String())
+				fmt.Println(v.Formatter.String(mod))
 			} else if itemStr != "" {
-				var item = c.Items()[itemStr]
+				var item = mod.Items()[itemStr]
 				if item == nil {
 					common.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
 				} else {
 					if depStr == "" {
-						fmt.Printf(c.Item(itemStr))
+						fmt.Printf(v.Formatter.Item(itemStr, item))
 					} else {
 						if _, found := item[depStr]; found {
-							fmt.Printf(c.Dependency(itemStr, depStr))
+							fmt.Printf(mod.Dependency(itemStr, depStr))
 						} else {
 							common.PrintError(fmt.Sprintf("\"%s\" dependency item does not exist", depStr))
 						}

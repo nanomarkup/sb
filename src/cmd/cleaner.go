@@ -10,20 +10,20 @@ import (
 )
 
 type Cleaner struct {
-	Clean cmd.Cleaner
+	Cleaner cmd.Cleaner
 	cobra.Command
 }
 
 func (v *Cleaner) init() {
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
-		if v.Clean == nil {
+		if v.Cleaner == nil {
 			return
 		}
 		application := ""
 		if len(args) > 0 {
 			application = args[0]
 		}
-		if err := v.Clean.Clean(application); err != nil {
+		if err := v.Cleaner.Clean(application); err != nil {
 			common.PrintError(err)
 		}
 	}

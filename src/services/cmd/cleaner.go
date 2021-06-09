@@ -1,5 +1,5 @@
 package cmd
 
 type Cleaner interface {
-	Clean(application string) error
+	Clean(AppName) error
 }
