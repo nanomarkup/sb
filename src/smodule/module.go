@@ -8,29 +8,20 @@ import (
 )
 
 var attrs = struct {
-	sb      string
-	sbFmt   string
-	lang    string
-	langFmt string
-	itemFmt string
-	depFmt  string
+	module    string
+	moduleFmt string
+	itemFmt   string
+	depFmt    string
 }{
-	"sb",
-	"sb %s\n",
-	"lang",
-	"lang %s\n",
+	"module",
+	"module %s\n",
 	"%s require (\n",
 	"%s %s\n",
 }
 
 type Module struct {
-	sb    string
 	lang  string
 	items map[string]map[string]string
-}
-
-func (m *Module) Sb() string {
-	return m.sb
 }
 
 func (m *Module) Lang() string {
@@ -82,12 +73,8 @@ func (m *Module) DeleteDependency(item, dependency string) error {
 	return nil
 }
 
-func (m *Module) Version() string {
-	return fmt.Sprintf(attrs.sbFmt, m.sb)
-}
-
 func (m *Module) Language() string {
-	return fmt.Sprintf(attrs.langFmt, m.lang)
+	return fmt.Sprintf(attrs.moduleFmt, m.lang)
 }
 
 func (m *Module) Dependency(item, dep string) string {

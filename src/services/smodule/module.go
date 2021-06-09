@@ -1,7 +1,6 @@
 package smodule
 
 type Reader interface {
-	Sb() Version
 	Lang() Language
 	Items() Items
 	Dependency(ItemName, DependencyName) ResolverName

@@ -98,7 +98,7 @@ func (b *SmartBuilder) Version() string {
 }
 
 func (b *SmartBuilder) Init(lang string) error {
-	return b.Manager.Init(Version, lang)
+	return b.Manager.Init(lang)
 }
 
 func (b *SmartBuilder) ReadAll(lang string) (smodule.Reader, error) {
@@ -131,10 +131,6 @@ func (b *SmartBuilder) DeleteDependency(module, item, dependency string) error {
 }
 
 func (b *SmartBuilder) checkApplication(application string, reader smodule.Reader) (string, error) {
-	// check version
-	if _, found := versions[reader.Sb()]; !found {
-		return "", fmt.Errorf("the current \"%s\" version is not supported", reader.Sb())
-	}
 	// check language
 	if _, found := suppLangs[reader.Lang()]; !found {
 		return "", fmt.Errorf("the current \"%s\" language is not supported", reader.Lang())

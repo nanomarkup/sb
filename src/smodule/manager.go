@@ -11,13 +11,13 @@ type Manager struct {
 	Lang func() string
 }
 
-func (m *Manager) Init(version, lang string) error {
+func (m *Manager) Init(lang string) error {
 	mod, err := readAll(lang)
 	common.Check(err)
 	if _, err := mod.Main(); err == nil {
 		return fmt.Errorf("the main item of %s language already exists", lang)
 	} else {
-		mod := &Module{version, lang, map[string]map[string]string{}}
+		mod := &Module{lang, map[string]map[string]string{}}
 		mod.AddItem("main")
 		filename := "main.sb"
 		common.Check(saveModule(filename, mod))

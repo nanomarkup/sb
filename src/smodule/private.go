@@ -68,19 +68,11 @@ func loadModule(filePath string) (*Module, error) {
 				slice[i] = strings.Trim(s, trimChars)
 			}
 			if index == 1 {
-				// check and initialize sb version
+				// check and initialize language
 				if len(slice) != 2 {
 					return nil, fmt.Errorf("cannot parse the first token of " + filePath)
-				} else if slice[0] != attrs.sb {
-					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.sb)
-				}
-				mod.sb = slice[1]
-			} else if index == 2 {
-				// check and initialize lang version
-				if len(slice) != 2 {
-					return nil, fmt.Errorf("cannot parse the second token of " + filePath)
-				} else if slice[0] != attrs.lang {
-					return nil, fmt.Errorf("the second token should be \"%s\"", attrs.lang)
+				} else if slice[0] != attrs.module {
+					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.module)
 				}
 				mod.lang = slice[1]
 			} else {
@@ -129,7 +121,6 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 	if err != nil {
 		return nil, err
 	}
-	modSb := ""
 	modLang := ""
 	modItems := map[string]map[string]string{}
 	var mod *Module
@@ -147,14 +138,8 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 			// skip the loaded module if the language is not right
 			continue
 		}
-		if modSb == "" {
-			modSb = mod.sb
-		}
 		if modLang == "" {
 			modLang = mod.lang
-		}
-		if modSb != mod.sb {
-			return nil, fmt.Errorf("the version of \"%s\" module do not match other modules", fname)
 		}
 		if modLang != mod.lang {
 			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
@@ -167,7 +152,7 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 			modItems[name] = data
 		}
 	}
-	return &Module{modSb, modLang, modItems}, nil
+	return &Module{modLang, modItems}, nil
 }
 
 func readAll(language string) (smodule.Reader, error) {

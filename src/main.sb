@@ -1,5 +1,4 @@
-sb 1.0
-lang go
+module go
 
 main require (
 	sb github.com/sapplications/sbuilder/src/cmd.SmartBuilder

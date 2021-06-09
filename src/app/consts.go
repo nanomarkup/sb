@@ -23,7 +23,3 @@ var Langs = struct {
 var suppLangs = map[string]bool{
 	Langs.Go: true,
 }
-
-var versions = map[string]bool{
-	"1.0": true,
-}

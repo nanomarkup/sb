@@ -1,5 +1,4 @@
-sb 1.0
-lang go
+module go
 
 github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (	
 	Runner github.com/sapplications/sbuilder/src/cmd.Runner
