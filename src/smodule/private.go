@@ -123,12 +123,14 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 	}
 	modLang := ""
 	modItems := map[string]map[string]string{}
+	modFound := false
 	var mod *Module
 	for _, f := range files {
 		fname := f.Name()
 		if filepath.Ext(fname) != ".sb" {
 			continue
 		}
+		modFound = true
 		// load module
 		if mod, err = loadModule(fname); err != nil {
 			return nil, err
@@ -152,7 +154,12 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 			modItems[name] = data
 		}
 	}
-	return &Module{modLang, modItems}, nil
+	if modFound {
+		return &Module{modLang, modItems}, nil
+	} else {
+		wd, _ := os.Getwd()
+		return &Module{modLang, modItems}, fmt.Errorf("no sb files in %s", wd)
+	}
 }
 
 func readAll(language string) (smodule.Reader, error) {

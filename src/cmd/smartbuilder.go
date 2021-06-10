@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +13,7 @@ type SmartBuilder struct {
 	DepManager DepManager
 }
 
-func (sb *SmartBuilder) Execute() {
+func (sb *SmartBuilder) Execute() error {
 	sb.Runner.init()
 	sb.Reader.init()
 	sb.Builder.init()
@@ -27,9 +25,8 @@ func (sb *SmartBuilder) Execute() {
 	sb.Runner.AddCommand(&sb.Builder.Command)
 	sb.Runner.AddCommand(&sb.Cleaner.Command)
 	sb.Runner.AddCommand(&sb.Reader.Command)
-	if err := sb.Runner.Execute(); err != nil {
-		fmt.Println(err)
-	}
+	sb.Runner.SilenceUsage = true
+	return sb.Runner.Execute()
 }
 
 func init() {
