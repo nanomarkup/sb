@@ -33,7 +33,7 @@ func (f *Formatter) Item(name string, deps map[string]string) string {
 
 func (f *Formatter) String(module smodule.Reader) string {
 	var res bytes.Buffer
-	res.WriteString(module.Lang())
+	res.WriteString(fmt.Sprintf(attrs.moduleFmt, module.Lang()))
 	// sort items
 	items := module.Items()
 	sorted := make([]string, 0, len(items))

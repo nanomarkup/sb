@@ -6,5 +6,5 @@ package common
 import "fmt"
 
 func PrintError(e interface{}) {
-	fmt.Printf(EMessage, e)
+	fmt.Printf(ErrorMessage, e)
 }

@@ -7,6 +7,6 @@ import (
 	"gopkg.in/check.v1"
 )
 
-func (s *CmdSuite) TestGenerateEmpty(c *check.C) {
+func (s *CmdSuite) TestGenEmpty(c *check.C) {
 	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*$"))
 }

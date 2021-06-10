@@ -12,14 +12,14 @@ type Manager struct {
 	Lang func() string
 }
 
-func (m *Manager) Init(lang string) error {
+func (m *Manager) Init(module, lang string) error {
 	mod, err := loadAll(lang)
 	if err == nil {
 		if _, err := mod.Main(); err == nil {
 			return fmt.Errorf("the main item of %s language already exists", lang)
 		} else {
 			mod.AddItem("main")
-			common.Check(saveModule(ModuleFileName, mod))
+			common.Check(saveModule(module, mod))
 			fmt.Print("the main item has been added")
 		}
 	} else {
@@ -27,8 +27,8 @@ func (m *Manager) Init(lang string) error {
 		if err.Error() == fmt.Sprintf(ModuleFilesMissingF, wd) {
 			mod := &Module{lang, map[string]map[string]string{}}
 			mod.AddItem("main")
-			common.Check(saveModule(ModuleFileName, mod))
-			fmt.Printf(ModuleIsCreatedF, ModuleFileName)
+			common.Check(saveModule(module, mod))
+			fmt.Printf(ModuleIsCreatedF, module)
 		} else {
 			return err
 		}

@@ -2,7 +2,7 @@ package golang
 
 const (
 	// MainFileName constant returns package's main file name
-	mainFileName = "main.go"
+	mainFileName string = "main.go"
 	// DepsFileName constant returns name of file with all dependencies
-	depsFileName = "deps.go"
+	depsFileName string = "deps.go"
 )

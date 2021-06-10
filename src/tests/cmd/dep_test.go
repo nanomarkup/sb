@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"github.com/sapplications/sbuilder/src/app"
 	src "github.com/sapplications/sbuilder/src/cmd"
+	"github.com/sapplications/sbuilder/src/smodule"
 	"gopkg.in/check.v1"
 )
 
@@ -20,11 +22,21 @@ func (s *CmdSuite) TestDepUnknownSubcmd(c *check.C) {
 // test the init subcommand
 
 func (s *CmdSuite) TestDepInitGo(c *check.C) {
+	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
+	// initialize a new module
 	c.Assert(s.Dep("init", "go"), check.IsNil)
-	fmt.Println()
+	fmt.Print("\n\n")
+	// read the created module
+	m := smodule.Manager{Lang: lang}
+	_, err := m.ReadAll("go")
+	if err != nil {
+		t, _ := ioutil.ReadFile(app.DefaultModuleFileName)
+		fmt.Print(string(t))
+		c.Error(err)
+	}
 }
 
 func (s *CmdSuite) TestDepInitLanguageMissing(c *check.C) {

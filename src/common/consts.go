@@ -4,6 +4,6 @@
 package common
 
 const (
-	// EMessage constant returns formatted error message
-	EMessage = "ERROR: %v\n"
+	// ErrorMessage constant returns formatted error message
+	ErrorMessage string = "Error: %v\n"
 )

@@ -94,12 +94,12 @@ func (b *SmartBuilder) Clean(application string) error {
 }
 
 func (b *SmartBuilder) Version() string {
-	return AppVersion
+	return AppVersionString
 }
 
 func (b *SmartBuilder) Init(lang string) error {
 	if _, found := suppLangs[lang]; found {
-		return b.Manager.Init(lang)
+		return b.Manager.Init(DefaultModuleFileName, lang)
 	} else {
 		return fmt.Errorf(LanguageIsNotSupportedF, lang)
 	}

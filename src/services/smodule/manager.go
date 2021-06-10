@@ -1,7 +1,7 @@
 package smodule
 
 type Manager interface {
-	Init(Language) error
+	Init(ModuleName, Language) error
 	AddItem(ModuleName, ItemName) error
 	AddDependency(ModuleName, ItemName, DependencyName, ResolverName, DoUpdate) error
 	DeleteItem(ModuleName, ItemName) error
