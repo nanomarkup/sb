@@ -19,25 +19,57 @@ func lang() string {
 	return "go"
 }
 
+func setCmd(cmd string, args ...string) {
+	os.Args = os.Args[:1]
+	os.Args = append(os.Args, cmd)
+	if len(args) > 0 {
+		os.Args = append(os.Args, args...)
+	}
+}
+
 type CmdSuite struct {
 	cmd src.SmartBuilder
 }
 
 var _ = check.Suite(&CmdSuite{})
 
-func (s *CmdSuite) SetUpSuite(c *check.C) {
+func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb := app.SmartBuilder{}
 	sb.Lang = lang
 	sb.Manager = &smodule.Manager{Lang: lang}
 	sb.GoGenerator = &golang.Generator{}
 	s.cmd = src.SmartBuilder{}
+	s.cmd.Builder = src.Builder{}
+	s.cmd.Builder.Use = "build"
+	s.cmd.Builder.Builder = &sb
+	s.cmd.Cleaner = src.Cleaner{}
+	s.cmd.Cleaner.Use = "clean"
+	s.cmd.Cleaner.Cleaner = &sb
 	s.cmd.Generator = src.Generator{}
 	s.cmd.Generator.Use = "gen"
 	s.cmd.Generator.Generator = &sb
+	s.cmd.DepManager = src.DepManager{}
+	s.cmd.DepManager.Use = "dep"
+	s.cmd.DepManager.Manager = &sb
 	s.cmd.Runner.SilenceErrors = true
 }
 
-func (s *CmdSuite) Generate() error {
-	os.Args[1] = "gen"
+func (s *CmdSuite) Dep(args ...string) error {
+	setCmd("dep", args...)
+	return s.cmd.Execute()
+}
+
+func (s *CmdSuite) Gen() error {
+	setCmd("gen")
+	return s.cmd.Execute()
+}
+
+func (s *CmdSuite) Build() error {
+	setCmd("build")
+	return s.cmd.Execute()
+}
+
+func (s *CmdSuite) Clean() error {
+	setCmd("clean")
 	return s.cmd.Execute()
 }

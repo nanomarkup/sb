@@ -2,6 +2,7 @@ package smodule
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services/smodule"
@@ -12,16 +13,25 @@ type Manager struct {
 }
 
 func (m *Manager) Init(lang string) error {
-	mod, err := readAll(lang)
-	common.Check(err)
-	if _, err := mod.Main(); err == nil {
-		return fmt.Errorf("the main item of %s language already exists", lang)
+	mod, err := loadAll(lang)
+	if err == nil {
+		if _, err := mod.Main(); err == nil {
+			return fmt.Errorf("the main item of %s language already exists", lang)
+		} else {
+			mod.AddItem("main")
+			common.Check(saveModule(ModuleFileName, mod))
+			fmt.Print("the main item has been added")
+		}
 	} else {
-		mod := &Module{lang, map[string]map[string]string{}}
-		mod.AddItem("main")
-		filename := "main.sb"
-		common.Check(saveModule(filename, mod))
-		fmt.Printf("%s file has been created", filename)
+		wd, _ := os.Getwd()
+		if err.Error() == fmt.Sprintf(ModuleFilesMissingF, wd) {
+			mod := &Module{lang, map[string]map[string]string{}}
+			mod.AddItem("main")
+			common.Check(saveModule(ModuleFileName, mod))
+			fmt.Printf(ModuleIsCreatedF, ModuleFileName)
+		} else {
+			return err
+		}
 	}
 	return nil
 }

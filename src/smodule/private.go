@@ -158,7 +158,7 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 		return &Module{modLang, modItems}, nil
 	} else {
 		wd, _ := os.Getwd()
-		return &Module{modLang, modItems}, fmt.Errorf("no sb files in %s", wd)
+		return &Module{modLang, modItems}, fmt.Errorf(ModuleFilesMissingF, wd)
 	}
 }
 

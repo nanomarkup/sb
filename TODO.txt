@@ -1,8 +1,8 @@
 - test the dep command with empty folder
-- test the build command with empty folder
-- test the clean command with empty folder
-
+- move the file name of init command to the application
+- update app.consts
 - remove the common package
+- rename dep to mod
 
 - update the dep command to work with multiple modules, select a module if the number of modules more than one
 

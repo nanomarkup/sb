@@ -18,10 +18,10 @@ func (v *Generator) init() {
 		if v.Generator == nil {
 			return nil
 		}
-		application := ""
 		if len(args) > 0 {
-			application = args[0]
+			return v.Generator.Generate(args[0])
+		} else {
+			return v.Generator.Generate("")
 		}
-		return v.Generator.Generate(application)
 	}
 }

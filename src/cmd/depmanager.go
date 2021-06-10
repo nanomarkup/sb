@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -47,13 +48,12 @@ func (v *DepManager) init() {
 	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
 	depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
 	depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
-	v.Command.Run = func(cmd *cobra.Command, args []string) {
+	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Manager == nil {
-			return
+			return nil
 		}
 		if len(args) == 0 {
-			common.PrintError("Subcommand is required")
-			return
+			return errors.New(SubcmdMissing)
 		}
 		defer common.Recover()
 		var subCmd = args[0]
@@ -65,64 +65,54 @@ func (v *DepManager) init() {
 		switch subCmd {
 		case subCmds.init:
 			if len(args) < 2 {
-				common.PrintError("Language parameter is required")
-				return
+				return errors.New(LanguageMissing)
+			} else {
+				return v.Manager.Init(args[1])
 			}
-			common.Check(v.Manager.Init(args[1]))
 		case subCmds.add:
 			if modStr == "" {
-				common.PrintError("\"--mod\" parameter is required")
-				return
+				return errors.New(ModuleMissing)
 			}
 			if itemStr == "" {
-				common.PrintError("\"--name\" parameter is required")
-				return
+				return errors.New(NameMissing)
 			}
 			if depStr != "" && resolverStr == "" {
-				common.PrintError("\"--resolver\" parameter is required")
-				return
+				return errors.New(ResolverMissing)
 			}
 			if depStr == "" {
-				common.Check(v.Manager.AddItem(modStr, itemStr))
+				return v.Manager.AddItem(modStr, itemStr)
 			} else {
-				common.Check(v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, false))
+				return v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, false)
 			}
 		case subCmds.del:
 			if modStr == "" {
-				common.PrintError("\"--mod\" parameter is required")
-				return
+				return errors.New(ModuleMissing)
 			}
 			if itemStr == "" {
-				common.PrintError("\"--name\" parameter is required")
-				return
+				return errors.New(NameMissing)
 			}
 			if depStr == "" {
-				common.Check(v.Manager.DeleteItem(modStr, itemStr))
+				return v.Manager.DeleteItem(modStr, itemStr)
 			} else {
-				common.Check(v.Manager.DeleteDependency(modStr, itemStr, depStr))
+				return v.Manager.DeleteDependency(modStr, itemStr, depStr)
 			}
 		case subCmds.edit:
 			if modStr == "" {
-				common.PrintError("\"--mod\" parameter is required")
-				return
+				return errors.New(ModuleMissing)
 			}
 			if itemStr == "" {
-				common.PrintError("\"--name\" parameter is required")
-				return
+				return errors.New(NameMissing)
 			}
 			if depStr == "" {
-				common.PrintError("\"--dep\" parameter is required")
-				return
+				return errors.New(DependencyMissing)
 			}
 			if resolverStr == "" {
-				common.PrintError("\"--resolver\" parameter is required")
-				return
+				return errors.New(ResolverMissing)
 			}
-			common.Check(v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, true))
+			return v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, true)
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
-				common.PrintError("\"--name\" parameter is required")
-				return
+				return errors.New(NameMissing)
 			}
 			mod, err := v.Manager.ReadAll(Language())
 			common.Check(err)
@@ -131,7 +121,7 @@ func (v *DepManager) init() {
 			} else if itemStr != "" {
 				var item = mod.Items()[itemStr]
 				if item == nil {
-					common.PrintError(fmt.Sprintf("\"%s\" item does not exist", itemStr))
+					return fmt.Errorf(ItemDoesNotExistF, itemStr)
 				} else {
 					if depStr == "" {
 						fmt.Printf(v.Formatter.Item(itemStr, item))
@@ -139,14 +129,14 @@ func (v *DepManager) init() {
 						if _, found := item[depStr]; found {
 							fmt.Printf(mod.Dependency(itemStr, depStr))
 						} else {
-							common.PrintError(fmt.Sprintf("\"%s\" dependency item does not exist", depStr))
+							return fmt.Errorf(DependencyDoesNotExistF, depStr)
 						}
 					}
 				}
 			}
 		default:
-			common.PrintError(fmt.Sprintf("Unknown \"%s\" subcommand", args[0]))
-			return
+			return fmt.Errorf(UnknownSubcmdF, args[0])
 		}
+		return nil
 	}
 }

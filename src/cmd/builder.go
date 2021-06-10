@@ -4,7 +4,6 @@
 package cmd
 
 import (
-	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
@@ -15,16 +14,14 @@ type Builder struct {
 }
 
 func (v *Builder) init() {
-	v.Command.Run = func(cmd *cobra.Command, args []string) {
+	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Builder == nil {
-			return
+			return nil
 		}
-		application := ""
 		if len(args) > 0 {
-			application = args[0]
-		}
-		if err := v.Builder.Build(application); err != nil {
-			common.PrintError(err)
+			return v.Builder.Build(args[0])
+		} else {
+			return v.Builder.Build("")
 		}
 	}
 }

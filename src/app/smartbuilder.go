@@ -98,7 +98,11 @@ func (b *SmartBuilder) Version() string {
 }
 
 func (b *SmartBuilder) Init(lang string) error {
-	return b.Manager.Init(lang)
+	if _, found := suppLangs[lang]; found {
+		return b.Manager.Init(lang)
+	} else {
+		return fmt.Errorf(LanguageIsNotSupportedF, lang)
+	}
 }
 
 func (b *SmartBuilder) ReadAll(lang string) (smodule.Reader, error) {

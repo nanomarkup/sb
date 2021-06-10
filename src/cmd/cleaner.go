@@ -4,7 +4,6 @@
 package cmd
 
 import (
-	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
@@ -15,16 +14,14 @@ type Cleaner struct {
 }
 
 func (v *Cleaner) init() {
-	v.Command.Run = func(cmd *cobra.Command, args []string) {
+	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Cleaner == nil {
-			return
+			return nil
 		}
-		application := ""
 		if len(args) > 0 {
-			application = args[0]
-		}
-		if err := v.Cleaner.Clean(application); err != nil {
-			common.PrintError(err)
+			return v.Cleaner.Clean(args[0])
+		} else {
+			return v.Cleaner.Clean("")
 		}
 	}
 }
