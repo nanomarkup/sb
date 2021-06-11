@@ -39,6 +39,9 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb.Manager = &smodule.Manager{Lang: lang}
 	sb.GoGenerator = &golang.Generator{}
 	s.cmd = src.SmartBuilder{}
+	s.cmd.Manager = src.Manager{}
+	s.cmd.Manager.Use = "mod"
+	s.cmd.Manager.Manager = &sb
 	s.cmd.Builder = src.Builder{}
 	s.cmd.Builder.Use = "build"
 	s.cmd.Builder.Builder = &sb
@@ -48,14 +51,14 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.Generator = src.Generator{}
 	s.cmd.Generator.Use = "gen"
 	s.cmd.Generator.Generator = &sb
-	s.cmd.DepManager = src.DepManager{}
-	s.cmd.DepManager.Use = "dep"
-	s.cmd.DepManager.Manager = &sb
+	s.cmd.ModInit = src.ModInit{}
+	s.cmd.ModInit.Use = "init"
+	s.cmd.ModInit.Manager = &sb
 	s.cmd.Runner.SilenceErrors = true
 }
 
-func (s *CmdSuite) Dep(args ...string) error {
-	setCmd("dep", args...)
+func (s *CmdSuite) Mod(args ...string) error {
+	setCmd("mod", args...)
 	return s.cmd.Execute()
 }
 

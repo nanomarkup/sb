@@ -14,6 +14,7 @@ type Builder struct {
 }
 
 func (v *Builder) init() {
+	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Builder == nil {
 			return nil

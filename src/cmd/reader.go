@@ -16,6 +16,7 @@ type Reader struct {
 }
 
 func (v *Reader) init() {
+	v.SilenceUsage = true
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Reader != nil {
 			fmt.Println(v.Reader.Version())

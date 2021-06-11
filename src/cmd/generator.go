@@ -14,6 +14,7 @@ type Generator struct {
 }
 
 func (v *Generator) init() {
+	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Generator == nil {
 			return nil

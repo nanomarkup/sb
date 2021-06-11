@@ -14,6 +14,7 @@ type Cleaner struct {
 }
 
 func (v *Cleaner) init() {
+	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Cleaner == nil {
 			return nil

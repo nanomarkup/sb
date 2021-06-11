@@ -19,7 +19,7 @@ func Language() string {
 	return runnerFlags.lang
 }
 
-
 func (r *Runner) init() {
+	r.SilenceUsage = true
 	r.PersistentFlags().StringVarP(&runnerFlags.lang, "lang", "l", "", "select language")
 }

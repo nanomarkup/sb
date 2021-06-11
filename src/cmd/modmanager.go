@@ -9,25 +9,23 @@ import (
 	"strings"
 
 	"github.com/sapplications/sbuilder/src/common"
-	"github.com/sapplications/sbuilder/src/services/cmd"
+	src "github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/sapplications/sbuilder/src/services/smodule"
 	"github.com/spf13/cobra"
 )
 
-type DepManager struct {
-	Manager   cmd.Manager
+type Manager struct {
+	Manager   src.Manager
 	Formatter smodule.Formatter
 	cobra.Command
 }
 
 var subCmds = struct {
-	init string
 	add  string
 	del  string
 	edit string
 	list string
 }{
-	"init",
 	"add",
 	"del",
 	"edit",
@@ -42,12 +40,13 @@ var depFlags struct {
 	all      *bool
 }
 
-func (v *DepManager) init() {
+func (v *Manager) init() {
 	depFlags.mod = v.Command.Flags().StringP("mod", "m", "", "module name")
 	depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
 	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
 	depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
 	depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
+	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Manager == nil {
 			return nil
@@ -63,12 +62,6 @@ func (v *DepManager) init() {
 		var resolverStr = strings.Trim(*depFlags.resolver, "\t \n")
 		// handle subcommands
 		switch subCmd {
-		case subCmds.init:
-			if len(args) < 2 {
-				return errors.New(LanguageMissing)
-			} else {
-				return v.Manager.Init(args[1])
-			}
 		case subCmds.add:
 			if modStr == "" {
 				return errors.New(ModuleMissing)
