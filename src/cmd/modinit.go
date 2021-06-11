@@ -6,17 +6,16 @@ package cmd
 import (
 	"errors"
 
-	"github.com/sapplications/sbuilder/src/common"
 	src "github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type ModInit struct {
+type ModIniter struct {
 	Manager src.Manager
 	cobra.Command
 }
 
-func (v *ModInit) init() {
+func (v *ModIniter) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Manager == nil {
@@ -24,7 +23,7 @@ func (v *ModInit) init() {
 		} else if len(args) < 1 {
 			return errors.New(LanguageMissing)
 		} else {
-			defer common.Recover()
+			defer handleError()
 			return v.Manager.Init(args[0])
 		}
 	}

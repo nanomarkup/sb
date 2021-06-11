@@ -1,13 +1,15 @@
 package cmd
 
 const (
-	SubcmdMissing           string = "Subcommand is required"
-	NameMissing             string = "\"--name\" parameter is required"
-	ModuleMissing           string = "\"--mod\" parameter is required"
-	LanguageMissing         string = "Language parameter is required"
-	ResolverMissing         string = "\"--resolver\" parameter is required"
+	// error messages
+	ErrorMessageF           string = "Error: %v\n"
+	SubcmdMissing           string = "subcommand is required"
+	ItemMissing             string = "item name is required"
+	ModOrDepMissing         string = "module name or dependency name is missing"
+	LanguageMissing         string = "language parameter is required"
+	ResolverMissing         string = "resolver is required"
 	DependencyMissing       string = "\"--dep\" parameter is required"
-	ItemDoesNotExistF       string = "\"%s\" item does not exist"
-	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist"
-	UnknownSubcmdF          string = "Unknown \"%s\" subcommand"
+	ItemDoesNotExistF       string = "\"%s\" item does not exist\n"
+	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist\n"
+	UnknownSubcmdF          string = "unknown \"%s\" subcommand\n"
 )

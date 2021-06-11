@@ -167,6 +167,15 @@ func readAll(language string) (smodule.Reader, error) {
 }
 
 func saveModule(module string, info smodule.Reader) error {
+	module = GetFileName(module)
+	// notify about a new module has been created
+	exists := IsExist(module)
+	defer func() {
+		if !exists {
+			fmt.Printf(ModuleIsCreatedF, module)
+		}
+	}()
+	// save changes
 	file, err := os.Create(module)
 	if err != nil {
 		return err

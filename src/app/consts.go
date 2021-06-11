@@ -4,16 +4,13 @@
 package app
 
 const (
-	// AppName constant returns application name
-	AppName string = "sb"
-	// Version constant returns the current version of application
-	AppVersion string = "1.0"
-	// AppVersion constant returns application version
-	AppVersionString string = AppName + " version " + AppVersion
-	// ModFileName constant returns smart module file name
-	DefaultModuleFileName string = "main.sb"
+	AppName           string = "sb"
+	AppVersion        string = "1.0"
+	AppVersionString  string = AppName + " version " + AppVersion
+	DefaultModuleName string = "main"
 	// error messages
-	LanguageIsNotSupportedF string = "the current \"%s\" language is not supported"
+	ErrorMessageF           string = "Error: %v\n"
+	LanguageIsNotSupportedF string = "the current \"%s\" language is not supported\n"
 )
 
 var Langs = struct {

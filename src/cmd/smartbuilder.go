@@ -11,7 +11,8 @@ type SmartBuilder struct {
 	Cleaner   Cleaner
 	Generator Generator
 	Manager   Manager
-	ModInit   ModInit
+	ModAdder  ModAdder
+	ModIniter ModIniter
 }
 
 func (sb *SmartBuilder) Execute() error {
@@ -21,13 +22,15 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Cleaner.init()
 	sb.Generator.init()
 	sb.Manager.init()
-	sb.ModInit.init()
+	sb.ModAdder.init()
+	sb.ModIniter.init()
 	sb.Runner.AddCommand(&sb.Manager.Command)
 	sb.Runner.AddCommand(&sb.Generator.Command)
 	sb.Runner.AddCommand(&sb.Builder.Command)
 	sb.Runner.AddCommand(&sb.Cleaner.Command)
 	sb.Runner.AddCommand(&sb.Reader.Command)
-	sb.Manager.AddCommand(&sb.ModInit.Command)
+	sb.Manager.AddCommand(&sb.ModIniter.Command)
+	sb.Manager.AddCommand(&sb.ModAdder.Command)
 	return sb.Runner.Execute()
 }
 

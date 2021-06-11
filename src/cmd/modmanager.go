@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sapplications/sbuilder/src/common"
 	src "github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/sapplications/sbuilder/src/services/smodule"
 	"github.com/spf13/cobra"
@@ -54,7 +53,7 @@ func (v *Manager) init() {
 		if len(args) == 0 {
 			return errors.New(SubcmdMissing)
 		}
-		defer common.Recover()
+		defer handleError()
 		var subCmd = args[0]
 		var modStr = strings.Trim(*depFlags.mod, "\t \n")
 		var itemStr = strings.Trim(*depFlags.item, "\t \n")
@@ -62,27 +61,12 @@ func (v *Manager) init() {
 		var resolverStr = strings.Trim(*depFlags.resolver, "\t \n")
 		// handle subcommands
 		switch subCmd {
-		case subCmds.add:
-			if modStr == "" {
-				return errors.New(ModuleMissing)
-			}
-			if itemStr == "" {
-				return errors.New(NameMissing)
-			}
-			if depStr != "" && resolverStr == "" {
-				return errors.New(ResolverMissing)
-			}
-			if depStr == "" {
-				return v.Manager.AddItem(modStr, itemStr)
-			} else {
-				return v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, false)
-			}
 		case subCmds.del:
 			if modStr == "" {
-				return errors.New(ModuleMissing)
+				// return errors.New(ModuleMissing)
 			}
 			if itemStr == "" {
-				return errors.New(NameMissing)
+				return errors.New(ItemMissing)
 			}
 			if depStr == "" {
 				return v.Manager.DeleteItem(modStr, itemStr)
@@ -91,10 +75,10 @@ func (v *Manager) init() {
 			}
 		case subCmds.edit:
 			if modStr == "" {
-				return errors.New(ModuleMissing)
+				// return errors.New(ModuleMissing)
 			}
 			if itemStr == "" {
-				return errors.New(NameMissing)
+				return errors.New(ItemMissing)
 			}
 			if depStr == "" {
 				return errors.New(DependencyMissing)
@@ -105,11 +89,12 @@ func (v *Manager) init() {
 			return v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, true)
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
-				return errors.New(NameMissing)
+				return errors.New(ItemMissing)
 			}
 			mod, err := v.Manager.ReadAll(Language())
-			common.Check(err)
-			if *depFlags.all {
+			if err != nil {
+				return err
+			} else if *depFlags.all {
 				fmt.Println(v.Formatter.String(mod))
 			} else if itemStr != "" {
 				var item = mod.Items()[itemStr]
@@ -117,10 +102,10 @@ func (v *Manager) init() {
 					return fmt.Errorf(ItemDoesNotExistF, itemStr)
 				} else {
 					if depStr == "" {
-						fmt.Printf(v.Formatter.Item(itemStr, item))
+						fmt.Print(v.Formatter.Item(itemStr, item))
 					} else {
 						if _, found := item[depStr]; found {
-							fmt.Printf(mod.Dependency(itemStr, depStr))
+							fmt.Print(mod.Dependency(itemStr, depStr))
 						} else {
 							return fmt.Errorf(DependencyDoesNotExistF, depStr)
 						}

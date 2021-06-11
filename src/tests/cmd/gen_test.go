@@ -8,5 +8,5 @@ import (
 )
 
 func (s *CmdSuite) TestGenEmpty(c *check.C) {
-	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*$"))
+	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*"))
 }

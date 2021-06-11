@@ -8,5 +8,5 @@ import (
 )
 
 func (s *CmdSuite) TestBuildEmpty(c *check.C) {
-	c.Assert(s.Build(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*$"))
+	c.Assert(s.Build(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*"))
 }

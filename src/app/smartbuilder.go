@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 
-	"github.com/sapplications/sbuilder/src/common"
 	"github.com/sapplications/sbuilder/src/services/sbuilder"
 	"github.com/sapplications/sbuilder/src/services/smodule"
 )
@@ -16,7 +15,7 @@ type SmartBuilder struct {
 }
 
 func (b *SmartBuilder) Generate(application string) error {
-	defer common.Recover()
+	defer handleError()
 	// load and check application
 	mod, err := b.Manager.ReadAll(b.Lang())
 	if err != nil {
@@ -40,7 +39,7 @@ func (b *SmartBuilder) Generate(application string) error {
 }
 
 func (b *SmartBuilder) Build(application string) error {
-	defer common.Recover()
+	defer handleError()
 	// load and check application
 	mod, err := b.Manager.ReadAll(b.Lang())
 	if err != nil {
@@ -64,7 +63,7 @@ func (b *SmartBuilder) Build(application string) error {
 }
 
 func (b *SmartBuilder) Clean(application string) error {
-	defer common.Recover()
+	defer handleError()
 	// load and check application
 	mod, err := b.Manager.ReadAll(b.Lang())
 	if err != nil {
@@ -99,14 +98,14 @@ func (b *SmartBuilder) Version() string {
 
 func (b *SmartBuilder) Init(lang string) error {
 	if _, found := suppLangs[lang]; found {
-		return b.Manager.Init(DefaultModuleFileName, lang)
+		return b.Manager.Init(DefaultModuleName, lang)
 	} else {
 		return fmt.Errorf(LanguageIsNotSupportedF, lang)
 	}
 }
 
 func (b *SmartBuilder) ReadAll(lang string) (smodule.Reader, error) {
-	defer common.Recover()
+	defer handleError()
 	mod, err := b.Manager.ReadAll(lang)
 	if err != nil {
 		return nil, err
@@ -115,22 +114,22 @@ func (b *SmartBuilder) ReadAll(lang string) (smodule.Reader, error) {
 }
 
 func (b *SmartBuilder) AddItem(module, item string) error {
-	defer common.Recover()
+	defer handleError()
 	return b.Manager.AddItem(module, item)
 }
 
 func (b *SmartBuilder) AddDependency(module, item, dependency, resolver string, update bool) error {
-	defer common.Recover()
+	defer handleError()
 	return b.Manager.AddDependency(module, item, dependency, resolver, update)
 }
 
 func (b *SmartBuilder) DeleteItem(module, item string) error {
-	defer common.Recover()
+	defer handleError()
 	return b.Manager.DeleteItem(module, item)
 }
 
 func (b *SmartBuilder) DeleteDependency(module, item, dependency string) error {
-	defer common.Recover()
+	defer handleError()
 	return b.Manager.DeleteDependency(module, item, dependency)
 }
 

@@ -38,22 +38,31 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb.Lang = lang
 	sb.Manager = &smodule.Manager{Lang: lang}
 	sb.GoGenerator = &golang.Generator{}
+
 	s.cmd = src.SmartBuilder{}
 	s.cmd.Manager = src.Manager{}
 	s.cmd.Manager.Use = "mod"
 	s.cmd.Manager.Manager = &sb
+
 	s.cmd.Builder = src.Builder{}
 	s.cmd.Builder.Use = "build"
 	s.cmd.Builder.Builder = &sb
+
 	s.cmd.Cleaner = src.Cleaner{}
 	s.cmd.Cleaner.Use = "clean"
 	s.cmd.Cleaner.Cleaner = &sb
+
 	s.cmd.Generator = src.Generator{}
 	s.cmd.Generator.Use = "gen"
 	s.cmd.Generator.Generator = &sb
-	s.cmd.ModInit = src.ModInit{}
-	s.cmd.ModInit.Use = "init"
-	s.cmd.ModInit.Manager = &sb
+
+	s.cmd.ModAdder = src.ModAdder{}
+	s.cmd.ModAdder.Use = "add"
+	s.cmd.ModAdder.Manager = &sb
+
+	s.cmd.ModIniter = src.ModIniter{}
+	s.cmd.ModIniter.Use = "init"
+	s.cmd.ModIniter.Manager = &sb
 	s.cmd.Runner.SilenceErrors = true
 }
 

@@ -1,7 +1,6 @@
 - rename dep to mod
 
 - test the dep command with empty folder
-- remove the common package
 
 - update the dep command to work with multiple modules, select a module if the number of modules more than one
 
