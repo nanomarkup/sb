@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +36,11 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Manager.AddCommand(&sb.ModIniter.Command)
 	sb.Manager.AddCommand(&sb.ModAdder.Command)
 	sb.Manager.AddCommand(&sb.ModDeler.Command)
-	return sb.Runner.Execute()
+	err := sb.Runner.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
+	return err
 }
 
 func init() {

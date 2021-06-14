@@ -53,7 +53,7 @@ func loadModule(name string) (*Module, error) {
 	var index = 1
 	var length int
 	var bracketOpened = false
-	trimChars := "\t \n \r"
+	trimChars := " \t\n\r"
 	for {
 		line, err = reader.ReadString('\n')
 		if err != nil && err != io.EOF {

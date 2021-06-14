@@ -1,16 +1,20 @@
-- add sb the test command (go test)
-
-- test the dep command with empty folder
-
-- update the dep command to work with multiple modules, select a module if the number of modules more than one
-
-- add a struct initialization into an item use brackets for overriding global settings
-- add a field initialization use a function
-- add a const item for declaring constants and use them in the module, it is a global item
-- use numbers as resolver
-
+- fix running tests and update the build.cmd script
+- build all samples by the build.cmd script
+- check and fix package dependencies
 - test a global lang parameter
-- add samples
-- add more tests
-- validate sb data before generate code
--- check the required fields
+
+core features
+    - add a struct initialization into an item use brackets for overriding global settings
+    - add a field initialization use a function
+    - add a const item for declaring constants and use them in the module, it is a global item
+    - use numbers as resolver
+
+validate code
+    - validate sb code before running the gen command
+
+samples
+    - add a helloworld.exe sample
+
+tests
+    - refactor all tests
+    - list all tests
