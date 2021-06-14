@@ -19,20 +19,24 @@ var attrs = struct {
 	"%s %s\n",
 }
 
+type Item = map[string]string
+type Items = map[string]Item
+
 type Module struct {
+	name  string
 	lang  string
-	items map[string]map[string]string
+	items Items
 }
 
 func (m *Module) Lang() string {
 	return m.lang
 }
 
-func (m *Module) Items() map[string]map[string]string {
+func (m *Module) Items() Items {
 	return m.items
 }
 
-func (m *Module) Main() (map[string]string, error) {
+func (m *Module) Main() (Item, error) {
 	main := m.items["main"]
 	if main == nil {
 		return nil, fmt.Errorf("the main item is not found")
@@ -45,7 +49,7 @@ func (m *Module) AddItem(item string) error {
 	if _, found := m.items[item]; found {
 		return fmt.Errorf("\"%s\" item already exists", item)
 	}
-	m.items[item] = map[string]string{}
+	m.items[item] = Item{}
 	return nil
 }
 

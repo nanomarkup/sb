@@ -1,4 +1,4 @@
-- rename dep to mod
+- add sb the test command (go test)
 
 - test the dep command with empty folder
 

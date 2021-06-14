@@ -40,7 +40,7 @@ func (s *CmdSuite) TestModInitGo(c *check.C) {
 	m := smodule.Manager{Lang: lang}
 	_, err := m.ReadAll(lang())
 	if err != nil {
-		t, _ := ioutil.ReadFile(smodule.GetFileName(app.DefaultModuleName))
+		t, _ := ioutil.ReadFile(smodule.GetModuleName(app.DefaultModuleName))
 		fmt.Print(string(t))
 		c.Error(err)
 	}
@@ -65,12 +65,12 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 	modName := "new"
 	err := s.Mod("add", "helloItem", modName)
 	c.Assert(err, check.IsNil)
-	c.Assert(smodule.IsExist(modName), check.Equals, true)
+	c.Assert(smodule.IsModuleExist(modName), check.Equals, true)
 	// read the created module
 	m := smodule.Manager{Lang: lang}
 	_, err = m.ReadAll(lang())
 	if err != nil {
-		t, _ := ioutil.ReadFile(smodule.GetFileName(modName))
+		t, _ := ioutil.ReadFile(smodule.GetModuleName(modName))
 		fmt.Print(string(t))
 		c.Error(err)
 	}
@@ -93,12 +93,13 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	mod := smodule.Manager{Lang: lang}
 	r, err := mod.ReadAll(lang())
 	if err != nil {
-		t, _ := ioutil.ReadFile(smodule.GetFileName(app.DefaultModuleName))
+		t, _ := ioutil.ReadFile(smodule.GetModuleName(app.DefaultModuleName))
 		fmt.Print(string(t))
 		c.Error(err)
+	} else {
+		// check the added item exist
+		c.Assert(r.Items()[name], check.NotNil)
 	}
-	// check the added item exist
-	c.Assert(r.Items()[name], check.NotNil)
 }
 
 // mod del|edit|list

@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func GetFileName(name string) string {
+func GetModuleName(name string) string {
 	if strings.HasSuffix(name, modExt) {
 		return name
 	} else {
@@ -13,7 +13,7 @@ func GetFileName(name string) string {
 	}
 }
 
-func IsExist(name string) bool {
-	_, err := os.Stat(GetFileName(name))
+func IsModuleExist(name string) bool {
+	_, err := os.Stat(GetModuleName(name))
 	return err == nil
 }

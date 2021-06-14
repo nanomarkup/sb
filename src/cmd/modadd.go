@@ -28,8 +28,7 @@ func (v *ModAdder) init() {
 		} else if len(args) == 2 {
 			return v.Manager.AddItem(args[1], args[0])
 		} else if len(args) > 2 {
-			return nil
-			// return v.Manager.AddDependency(modStr, args[0], args[1], args[2], false)
+			return v.Manager.AddDependency(args[0], args[1], args[2], false)
 		}
 		return nil
 	}

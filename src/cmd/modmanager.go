@@ -86,7 +86,7 @@ func (v *Manager) init() {
 			if resolverStr == "" {
 				return errors.New(ResolverMissing)
 			}
-			return v.Manager.AddDependency(modStr, itemStr, depStr, resolverStr, true)
+			return v.Manager.AddDependency(itemStr, depStr, resolverStr, true)
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
 				return errors.New(ItemMissing)

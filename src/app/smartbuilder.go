@@ -118,9 +118,9 @@ func (b *SmartBuilder) AddItem(module, item string) error {
 	return b.Manager.AddItem(module, item)
 }
 
-func (b *SmartBuilder) AddDependency(module, item, dependency, resolver string, update bool) error {
+func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update bool) error {
 	defer handleError()
-	return b.Manager.AddDependency(module, item, dependency, resolver, update)
+	return b.Manager.AddDependency(item, dependency, resolver, update)
 }
 
 func (b *SmartBuilder) DeleteItem(module, item string) error {

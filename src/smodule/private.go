@@ -34,11 +34,13 @@ func split(line string) []string {
 	return res
 }
 
-func loadModule(filePath string) (*Module, error) {
+func loadModule(name string) (*Module, error) {
 	mod := Module{}
-	mod.items = map[string]map[string]string{}
+	mod.name = name
+	mod.items = Items{}
 
-	file, err := os.Open(filePath)
+	fileName := GetModuleName(name)
+	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +72,7 @@ func loadModule(filePath string) (*Module, error) {
 			if index == 1 {
 				// check and initialize language
 				if len(slice) != 2 {
-					return nil, fmt.Errorf("cannot parse the first token of " + filePath)
+					return nil, fmt.Errorf("cannot parse the first token of " + fileName)
 				} else if slice[0] != attrs.module {
 					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.module)
 				}
@@ -84,7 +86,7 @@ func loadModule(filePath string) (*Module, error) {
 						item = ""
 						bracketOpened = false
 					} else if length != 2 {
-						return nil, fmt.Errorf("cannot parse the dependency token of " + filePath)
+						return nil, fmt.Errorf("cannot parse the dependency token of " + fileName)
 					} else {
 						mod.items[item][slice[0]] = slice[1]
 					}
@@ -93,12 +95,12 @@ func loadModule(filePath string) (*Module, error) {
 					if (length == 1) && (slice[0] == "(") && (item != "") {
 						bracketOpened = true
 					} else if length < 2 {
-						return nil, fmt.Errorf("cannot parse the item token of " + filePath)
+						return nil, fmt.Errorf("cannot parse the item token of " + fileName)
 					} else if (slice[1] != "require") && (slice[1] != "require(") {
 						return nil, fmt.Errorf("invalid token")
 					} else {
 						item = slice[0]
-						mod.items[item] = map[string]string{}
+						mod.items[item] = Item{}
 						if (slice[1] == "require(") || (length > 2 && strings.TrimSuffix(slice[2], "\n") == "(") {
 							bracketOpened = true
 						}
@@ -115,14 +117,14 @@ func loadModule(filePath string) (*Module, error) {
 	return &mod, nil
 }
 
-func loadAll(language string) (smodule.ReadWriter, error) {
+func loadModules(language string) (modules, error) {
 	// read and check all modules in the working directory
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
 		return nil, err
 	}
+	mods := modules{}
 	modLang := ""
-	modItems := map[string]map[string]string{}
 	modFound := false
 	var mod *Module
 	for _, f := range files {
@@ -137,7 +139,7 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 		}
 		// validate the loaded module
 		if language != "" && language != mod.lang {
-			// skip the loaded module if the language is not right
+			// skip the loaded module if the language is not the selected language
 			continue
 		}
 		if modLang == "" {
@@ -146,45 +148,95 @@ func loadAll(language string) (smodule.ReadWriter, error) {
 		if modLang != mod.lang {
 			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
 		}
-		// populate items
-		for name, data := range mod.items {
-			if _, found := modItems[name]; found {
-				return nil, fmt.Errorf("\"%s\" item of \"%s\" module already exists", name, fname)
-			}
-			modItems[name] = data
-		}
+		// add module
+		mods = append(mods, Module{name: fname, items: mod.items})
 	}
 	if modFound {
-		return &Module{modLang, modItems}, nil
+		return mods, nil
 	} else {
 		wd, _ := os.Getwd()
-		return &Module{modLang, modItems}, fmt.Errorf(ModuleFilesMissingF, wd)
+		return nil, fmt.Errorf(ModuleFilesMissingF, wd)
 	}
 }
 
-func readAll(language string) (smodule.Reader, error) {
-	return loadAll(language)
+func loadItems(mods modules) (smodule.ReadWriter, error) {
+	all := Items{}
+	lang := ""
+	if len(mods) > 0 {
+		lang = mods[0].lang
+	}
+	for _, m := range mods {
+		// read all items and validate them
+		for name, data := range m.items {
+			if _, found := all[name]; found {
+				return nil, fmt.Errorf("\"%s\" item of \"%s\" module already exists", name, m.name)
+			}
+			all[name] = data
+		}
+	}
+	return &Module{name: "", lang: lang, items: all}, nil
 }
 
 func saveModule(module string, info smodule.Reader) error {
-	module = GetFileName(module)
-	// notify about a new module has been created
-	exists := IsExist(module)
-	defer func() {
-		if !exists {
-			fmt.Printf(ModuleIsCreatedF, module)
-		}
-	}()
+	module = GetModuleName(module)
+	exists := IsModuleExist(module)
 	// save changes
 	file, err := os.Create(module)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
+	// notify about a new module has been created
+	defer func() {
+		if !exists {
+			fmt.Printf(ModuleIsCreatedF, module)
+		}
+	}()
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
 	f := Formatter{}
 	_, err = writer.WriteString(f.String(info))
 	return err
+}
+
+func addItem(module, lang, item string) error {
+	// check the item is exist
+	if found, modName := isItemExists(item, lang); found {
+		return fmt.Errorf(ItemExistsF, item, modName)
+	}
+	// load the existing module or create a new one
+	var mod *Module
+	var err error
+	if IsModuleExist(module) {
+		if mod, err = loadModule(module); err != nil {
+			return err
+		}
+		// check language of the selected module
+		if mod.lang != lang {
+			return fmt.Errorf(ModuleLanguageMismatchF, mod.lang, mod.name, lang)
+		}
+	} else {
+		mod = &Module{name: module, lang: lang, items: Items{}}
+	}
+	// add the item to the selected module
+	if err = mod.AddItem(item); err != nil {
+		return err
+	} else {
+		return saveModule(module, mod)
+	}
+}
+
+func isItemExists(name, lang string) (bool, smodule.ModuleName) {
+	wd, _ := os.Getwd()
+	mods, err := loadModules(lang)
+	if (err != nil) && (err.Error() != fmt.Sprintf(ModuleFilesMissingF, wd)) {
+		return false, ""
+	}
+	for _, m := range mods {
+		if _, found := m.items[name]; found {
+			return true, m.name
+		}
+	}
+	return false, ""
 }
