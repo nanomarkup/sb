@@ -40,6 +40,8 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb.GoGenerator = &golang.Generator{}
 
 	s.cmd = src.SmartBuilder{}
+	s.cmd.SilentErrors = true
+
 	s.cmd.Manager = src.Manager{}
 	s.cmd.Manager.Use = "mod"
 	s.cmd.Manager.Manager = &sb

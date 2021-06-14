@@ -1,4 +1,3 @@
-- fix running tests and update the build.cmd script
 - build all samples by the build.cmd script
 - check and fix package dependencies
 - test a global lang parameter

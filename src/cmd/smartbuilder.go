@@ -7,15 +7,16 @@ import (
 )
 
 type SmartBuilder struct {
-	Runner    Runner
-	Reader    Reader
-	Builder   Builder
-	Cleaner   Cleaner
-	Generator Generator
-	Manager   Manager
-	ModAdder  ModAdder
-	ModDeler  ModDeler
-	ModIniter ModIniter
+	Runner       Runner
+	Reader       Reader
+	Builder      Builder
+	Cleaner      Cleaner
+	Generator    Generator
+	Manager      Manager
+	ModAdder     ModAdder
+	ModDeler     ModDeler
+	ModIniter    ModIniter
+	SilentErrors bool
 }
 
 func (sb *SmartBuilder) Execute() error {
@@ -37,7 +38,7 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Manager.AddCommand(&sb.ModAdder.Command)
 	sb.Manager.AddCommand(&sb.ModDeler.Command)
 	err := sb.Runner.Execute()
-	if err != nil {
+	if (err != nil) && !sb.SilentErrors {
 		os.Exit(1)
 	}
 	return err

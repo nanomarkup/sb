@@ -10,7 +10,7 @@ echo Built
 
 rem Test the application
 pushd .\tests\cmd
-rem go test
+go test
 if %errorlevel%==1 goto error
 echo Tested
 popd
@@ -30,5 +30,6 @@ goto success
 
 :error
 echo Failed
+pause
 
 :success
