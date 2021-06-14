@@ -102,6 +102,23 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	}
 }
 
+func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
+	// create a temporary folder and change the current working directory
+	wd, _ := os.Getwd()
+	defer os.Chdir(wd)
+	os.Chdir(c.MkDir())
+	// initialize a new module
+	c.Assert(s.Mod("init", lang()), check.IsNil)
+	// add a new dependency item (application) to the main item
+	cmd := CmdSuite{}
+	cmd.SetUpTest(nil)
+	name := "hello"
+	resolver := "\"Hello World!\""
+	err := cmd.Mod("add", smodule.MainItemName, name, resolver)
+	c.Assert(err, check.IsNil)
+	// TODO verify the added dependency...
+}
+
 // test the del subcommand
 
 func (s *CmdSuite) TestModDelModuleMissing(c *check.C) {

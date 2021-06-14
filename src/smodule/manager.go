@@ -1,6 +1,8 @@
 package smodule
 
 import (
+	"fmt"
+
 	"github.com/sapplications/sbuilder/src/services/smodule"
 )
 
@@ -11,7 +13,7 @@ type Manager struct {
 }
 
 func (m *Manager) Init(module, lang string) error {
-	return addItem(module, lang, mainItemName)
+	return addItem(module, lang, MainItemName)
 }
 
 func (m *Manager) AddItem(module, item string) error {
@@ -19,16 +21,18 @@ func (m *Manager) AddItem(module, item string) error {
 }
 
 func (m *Manager) AddDependency(item, dependency, resolver string, update bool) error {
-	// mod, err := m.loadItems()
-	// if err != nil {
-	// 	return err
-	// } else if err = mod.AddDependency(item, dependency, resolver, update); err != nil {
-	// 	return err
-	// } else {
-	// 	return nil
-	// 	// return saveModule(module, mod)
-	// }
-	return nil
+	mod, err := findItem(m.Lang(), item)
+	if err != nil {
+		return err
+	} else if mod == nil {
+		return fmt.Errorf(ItemIsMissingF, item)
+	} else {
+		if err = mod.AddDependency(item, dependency, resolver, update); err != nil {
+			return err
+		} else {
+			return saveModule(mod)
+		}
+	}
 }
 
 func (m *Manager) DeleteItem(item string) error {
@@ -47,15 +51,18 @@ func (m *Manager) DeleteItem(item string) error {
 }
 
 func (m *Manager) DeleteDependency(item, dependency string) error {
-	// mod, err := m.loadItems()
-	// if err != nil {
-	// 	return err
-	// } else if err = mod.DeleteDependency(item, dependency); err != nil {
-	// 	return err
-	// } else {
-	// 	return saveModule(module, mod)
-	// }
-	return nil
+	mod, err := findItem(m.Lang(), item)
+	if err != nil {
+		return err
+	} else if mod != nil {
+		if err = mod.DeleteDependency(item, dependency); err != nil {
+			return err
+		} else {
+			return saveModule(mod)
+		}
+	} else {
+		return nil
+	}
 }
 
 func (m *Manager) ReadAll(lang string) (smodule.Reader, error) {
