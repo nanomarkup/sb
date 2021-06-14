@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/sapplications/sbuilder/src/services/sbuilder"
@@ -123,14 +124,14 @@ func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update b
 	return b.Manager.AddDependency(item, dependency, resolver, update)
 }
 
-func (b *SmartBuilder) DeleteItem(module, item string) error {
+func (b *SmartBuilder) DeleteItem(item string) error {
 	defer handleError()
-	return b.Manager.DeleteItem(module, item)
+	return b.Manager.DeleteItem(item)
 }
 
-func (b *SmartBuilder) DeleteDependency(module, item, dependency string) error {
+func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	defer handleError()
-	return b.Manager.DeleteDependency(module, item, dependency)
+	return b.Manager.DeleteDependency(item, dependency)
 }
 
 func (b *SmartBuilder) checkApplication(application string, reader smodule.Reader) (string, error) {
@@ -145,7 +146,7 @@ func (b *SmartBuilder) checkApplication(application string, reader smodule.Reade
 	}
 	// check the number of existing applications
 	if len(main) == 0 {
-		return "", fmt.Errorf("does not found any application in the main")
+		return "", errors.New(ApplicationIsMissing)
 	}
 	// read the current application if it is not specified and only one is exist
 	if application == "" {

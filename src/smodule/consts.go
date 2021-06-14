@@ -1,9 +1,8 @@
 package smodule
 
 const (
-	modExt         string = ".sb"
-	modDefaultName string = "main"
-	mainItemName   string = "main"
+	moduleExt    string = ".sb"
+	mainItemName string = "main"
 	// error messages
 	ItemExistsF             string = "the %s item already exists in %s module"
 	ModuleIsCreatedF        string = "%s file has been created\n"

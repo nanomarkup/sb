@@ -10,12 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ModAdder struct {
+type ModDeler struct {
 	Manager src.Manager
 	cobra.Command
 }
 
-func (v *ModAdder) init() {
+func (v *ModDeler) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		defer handleError()
@@ -23,12 +23,10 @@ func (v *ModAdder) init() {
 			return nil
 		} else if len(args) < 1 {
 			return errors.New(ItemMissing)
-		} else if len(args) < 2 {
-			return errors.New(ModOrDepMissing)
+		} else if len(args) == 1 {
+			return v.Manager.DeleteItem(args[0])
 		} else if len(args) == 2 {
-			return v.Manager.AddItem(args[1], args[0])
-		} else if len(args) > 2 {
-			return v.Manager.AddDependency(args[0], args[1], args[2], false)
+			return v.Manager.DeleteDependency(args[1], args[0])
 		} else {
 			return nil
 		}

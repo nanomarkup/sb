@@ -62,17 +62,17 @@ func (v *Manager) init() {
 		// handle subcommands
 		switch subCmd {
 		case subCmds.del:
-			if modStr == "" {
-				// return errors.New(ModuleMissing)
-			}
-			if itemStr == "" {
-				return errors.New(ItemMissing)
-			}
-			if depStr == "" {
-				return v.Manager.DeleteItem(modStr, itemStr)
-			} else {
-				return v.Manager.DeleteDependency(modStr, itemStr, depStr)
-			}
+			// if modStr == "" {
+			// 	// return errors.New(ModuleMissing)
+			// }
+			// if itemStr == "" {
+			// 	return errors.New(ItemMissing)
+			// }
+			// if depStr == "" {
+			// 	return v.Manager.DeleteItem(modStr, itemStr)
+			// } else {
+			// 	return v.Manager.DeleteDependency(modStr, itemStr, depStr)
+			// }
 		case subCmds.edit:
 			if modStr == "" {
 				// return errors.New(ModuleMissing)

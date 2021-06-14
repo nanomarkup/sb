@@ -6,7 +6,7 @@ type Manager interface {
 	Init(lang string) error
 	AddItem(module, item string) error
 	AddDependency(item, dependency, resolver string, update bool) error
-	DeleteItem(module, item string) error
-	DeleteDependency(module, item, dependency string) error
+	DeleteItem(item string) error
+	DeleteDependency(item, dependency string) error
 	ReadAll(lang string) (smodule.Reader, error)
 }

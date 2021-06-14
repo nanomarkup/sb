@@ -8,12 +8,13 @@ github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (
 	Generator github.com/sapplications/sbuilder/src/cmd.Generator	
 	Manager github.com/sapplications/sbuilder/src/cmd.Manager
 	ModAdder github.com/sapplications/sbuilder/src/cmd.ModAdder
+	ModDeler github.com/sapplications/sbuilder/src/cmd.ModDeler
 	ModIniter github.com/sapplications/sbuilder/src/cmd.ModIniter
 )
 
 github.com/sapplications/sbuilder/src/cmd.Manager require (
 	Use "mod"
-	Example "  mod del --name hello - delete 'hello' item with all dependencies\n  mod del --name hello --dep Writer - delete 'Writer' dependency item from 'hello' item\n  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
+	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
 	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
@@ -25,6 +26,14 @@ github.com/sapplications/sbuilder/src/cmd.ModAdder require (
 	Example "  mod add hello - add 'hello' item\n  mod add hello Writer ConsoleWriter - add 'Writer' dependency item to 'hello' item"
 	Short "Add item or dependency"
 	Long "Adds items or dependencies to the exsiting item."
+	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+)
+
+github.com/sapplications/sbuilder/src/cmd.ModDeler require (
+	Use "del"
+	Example "  mod del hello - delete 'hello' item with all dependencies\n  mod del hello Writer - delete 'Writer' dependency item from 'hello' item"
+	Short "Delete item or dependency"
+	Long "Deletes items or dependencies from the exsiting item."
 	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 

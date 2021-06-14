@@ -31,19 +31,22 @@ func (m *Manager) AddDependency(item, dependency, resolver string, update bool) 
 	return nil
 }
 
-func (m *Manager) DeleteItem(module, item string) error {
-	// mod, err := m.loadItems()
-	// if err != nil {
-	// 	return err
-	// } else if err = mod.DeleteItem(item); err != nil {
-	// 	return err
-	// } else {
-	// 	return saveModule(module, mod)
-	// }
-	return nil
+func (m *Manager) DeleteItem(item string) error {
+	mod, err := findItem(m.Lang(), item)
+	if err != nil {
+		return err
+	} else if mod != nil {
+		if err = mod.DeleteItem(item); err != nil {
+			return err
+		} else {
+			return saveModule(mod)
+		}
+	} else {
+		return nil
+	}
 }
 
-func (m *Manager) DeleteDependency(module, item, dependency string) error {
+func (m *Manager) DeleteDependency(item, dependency string) error {
 	// mod, err := m.loadItems()
 	// if err != nil {
 	// 	return err

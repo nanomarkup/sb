@@ -12,6 +12,7 @@ type SmartBuilder struct {
 	Generator Generator
 	Manager   Manager
 	ModAdder  ModAdder
+	ModDeler  ModDeler
 	ModIniter ModIniter
 }
 
@@ -23,6 +24,7 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Generator.init()
 	sb.Manager.init()
 	sb.ModAdder.init()
+	sb.ModDeler.init()
 	sb.ModIniter.init()
 	sb.Runner.AddCommand(&sb.Manager.Command)
 	sb.Runner.AddCommand(&sb.Generator.Command)
@@ -31,6 +33,7 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Runner.AddCommand(&sb.Reader.Command)
 	sb.Manager.AddCommand(&sb.ModIniter.Command)
 	sb.Manager.AddCommand(&sb.ModAdder.Command)
+	sb.Manager.AddCommand(&sb.ModDeler.Command)
 	return sb.Runner.Execute()
 }
 

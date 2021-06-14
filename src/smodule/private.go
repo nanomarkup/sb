@@ -39,7 +39,7 @@ func loadModule(name string) (*Module, error) {
 	mod.name = name
 	mod.items = Items{}
 
-	fileName := GetModuleName(name)
+	fileName := GetModuleFileName(name)
 	file, err := os.Open(fileName)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func loadModule(name string) (*Module, error) {
 	return &mod, nil
 }
 
-func loadModules(language string) (modules, error) {
+func loadModules(lang string) (modules, error) {
 	// read and check all modules in the working directory
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
@@ -138,7 +138,7 @@ func loadModules(language string) (modules, error) {
 			return nil, err
 		}
 		// validate the loaded module
-		if language != "" && language != mod.lang {
+		if lang != "" && lang != mod.lang {
 			// skip the loaded module if the language is not the selected language
 			continue
 		}
@@ -149,7 +149,7 @@ func loadModules(language string) (modules, error) {
 			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
 		}
 		// add module
-		mods = append(mods, Module{name: fname, items: mod.items})
+		mods = append(mods, Module{name: GetModuleName(fname), lang: mod.lang, items: mod.items})
 	}
 	if modFound {
 		return mods, nil
@@ -177,11 +177,10 @@ func loadItems(mods modules) (smodule.ReadWriter, error) {
 	return &Module{name: "", lang: lang, items: all}, nil
 }
 
-func saveModule(module string, info smodule.Reader) error {
-	module = GetModuleName(module)
-	exists := IsModuleExist(module)
-	// save changes
-	file, err := os.Create(module)
+func saveModule(module *Module) error {
+	fileName := GetModuleFileName(module.name)
+	exists := IsModuleExists(fileName)
+	file, err := os.Create(fileName)
 	if err != nil {
 		return err
 	}
@@ -189,26 +188,26 @@ func saveModule(module string, info smodule.Reader) error {
 	// notify about a new module has been created
 	defer func() {
 		if !exists {
-			fmt.Printf(ModuleIsCreatedF, module)
+			fmt.Printf(ModuleIsCreatedF, fileName)
 		}
 	}()
-
+	// save the module
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
 	f := Formatter{}
-	_, err = writer.WriteString(f.String(info))
+	_, err = writer.WriteString(f.String(module))
 	return err
 }
 
 func addItem(module, lang, item string) error {
 	// check the item is exist
-	if found, modName := isItemExists(item, lang); found {
+	if found, modName := IsItemExists(lang, item); found {
 		return fmt.Errorf(ItemExistsF, item, modName)
 	}
 	// load the existing module or create a new one
 	var mod *Module
 	var err error
-	if IsModuleExist(module) {
+	if IsModuleExists(module) {
 		if mod, err = loadModule(module); err != nil {
 			return err
 		}
@@ -223,20 +222,20 @@ func addItem(module, lang, item string) error {
 	if err = mod.AddItem(item); err != nil {
 		return err
 	} else {
-		return saveModule(module, mod)
+		return saveModule(mod)
 	}
 }
 
-func isItemExists(name, lang string) (bool, smodule.ModuleName) {
+func findItem(lang, item string) (*Module, error) {
 	wd, _ := os.Getwd()
 	mods, err := loadModules(lang)
 	if (err != nil) && (err.Error() != fmt.Sprintf(ModuleFilesMissingF, wd)) {
-		return false, ""
+		return nil, err
 	}
 	for _, m := range mods {
-		if _, found := m.items[name]; found {
-			return true, m.name
+		if _, found := m.items[item]; found {
+			return &m, nil
 		}
 	}
-	return false, ""
+	return nil, nil
 }

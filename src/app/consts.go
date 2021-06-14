@@ -11,6 +11,7 @@ const (
 	// error messages
 	ErrorMessageF           string = "Error: %v\n"
 	LanguageIsNotSupportedF string = "the current \"%s\" language is not supported\n"
+	ApplicationIsMissing    string = "does not found any application in the main"
 )
 
 var Langs = struct {

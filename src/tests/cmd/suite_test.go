@@ -60,6 +60,10 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.ModAdder.Use = "add"
 	s.cmd.ModAdder.Manager = &sb
 
+	s.cmd.ModDeler = src.ModDeler{}
+	s.cmd.ModDeler.Use = "del"
+	s.cmd.ModDeler.Manager = &sb
+
 	s.cmd.ModIniter = src.ModIniter{}
 	s.cmd.ModIniter.Use = "init"
 	s.cmd.ModIniter.Manager = &sb
