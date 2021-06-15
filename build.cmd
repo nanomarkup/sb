@@ -25,6 +25,13 @@ if %errorlevel%==1 goto error
 echo Installed
 popd
 
+rem Build sample aplications
+pushd .\samples
+sb gen helloworld
+sb build helloworld
+echo Samples built
+popd
+
 popd
 goto success
 

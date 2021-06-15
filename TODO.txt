@@ -1,6 +1,6 @@
-- build all samples by the build.cmd script
 - check and fix package dependencies
 - test a global lang parameter
+- update documentation
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings
@@ -10,9 +10,6 @@ core features
 
 validate code
     - validate sb code before running the gen command
-
-samples
-    - add a helloworld.exe sample
 
 tests
     - refactor all tests
