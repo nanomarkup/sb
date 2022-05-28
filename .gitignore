@@ -1,19 +1,20 @@
-# Binaries for programs and plugins
+# Binary files
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
 
-# Test binary, built with `go test -c`
+# Generated the test files (go test -c)
 *.test
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# Output of the go coverage tool, specifically when using LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
+# Dependency directories
 # vendor/
 
 .vscode
 
 src/sb/
+src/samples/helloworld/
