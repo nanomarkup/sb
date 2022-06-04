@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 )
 
@@ -104,14 +105,17 @@ func (g *Generator) generateDepsFile(application, entryPoint string) error {
 		entryPoint,
 		g.items,
 	}
-	list, err := r.resolve()
+	list, types, err := r.resolve()
 	if err != nil {
 		return err
 	}
-	code, imports := g.generateItems(entryPoint, list)
+	code, imports, err := g.generateItems(entryPoint, list, types)
+	if err != nil {
+		return err
+	}
 	entry, found := list[entryPoint]
 	if found && entry.kind == itemKind.String {
-		imports = append(imports, "fmt")
+		imports["fmt"] = ""
 	}
 	// save dependencies to a file
 	wd, _ := os.Getwd()
@@ -131,8 +135,12 @@ func (g *Generator) generateDepsFile(application, entryPoint string) error {
 	// write the import section
 	if len(imports) > 0 {
 		writer.WriteString("import (\n")
-		for _, v := range imports {
-			writer.WriteString(fmt.Sprintf("\t\"%s\"\n", v))
+		for path, alias := range imports {
+			if alias == "" {
+				writer.WriteString(fmt.Sprintf("\t\"%s\"\n", path))
+			} else {
+				writer.WriteString(fmt.Sprintf("\t%s \"%s\"\n", alias, path))
+			}
 		}
 		writer.WriteString(")\n\n")
 	}
@@ -159,13 +167,19 @@ func (g *Generator) generateDepsFile(application, entryPoint string) error {
 	return nil
 }
 
-func (g *Generator) generateItems(entryPoint string, list items) ([]string, []string) {
+func (g *Generator) generateItems(entryPoint string, list items, types []Type) ([]string, imports, error) {
 	code := []string{}
-	imports := map[string]bool{}
+	imports := imports{}
+	adapter := adapter{}
+	adapter.imports = &imports
 	// get all type of struct items to process
 	its := map[string]bool{}
 	g.getStructItems(entryPoint, list, its)
 	// generate code for all type of struct items
+	ref := false
+	alias := ""
+	typeId1 := ""
+	typeId2 := ""
 	funcName := ""
 	fullNameDefine := ""
 	fullNameReturn := ""
@@ -173,21 +187,21 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 		if it, found := list[i]; found {
 			switch it.kind {
 			case itemKind.Func:
-				imports[it.path+it.pkg] = true
+				appendImport(imports, it.path+it.pkg)
 			case itemKind.Struct:
 				funcName = fmt.Sprintf("Use%s%s", strings.Title(it.pkg), it.name)
 				fullNameDefine = it.name
 				fullNameReturn = it.name
 				if len(it.path) > 0 {
 					if it.path[0] == '*' {
+						alias = string(appendImport(imports, it.path[1:]+it.pkg))
 						funcName = funcName + "Ref"
-						fullNameDefine = fmt.Sprintf("*%s.%s", it.pkg, it.name)
-						fullNameReturn = fmt.Sprintf("&%s.%s", it.pkg, it.name)
-						imports[it.path[1:]+it.pkg] = true
+						fullNameDefine = fmt.Sprintf("*%s.%s", alias, it.name)
+						fullNameReturn = fmt.Sprintf("&%s.%s", alias, it.name)
 					} else {
-						fullNameDefine = fmt.Sprintf("%s.%s", it.pkg, it.name)
+						alias = string(appendImport(imports, it.path+it.pkg))
+						fullNameDefine = fmt.Sprintf("%s.%s", alias, it.name)
 						fullNameReturn = fullNameDefine
-						imports[it.path+it.pkg] = true
 					}
 				}
 				// create a new item and initialize it
@@ -199,14 +213,35 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 					for k, v := range it.deps {
 						switch v.kind {
 						case itemKind.Func:
-							imports[v.path+v.pkg] = true
-							code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, v.pkg, strings.Replace(v.name, "()", "", 1)))
+							alias = string(appendImport(imports, v.path+v.pkg))
+							code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, alias, strings.Replace(v.name, "()", "", 1)))
 						case itemKind.Struct:
-							funcName = fmt.Sprintf("Use%s%s", strings.Title(v.pkg), v.name)
-							if len(v.path) > 0 && v.path[0] == '*' {
-								funcName = funcName + "Ref"
+							typeId1 = it.original
+							if typeId1[0] == '*' {
+								typeId1 = typeId1[1:]
 							}
-							code = append(code, fmt.Sprintf("\tv.%s = %s()\n", k, funcName))
+							typeId2 = v.original
+							if typeId2[0] == '*' {
+								typeId2 = typeId2[1:]
+							}
+							supported, err := g.areTypesCompatible(types, typeId1, k, typeId2)
+							if err != nil {
+								return nil, nil, err
+							}
+							ref = len(v.path) > 0 && v.path[0] == '*'
+							if supported {
+								funcName = fmt.Sprintf("Use%s%s", strings.Title(v.pkg), v.name)
+								if ref {
+									funcName = funcName + "Ref"
+								}
+								code = append(code, fmt.Sprintf("\tv.%s = %s()\n", k, funcName))
+							} else {
+								funcName, err = adapter.adapt(types, typeId1, k, typeId2, ref)
+								if err != nil {
+									return nil, nil, err
+								}
+								code = append(code, fmt.Sprintf("\tv.%s = %s()\n", k, funcName))
+							}
 						case itemKind.String:
 							code = append(code, fmt.Sprintf("\tv.%s = %s\n", k, v.original))
 						}
@@ -217,12 +252,11 @@ func (g *Generator) generateItems(entryPoint string, list items) ([]string, []st
 			}
 		}
 	}
-	// map -> slice
-	imp := []string{}
-	for key := range imports {
-		imp = append(imp, key)
+	// append adapters
+	for _, value := range adapter.code {
+		code = append(code, value...)
 	}
-	return code, imp
+	return code, imports, nil
 }
 
 func (g *Generator) getStructItems(original string, list items, result map[string]bool) {
@@ -237,4 +271,89 @@ func (g *Generator) getStructItems(original string, list items, result map[strin
 			}
 		}
 	}
+}
+
+func (g *Generator) areTypesCompatible(types []Type, typeA string, fieldA string, typeB string) (bool, error) {
+	// get input types
+	infoA := getType(types, typeA)
+	if infoA == nil {
+		return false, fmt.Errorf("\"%s\" type does not found", typeA)
+	}
+	infoB := getType(types, typeB)
+	if infoB == nil {
+		return false, fmt.Errorf("\"%s\" type does not found", typeB)
+	}
+	fieldId := ""
+	for _, v := range infoA.Fields {
+		if v.FieldName == fieldA {
+			fieldId = v.Id
+			break
+		}
+	}
+	if fieldId == "" {
+		return false, fmt.Errorf("\"%s\" field of \"%s\" type does not exist", fieldA, typeA)
+	}
+	fieldInfo := getType(types, fieldId)
+	if fieldInfo == nil {
+		return false, fmt.Errorf("\"%s\" type does not found", fieldId)
+	}
+	// check compatibility of input types
+	if fieldInfo.Id == infoB.Id {
+		return true, nil
+	}
+	if fieldInfo.Kind != reflect.Interface {
+		return false, fmt.Errorf("The receiver of \"%s\" type should be type of interface", fieldInfo.Id)
+	}
+	// check methods
+	var fA Field
+	var fB Field
+	var iA int
+	var iB int
+	var countA int
+	var countB int
+	for _, v := range fieldInfo.Methods {
+		found := false
+		for _, x := range infoB.Methods {
+			if x.Name == v.Name {
+				// check input parameters
+				iA = 0
+				iB = 0
+				countA = len(v.In)
+				countB = len(x.In)
+				if countA > 0 && v.In[0].Id == "." && v.In[0].Kind == reflect.Ptr {
+					iA++
+				}
+				if countB > 0 && x.In[0].Id == "." && x.In[0].Kind == reflect.Ptr {
+					iB++
+				}
+				if (countA - iA) != (countB - iB) {
+					return false, fmt.Errorf("The number of input parameters are different for \"%s\" method of \"%s\" type and \"%s\" type", fieldA, typeA, typeB)
+				}
+				for i := iA; i < countA; i++ {
+					fA = v.In[i]
+					fB = x.In[iB]
+					if fA.Kind != fB.Kind || fA.Id != fB.Id {
+						return false, nil
+					}
+					iB++
+				}
+				// check output parameters
+				if len(x.Out) != len(v.Out) {
+					return false, fmt.Errorf("The number of output parameters are different for \"%s\" method of \"%s\" type and \"%s\" type", fieldA, typeA, typeB)
+				}
+				for i, p := range x.Out {
+					fA = v.Out[i]
+					if p.Kind != fA.Kind || p.Id != fA.Id {
+						return false, nil
+					}
+				}
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false, fmt.Errorf("The \"%s\" method is missing in \"%s\"", v.Name, infoB.Id)
+		}
+	}
+	return true, nil
 }

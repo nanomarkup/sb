@@ -16,5 +16,5 @@
 
 .vscode
 
-src/sb/
-src/samples/helloworld/
+/src/sb/
+/src/samples/helloworld/

@@ -3,16 +3,13 @@ package app
 import (
 	"errors"
 	"fmt"
-
-	"github.com/sapplications/sbuilder/src/services/sbuilder"
-	"github.com/sapplications/sbuilder/src/services/smodule"
 )
 
 type SmartBuilder struct {
 	Lang        func() string
-	Manager     smodule.Manager
-	GoBuilder   sbuilder.Builder
-	GoGenerator sbuilder.Generator
+	Manager     Manager
+	GoBuilder   Builder
+	GoGenerator Generator
 }
 
 func (b *SmartBuilder) Generate(application string) error {
@@ -28,7 +25,7 @@ func (b *SmartBuilder) Generate(application string) error {
 	}
 	// process application
 	switch mod.Lang() {
-	case Langs.Go:
+	case langs.Go:
 		b.GoGenerator.Init(mod.Items())
 		if err := b.GoGenerator.Generate(application); err != nil {
 			return err
@@ -52,7 +49,7 @@ func (b *SmartBuilder) Build(application string) error {
 	}
 	// process application
 	switch mod.Lang() {
-	case Langs.Go:
+	case langs.Go:
 		b.GoBuilder.Init(mod.Items())
 		if err := b.GoBuilder.Build(application); err != nil {
 			return err
@@ -76,7 +73,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	}
 	// process application
 	switch mod.Lang() {
-	case Langs.Go:
+	case langs.Go:
 		// remove the built files
 		b.GoBuilder.Init(mod.Items())
 		if err := b.GoBuilder.Clean(application); err != nil {
@@ -105,7 +102,7 @@ func (b *SmartBuilder) Init(lang string) error {
 	}
 }
 
-func (b *SmartBuilder) ReadAll(lang string) (smodule.Reader, error) {
+func (b *SmartBuilder) ReadAll(lang string) (Reader, error) {
 	defer handleError()
 	mod, err := b.Manager.ReadAll(lang)
 	if err != nil {
@@ -134,7 +131,7 @@ func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	return b.Manager.DeleteDependency(item, dependency)
 }
 
-func (b *SmartBuilder) checkApplication(application string, reader smodule.Reader) (string, error) {
+func (b *SmartBuilder) checkApplication(application string, reader Reader) (string, error) {
 	// check language
 	if _, found := suppLangs[reader.Lang()]; !found {
 		return "", fmt.Errorf("the current \"%s\" language is not supported", reader.Lang())

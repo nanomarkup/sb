@@ -4,10 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/sapplications/sbuilder/src/app"
 	src "github.com/sapplications/sbuilder/src/cmd"
-	"github.com/sapplications/sbuilder/src/golang"
-	"github.com/sapplications/sbuilder/src/smodule"
 	"gopkg.in/check.v1"
 )
 
@@ -34,10 +31,10 @@ type CmdSuite struct {
 var _ = check.Suite(&CmdSuite{})
 
 func (s *CmdSuite) SetUpTest(c *check.C) {
-	sb := app.SmartBuilder{}
+	sb := appSmartBuilder{}
 	sb.Lang = lang
-	sb.Manager = &smodule.Manager{Lang: lang}
-	sb.GoGenerator = &golang.Generator{}
+	sb.Manager = &smoduleManager{Lang: lang}
+	sb.GoGenerator = &golangGenerator{}
 
 	s.cmd = src.SmartBuilder{}
 	s.cmd.SilentErrors = true

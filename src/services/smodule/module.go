@@ -2,9 +2,9 @@ package smodule
 
 type Reader interface {
 	Lang() Language
-	Items() Items
+	Items() map[string]map[string]string
 	Dependency(ItemName, DependencyName) ResolverName
-	Main() (Item, error)
+	Main() (map[string]string, error)
 }
 
 type Writer interface {
@@ -20,6 +20,6 @@ type ReadWriter interface {
 }
 
 type Formatter interface {
-	Item(ItemName, Item) string
+	Item(ItemName, map[string]string) string
 	String(module Reader) string
 }
