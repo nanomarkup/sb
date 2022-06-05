@@ -7,16 +7,15 @@ import (
 
 	"github.com/sapplications/sbuilder/src/app"
 	"github.com/sapplications/sbuilder/src/smodule"
+	"github.com/spf13/viper"
 	"gopkg.in/check.v1"
 )
 
 func (s *CmdSuite) TestGenEmpty(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*"))
 }
 
 func (s *CmdSuite) TestGenAppMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -33,6 +32,7 @@ func (s *CmdSuite) TestGenSbApp(c *check.C) {
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
+	viper.Set("GOWD", wd)
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ = os.Getwd()

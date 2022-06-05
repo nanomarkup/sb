@@ -8,6 +8,5 @@ import (
 )
 
 func (s *CmdSuite) TestBuildEmpty(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Build(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*"))
 }

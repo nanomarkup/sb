@@ -12,29 +12,24 @@ import (
 )
 
 func (s *CmdSuite) TestModSubcmdMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod(), check.ErrorMatches, src.SubcmdMissing)
 }
 
 func (s *CmdSuite) TestModUnknownSubcmd(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("test"), check.ErrorMatches, fmt.Sprintf(src.UnknownSubcmdF, "test"))
 }
 
 // test the init subcommand
 
 func (s *CmdSuite) TestModInitLanguageMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("init"), check.ErrorMatches, src.LanguageMissing)
 }
 
 func (s *CmdSuite) TestModInitLanguageIsNotSupported(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("init", "delphi"), check.ErrorMatches, fmt.Sprintf(app.LanguageIsNotSupportedF, "delphi"))
 }
 
 func (s *CmdSuite) TestModInit(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -54,12 +49,10 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 // test the add subcommand
 
 func (s *CmdSuite) TestModAddItemMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("add"), check.ErrorMatches, src.ItemMissing)
 }
 
 func (s *CmdSuite) TestModAddModuleMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("add", "helloItem"), check.ErrorMatches, src.ModOrDepMissing)
 }
 
@@ -112,7 +105,6 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 }
 
 func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -132,17 +124,14 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 // test the del subcommand
 
 func (s *CmdSuite) TestModDelModuleMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("del", "helloItem"), check.IsNil)
 }
 
 func (s *CmdSuite) TestModDelItemMissing(c *check.C) {
-	c.Skip("Updating in progress...")
 	c.Assert(s.Mod("del"), check.ErrorMatches, src.ItemMissing)
 }
 
 func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -157,7 +146,6 @@ func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {
 }
 
 func (s *CmdSuite) TestModDelItem(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)

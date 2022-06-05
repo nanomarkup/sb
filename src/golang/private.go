@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/mitchellh/go-ps"
+	"github.com/spf13/viper"
 )
 
 func getType(types []Type, id string) *Type {
@@ -148,7 +149,14 @@ func goRun(src string) ([]byte, error) {
 	args := []string{"run", src}
 	cmd := exec.Command("go", args...)
 	if isDebugging() {
+		// resolve the debugging sb application
 		cmd.Dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
+	} else {
+		// resolve the testing sb application
+		wd := viper.GetString("GOWD")
+		if wd != "" {
+			cmd.Dir = wd
+		}
 	}
 	return cmd.Output()
 }
