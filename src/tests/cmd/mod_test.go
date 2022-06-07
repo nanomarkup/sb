@@ -57,7 +57,6 @@ func (s *CmdSuite) TestModAddModuleMissing(c *check.C) {
 }
 
 func (s *CmdSuite) TestModAddEmpty(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -78,7 +77,6 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 }
 
 func (s *CmdSuite) TestModAddItem(c *check.C) {
-	c.Skip("Updating in progress...")
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)

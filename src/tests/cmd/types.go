@@ -93,6 +93,26 @@ type smoduleManager struct {
 	src.Manager
 }
 
+func (m *smoduleManager) AddItem(module, item string) error {
+	m.Manager.Lang = m.Lang
+	return m.Manager.AddItem(module, item)
+}
+
+func (m *smoduleManager) AddDependency(item, dependency, resolver string, update bool) error {
+	m.Manager.Lang = m.Lang
+	return m.Manager.AddDependency(item, dependency, resolver, update)
+}
+
+func (m *smoduleManager) DeleteItem(item string) error {
+	m.Manager.Lang = m.Lang
+	return m.Manager.DeleteItem(item)
+}
+
+func (m *smoduleManager) DeleteDependency(item, dependency string) error {
+	m.Manager.Lang = m.Lang
+	return m.Manager.DeleteDependency(item, dependency)
+}
+
 func (m *smoduleManager) ReadAll(language string) (app.Reader, error) {
 	m.Manager.Lang = m.Lang
 	r, e := m.Manager.ReadAll(language)
