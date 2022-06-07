@@ -43,6 +43,19 @@ func (s *CmdSuite) TestGenSbApp(c *check.C) {
 	c.Assert(s.Gen(), check.IsNil)
 }
 
+func (s *CmdSuite) TestGenHelloWorldApp(c *check.C) {
+	// create a temporary folder and change the current working directory
+	wd, _ := os.Getwd()
+	defer os.Chdir(wd)
+	viper.Set("GOWD", wd)
+	os.Chdir(c.MkDir())
+	// copy sb files
+	wd, _ = os.Getwd()
+	copyFile("e:\\Projects\\src\\github.com\\sapplications\\sbuilder\\src\\samples\\main.sb", wd+"\\main.sb")
+	// generate application's files
+	c.Assert(s.Gen(), check.IsNil)
+}
+
 func copyFile(src, dst string) error {
 	input, err := ioutil.ReadFile(src)
 	if err == nil {

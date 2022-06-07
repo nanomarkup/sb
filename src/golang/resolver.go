@@ -36,6 +36,9 @@ func (r *resolver) resolve() (items, []Type, error) {
 		})
 	}
 	all := []Type{}
+	if len(input) == 0 {
+		return list, all, nil
+	}
 	for {
 		curr, err := getTypeInfo(input)
 		if err != nil {
