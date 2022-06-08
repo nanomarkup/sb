@@ -5,13 +5,6 @@ import (
 	"fmt"
 )
 
-type SmartBuilder struct {
-	Lang        func() string
-	ModManager  Manager
-	GoBuilder   Builder
-	GoGenerator Generator
-}
-
 func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
 	// load and check application

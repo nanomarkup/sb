@@ -1,5 +1,12 @@
 package app
 
+type SmartBuilder struct {
+	Lang        func() string
+	ModManager  Manager
+	GoBuilder   Builder
+	GoGenerator Generator
+}
+
 type Builder interface {
 	Init(items map[string]map[string]string)
 	Build(appName string) error
@@ -27,3 +34,14 @@ type Reader interface {
 	Dependency(itemName, dependencyName string) string
 	Main() (map[string]string, error)
 }
+
+const (
+	AppName           string = "sb"
+	AppVersion        string = "1.0"
+	AppVersionString  string = AppName + " version " + AppVersion
+	DefaultModuleName string = "main"
+	// error messages
+	ErrorMessageF           string = "Error: %v\n"
+	LanguageIsNotSupportedF string = "the current \"%s\" language is not supported\n"
+	ApplicationIsMissing    string = "does not found any application in the main"
+)
