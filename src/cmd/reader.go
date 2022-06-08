@@ -6,16 +6,19 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type Reader struct {
-	Reader cmd.Reader
+type Reader interface {
+	Version() string
+}
+
+type CmdReader struct {
+	Reader
 	cobra.Command
 }
 
-func (v *Reader) init() {
+func (v *CmdReader) init() {
 	v.SilenceUsage = true
 	v.Command.Run = func(cmd *cobra.Command, args []string) {
 		if v.Reader != nil {

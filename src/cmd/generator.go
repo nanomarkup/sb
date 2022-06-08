@@ -4,16 +4,19 @@
 package cmd
 
 import (
-	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type Generator struct {
-	Generator cmd.Generator
+type Generator interface {
+	Generate(string) error
+}
+
+type CmdGenerator struct {
+	Generator
 	cobra.Command
 }
 
-func (v *Generator) init() {
+func (v *CmdGenerator) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Generator == nil {

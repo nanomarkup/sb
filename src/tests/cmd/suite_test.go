@@ -40,31 +40,31 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd = src.SmartBuilder{}
 	s.cmd.SilentErrors = true
 
-	s.cmd.Manager = src.Manager{}
+	s.cmd.Manager = src.CmdManager{}
 	s.cmd.Manager.Use = "mod"
 	s.cmd.Manager.Manager = &sb
 
-	s.cmd.Builder = src.Builder{}
+	s.cmd.Builder = src.CmdBuilder{}
 	s.cmd.Builder.Use = "build"
 	s.cmd.Builder.Builder = &sb
 
-	s.cmd.Cleaner = src.Cleaner{}
+	s.cmd.Cleaner = src.CmdCleaner{}
 	s.cmd.Cleaner.Use = "clean"
 	s.cmd.Cleaner.Cleaner = &sb
 
-	s.cmd.Generator = src.Generator{}
+	s.cmd.Generator = src.CmdGenerator{}
 	s.cmd.Generator.Use = "gen"
 	s.cmd.Generator.Generator = &sb
 
-	s.cmd.ModAdder = src.ModAdder{}
+	s.cmd.ModAdder = src.CmdModAdder{}
 	s.cmd.ModAdder.Use = "add"
 	s.cmd.ModAdder.Manager = &sb
 
-	s.cmd.ModDeler = src.ModDeler{}
+	s.cmd.ModDeler = src.CmdModDeler{}
 	s.cmd.ModDeler.Use = "del"
 	s.cmd.ModDeler.Manager = &sb
 
-	s.cmd.ModIniter = src.ModIniter{}
+	s.cmd.ModIniter = src.CmdModIniter{}
 	s.cmd.ModIniter.Use = "init"
 	s.cmd.ModIniter.Manager = &sb
 	s.cmd.Runner.SilenceErrors = true

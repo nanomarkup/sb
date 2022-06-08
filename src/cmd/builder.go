@@ -4,16 +4,19 @@
 package cmd
 
 import (
-	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type Builder struct {
-	Builder cmd.Builder
+type Builder interface {
+	Build(string) error
+}
+
+type CmdBuilder struct {
+	Builder
 	cobra.Command
 }
 
-func (v *Builder) init() {
+func (v *CmdBuilder) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Builder == nil {

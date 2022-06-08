@@ -8,14 +8,14 @@ import (
 
 type SmartBuilder struct {
 	Runner       Runner
-	Reader       Reader
-	Builder      Builder
-	Cleaner      Cleaner
-	Generator    Generator
-	Manager      Manager
-	ModAdder     ModAdder
-	ModDeler     ModDeler
-	ModIniter    ModIniter
+	Reader       CmdReader
+	Builder      CmdBuilder
+	Cleaner      CmdCleaner
+	Generator    CmdGenerator
+	Manager      CmdManager
+	ModAdder     CmdModAdder
+	ModDeler     CmdModDeler
+	ModIniter    CmdModIniter
 	SilentErrors bool
 }
 

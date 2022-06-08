@@ -6,16 +6,15 @@ package cmd
 import (
 	"errors"
 
-	src "github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type ModAdder struct {
-	Manager src.Manager
+type CmdModAdder struct {
+	Manager
 	cobra.Command
 }
 
-func (v *ModAdder) init() {
+func (v *CmdModAdder) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		defer handleError()

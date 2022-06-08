@@ -4,16 +4,19 @@
 package cmd
 
 import (
-	"github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/spf13/cobra"
 )
 
-type Cleaner struct {
-	Cleaner cmd.Cleaner
+type Cleaner interface {
+	Clean(string) error
+}
+
+type CmdCleaner struct {
+	Cleaner
 	cobra.Command
 }
 
-func (v *Cleaner) init() {
+func (v *CmdCleaner) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
 		if v.Cleaner == nil {

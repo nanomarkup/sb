@@ -8,13 +8,21 @@ import (
 	"fmt"
 	"strings"
 
-	src "github.com/sapplications/sbuilder/src/services/cmd"
 	"github.com/sapplications/sbuilder/src/services/smodule"
 	"github.com/spf13/cobra"
 )
 
-type Manager struct {
-	Manager   src.Manager
+type Manager interface {
+	Init(lang string) error
+	AddItem(module, item string) error
+	AddDependency(item, dependency, resolver string, update bool) error
+	DeleteItem(item string) error
+	DeleteDependency(item, dependency string) error
+	ReadAll(lang string) (smodule.Reader, error)
+}
+
+type CmdManager struct {
+	Manager
 	Formatter smodule.Formatter
 	cobra.Command
 }
@@ -39,7 +47,7 @@ var depFlags struct {
 	all      *bool
 }
 
-func (v *Manager) init() {
+func (v *CmdManager) init() {
 	depFlags.mod = v.Command.Flags().StringP("mod", "m", "", "module name")
 	depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
 	depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
