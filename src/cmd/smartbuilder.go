@@ -12,7 +12,7 @@ type SmartBuilder struct {
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
 	Generator    CmdGenerator
-	Manager      CmdManager
+	ModManager   CmdManager
 	ModAdder     CmdModAdder
 	ModDeler     CmdModDeler
 	ModIniter    CmdModIniter
@@ -25,18 +25,18 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Builder.init()
 	sb.Cleaner.init()
 	sb.Generator.init()
-	sb.Manager.init()
+	sb.ModManager.init()
 	sb.ModAdder.init()
 	sb.ModDeler.init()
 	sb.ModIniter.init()
-	sb.Runner.AddCommand(&sb.Manager.Command)
+	sb.Runner.AddCommand(&sb.ModManager.Command)
 	sb.Runner.AddCommand(&sb.Generator.Command)
 	sb.Runner.AddCommand(&sb.Builder.Command)
 	sb.Runner.AddCommand(&sb.Cleaner.Command)
 	sb.Runner.AddCommand(&sb.Reader.Command)
-	sb.Manager.AddCommand(&sb.ModIniter.Command)
-	sb.Manager.AddCommand(&sb.ModAdder.Command)
-	sb.Manager.AddCommand(&sb.ModDeler.Command)
+	sb.ModManager.AddCommand(&sb.ModIniter.Command)
+	sb.ModManager.AddCommand(&sb.ModAdder.Command)
+	sb.ModManager.AddCommand(&sb.ModDeler.Command)
 	err := sb.Runner.Execute()
 	if (err != nil) && !sb.SilentErrors {
 		os.Exit(1)

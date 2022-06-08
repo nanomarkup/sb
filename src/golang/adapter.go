@@ -261,7 +261,11 @@ func (o *adapter) resolveParameter(in bool, name1 string, f1 Field, name2 string
 		}
 	} else if f1.Kind == reflect.Interface && f2.Kind == reflect.Interface {
 		alias := string(appendImport(*o.imports, f2.PkgPath))
-		return name1, []string{fmt.Sprintf("\t%s = %s.(%s.%s)\n", name2, name1, alias, f2.FieldName)}, nil
+		if in {
+			return name2, []string{fmt.Sprintf("\t%s := %s.(%s.%s)\n", name2, name1, alias, f2.FieldName)}, nil
+		} else {
+			return name1, []string{fmt.Sprintf("\t%s = %s.(%s.%s)\n", name2, name1, alias, f2.FieldName)}, nil
+		}
 	}
 	return "", nil, fmt.Errorf("Cannot resolve \"%s\" and \"%s\" parameters", f1.TypeName, f2.TypeName)
 }

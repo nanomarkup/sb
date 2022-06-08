@@ -8,22 +8,33 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sapplications/sbuilder/src/services/smodule"
 	"github.com/spf13/cobra"
 )
 
-type Manager interface {
+type ModManager interface {
 	Init(lang string) error
 	AddItem(module, item string) error
 	AddDependency(item, dependency, resolver string, update bool) error
 	DeleteItem(item string) error
 	DeleteDependency(item, dependency string) error
-	ReadAll(lang string) (smodule.Reader, error)
+	ReadAll(lang string) (ModReader, error)
+}
+
+type ModReader interface {
+	Lang() string
+	Items() map[string]map[string]string
+	Dependency(string, string) string
+	Main() (map[string]string, error)
+}
+
+type ModFormatter interface {
+	Item(string, map[string]string) string
+	String(module ModReader) string
 }
 
 type CmdManager struct {
-	Manager
-	Formatter smodule.Formatter
+	ModManager
+	ModFormatter
 	cobra.Command
 }
 
@@ -55,7 +66,7 @@ func (v *CmdManager) init() {
 	depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {
-		if v.Manager == nil {
+		if v.ModManager == nil {
 			return nil
 		}
 		if len(args) == 0 {
@@ -94,23 +105,23 @@ func (v *CmdManager) init() {
 			if resolverStr == "" {
 				return errors.New(ResolverMissing)
 			}
-			return v.Manager.AddDependency(itemStr, depStr, resolverStr, true)
+			return v.ModManager.AddDependency(itemStr, depStr, resolverStr, true)
 		case subCmds.list:
 			if depStr != "" && itemStr == "" {
 				return errors.New(ItemMissing)
 			}
-			mod, err := v.Manager.ReadAll(Language())
+			mod, err := v.ModManager.ReadAll(Language())
 			if err != nil {
 				return err
 			} else if *depFlags.all {
-				fmt.Println(v.Formatter.String(mod))
+				fmt.Println(v.ModFormatter.String(mod))
 			} else if itemStr != "" {
 				var item = mod.Items()[itemStr]
 				if item == nil {
 					return fmt.Errorf(ItemDoesNotExistF, itemStr)
 				} else {
 					if depStr == "" {
-						fmt.Print(v.Formatter.Item(itemStr, item))
+						fmt.Print(v.ModFormatter.Item(itemStr, item))
 					} else {
 						if _, found := item[depStr]; found {
 							fmt.Print(mod.Dependency(itemStr, depStr))

@@ -2,9 +2,14 @@ package smodule
 
 import (
 	"fmt"
-
-	"github.com/sapplications/sbuilder/src/services/smodule"
 )
+
+type Reader interface {
+	Lang() string
+	Items() map[string]map[string]string
+	Dependency(string, string) string
+	Main() (map[string]string, error)
+}
 
 type modules []Module
 
@@ -65,7 +70,7 @@ func (m *Manager) DeleteDependency(item, dependency string) error {
 	}
 }
 
-func (m *Manager) ReadAll(lang string) (smodule.Reader, error) {
+func (m *Manager) ReadAll(lang string) (Reader, error) {
 	mods, err := loadModules(lang)
 	if err == nil {
 		return loadItems(mods)

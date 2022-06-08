@@ -1,10 +1,11 @@
-- check and fix package dependencies
 - test a global lang parameter
 - update documentation
 - use a short name for functions (try it for adapters)
 - provide functions for resolving different types
 - return an error message when getting type information using go.exe
 - support comments
+- check all methods in interfaces
+- broke sb file and fix an error message
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings

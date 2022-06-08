@@ -8,8 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/sapplications/sbuilder/src/services/smodule"
 )
 
 func split(line string) []string {
@@ -159,7 +157,7 @@ func loadModules(lang string) (modules, error) {
 	}
 }
 
-func loadItems(mods modules) (smodule.ReadWriter, error) {
+func loadItems(mods modules) (*Module, error) {
 	all := Items{}
 	lang := ""
 	if len(mods) > 0 {

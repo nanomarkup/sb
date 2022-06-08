@@ -7,7 +7,7 @@ import (
 
 type SmartBuilder struct {
 	Lang        func() string
-	Manager     Manager
+	ModManager  Manager
 	GoBuilder   Builder
 	GoGenerator Generator
 }
@@ -15,7 +15,7 @@ type SmartBuilder struct {
 func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
 	// load and check application
-	mod, err := b.Manager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func (b *SmartBuilder) Generate(application string) error {
 func (b *SmartBuilder) Build(application string) error {
 	defer handleError()
 	// load and check application
-	mod, err := b.Manager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (b *SmartBuilder) Build(application string) error {
 func (b *SmartBuilder) Clean(application string) error {
 	defer handleError()
 	// load and check application
-	mod, err := b.Manager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ func (b *SmartBuilder) Version() string {
 
 func (b *SmartBuilder) Init(lang string) error {
 	if _, found := suppLangs[lang]; found {
-		return b.Manager.Init(DefaultModuleName, lang)
+		return b.ModManager.Init(DefaultModuleName, lang)
 	} else {
 		return fmt.Errorf(LanguageIsNotSupportedF, lang)
 	}
@@ -104,7 +104,7 @@ func (b *SmartBuilder) Init(lang string) error {
 
 func (b *SmartBuilder) ReadAll(lang string) (Reader, error) {
 	defer handleError()
-	mod, err := b.Manager.ReadAll(lang)
+	mod, err := b.ModManager.ReadAll(lang)
 	if err != nil {
 		return nil, err
 	}
@@ -113,22 +113,22 @@ func (b *SmartBuilder) ReadAll(lang string) (Reader, error) {
 
 func (b *SmartBuilder) AddItem(module, item string) error {
 	defer handleError()
-	return b.Manager.AddItem(module, item)
+	return b.ModManager.AddItem(module, item)
 }
 
 func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update bool) error {
 	defer handleError()
-	return b.Manager.AddDependency(item, dependency, resolver, update)
+	return b.ModManager.AddDependency(item, dependency, resolver, update)
 }
 
 func (b *SmartBuilder) DeleteItem(item string) error {
 	defer handleError()
-	return b.Manager.DeleteItem(item)
+	return b.ModManager.DeleteItem(item)
 }
 
 func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	defer handleError()
-	return b.Manager.DeleteDependency(item, dependency)
+	return b.ModManager.DeleteDependency(item, dependency)
 }
 
 func (b *SmartBuilder) checkApplication(application string, reader Reader) (string, error) {

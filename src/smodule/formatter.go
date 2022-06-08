@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"sort"
-
-	"github.com/sapplications/sbuilder/src/services/smodule"
 )
 
 type Formatter struct {
@@ -31,7 +29,7 @@ func (f *Formatter) Item(name string, deps map[string]string) string {
 	return res.String()
 }
 
-func (f *Formatter) String(module smodule.Reader) string {
+func (f *Formatter) String(module Reader) string {
 	var res bytes.Buffer
 	res.WriteString(fmt.Sprintf(attrs.moduleFmt, module.Lang()))
 	// sort items

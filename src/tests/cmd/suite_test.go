@@ -34,15 +34,15 @@ var _ = check.Suite(&CmdSuite{})
 func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb := appSmartBuilder{}
 	sb.Lang = lang
-	sb.Manager = &smoduleManager{Lang: lang}
+	sb.ModManager = &smoduleManager{Lang: lang}
 	sb.GoGenerator = &golang.Generator{}
 
 	s.cmd = src.SmartBuilder{}
 	s.cmd.SilentErrors = true
 
-	s.cmd.Manager = src.CmdManager{}
-	s.cmd.Manager.Use = "mod"
-	s.cmd.Manager.Manager = &sb
+	s.cmd.ModManager = src.CmdManager{}
+	s.cmd.ModManager.Use = "mod"
+	s.cmd.ModManager.ModManager = &sb
 
 	s.cmd.Builder = src.CmdBuilder{}
 	s.cmd.Builder.Use = "build"
@@ -58,15 +58,15 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 
 	s.cmd.ModAdder = src.CmdModAdder{}
 	s.cmd.ModAdder.Use = "add"
-	s.cmd.ModAdder.Manager = &sb
+	s.cmd.ModAdder.ModManager = &sb
 
 	s.cmd.ModDeler = src.CmdModDeler{}
 	s.cmd.ModDeler.Use = "del"
-	s.cmd.ModDeler.Manager = &sb
+	s.cmd.ModDeler.ModManager = &sb
 
 	s.cmd.ModIniter = src.CmdModIniter{}
 	s.cmd.ModIniter.Use = "init"
-	s.cmd.ModIniter.Manager = &sb
+	s.cmd.ModIniter.ModManager = &sb
 	s.cmd.Runner.SilenceErrors = true
 }
 

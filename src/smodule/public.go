@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/sapplications/sbuilder/src/services/smodule"
 )
 
 func GetModuleName(fileName string) string {
@@ -29,7 +27,7 @@ func IsModuleExists(name string) bool {
 	return err == nil
 }
 
-func IsItemExists(lang, item string) (bool, smodule.ModuleName) {
+func IsItemExists(lang, item string) (bool, string) {
 	wd, _ := os.Getwd()
 	mods, err := loadModules(lang)
 	if (err != nil) && (err.Error() != fmt.Sprintf(ModuleFilesMissingF, wd)) {

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/sapplications/sbuilder/src/app"
-	"github.com/sapplications/sbuilder/src/services/smodule"
+	"github.com/sapplications/sbuilder/src/cmd"
 	src "github.com/sapplications/sbuilder/src/smodule"
 )
 
@@ -10,7 +10,7 @@ type appSmartBuilder struct {
 	app.SmartBuilder
 }
 
-func (b *appSmartBuilder) ReadAll(lang string) (smodule.Reader, error) {
+func (b *appSmartBuilder) ReadAll(lang string) (cmd.ModReader, error) {
 	return b.SmartBuilder.ReadAll(lang)
 }
 

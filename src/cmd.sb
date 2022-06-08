@@ -6,7 +6,7 @@ github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (
 	Builder github.com/sapplications/sbuilder/src/cmd.CmdBuilder
 	Cleaner github.com/sapplications/sbuilder/src/cmd.CmdCleaner
 	Generator github.com/sapplications/sbuilder/src/cmd.CmdGenerator	
-	Manager github.com/sapplications/sbuilder/src/cmd.CmdManager
+	ModManager github.com/sapplications/sbuilder/src/cmd.CmdManager
 	ModAdder github.com/sapplications/sbuilder/src/cmd.CmdModAdder
 	ModDeler github.com/sapplications/sbuilder/src/cmd.CmdModDeler
 	ModIniter github.com/sapplications/sbuilder/src/cmd.CmdModIniter
@@ -17,8 +17,8 @@ github.com/sapplications/sbuilder/src/cmd.CmdManager require (
 	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
-	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
-	Formatter *github.com/sapplications/sbuilder/src/smodule.Formatter
+	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModFormatter *github.com/sapplications/sbuilder/src/smodule.Formatter
 )
 
 github.com/sapplications/sbuilder/src/cmd.CmdModAdder require (
@@ -26,7 +26,7 @@ github.com/sapplications/sbuilder/src/cmd.CmdModAdder require (
 	Example "  mod add hello - add 'hello' item\n  mod add hello Writer ConsoleWriter - add 'Writer' dependency item to 'hello' item"
 	Short "Add item or dependency"
 	Long "Adds items or dependencies to the exsiting item."
-	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.ModDeler require (
@@ -34,7 +34,7 @@ github.com/sapplications/sbuilder/src/cmd.ModDeler require (
 	Example "  mod del hello - delete 'hello' item with all dependencies\n  mod del hello Writer - delete 'Writer' dependency item from 'hello' item"
 	Short "Delete item or dependency"
 	Long "Deletes items or dependencies from the exsiting item."
-	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.ModIniter require (
@@ -42,7 +42,7 @@ github.com/sapplications/sbuilder/src/cmd.ModIniter require (
 	Example "  init go - generate a main.sb module for 'go' language"
 	Short "Add the main item"
 	Long "Creates a main.sb module and initialize it with the main item. If the main item is exist then do nothing."
-	Manager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.Runner require (
