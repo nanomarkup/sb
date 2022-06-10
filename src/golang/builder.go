@@ -6,10 +6,6 @@ import (
 	"path/filepath"
 )
 
-type Builder struct {
-	items map[string]map[string]string
-}
-
 func (b *Builder) Init(items map[string]map[string]string) {
 	b.items = items
 }

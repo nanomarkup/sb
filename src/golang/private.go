@@ -6,6 +6,7 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -17,7 +18,74 @@ import (
 	"github.com/spf13/viper"
 )
 
-func getType(types []Type, id string) *Type {
+const (
+	// MainFileName constant returns package's main file name
+	mainFileName string = "main.go"
+	// DepsFileName constant returns name of file with all dependencies
+	depsFileName string = "deps.go"
+)
+
+type adapter struct {
+	code    map[string][]string
+	imports *imports
+}
+
+type resolver struct {
+	application string
+	entryPoint  string
+	items       map[string]map[string]string
+}
+
+type item struct {
+	kind     uint
+	name     string
+	pkg      string
+	path     string
+	original string
+	deps     items
+}
+
+type items map[string]item
+
+type alias string
+
+type imports map[string]alias
+
+var itemKind = struct {
+	Func   uint
+	Struct uint
+	String uint
+}{
+	1,
+	2,
+	3,
+}
+
+type typeInfo struct {
+	Id      string
+	Kind    reflect.Kind
+	Name    string
+	String  string
+	PkgPath string
+	Fields  []field
+	Methods []method
+}
+
+type field struct {
+	Id        string
+	Kind      reflect.Kind
+	TypeName  string
+	FieldName string
+	PkgPath   string
+}
+
+type method struct {
+	Name string
+	In   []field
+	Out  []field
+}
+
+func getType(types []typeInfo, id string) *typeInfo {
 	for _, v := range types {
 		if v.Id == id {
 			return &v
@@ -26,7 +94,7 @@ func getType(types []Type, id string) *Type {
 	return nil
 }
 
-func getTypeInfo(list []Type) ([]Type, error) {
+func getTypeInfo(list []typeInfo) ([]typeInfo, error) {
 	// process all items
 	main := []string{}
 	imports := map[string]string{}
@@ -118,7 +186,7 @@ func getTypeInfo(list []Type) ([]Type, error) {
 		if err != nil {
 			return nil, err
 		}
-		var info []Type
+		var info []typeInfo
 		dec := gob.NewDecoder(bytes.NewReader(types))
 		if err := dec.Decode(&info); err != nil {
 			return nil, err
@@ -127,6 +195,20 @@ func getTypeInfo(list []Type) ([]Type, error) {
 		}
 	}
 	return nil, errors.New("cannot collect type details")
+}
+
+func isDirEmpty(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	_, err = f.Readdirnames(1)
+	if err == io.EOF {
+		return true, nil
+	}
+	return false, nil
 }
 
 func isDebugging() bool {
@@ -161,6 +243,32 @@ func goRun(src string) ([]byte, error) {
 	return cmd.Output()
 }
 
+func goBuild(src, dst string) error {
+	args := []string{"build"}
+	if dst != "" {
+		args = append(args, "-o", dst)
+	}
+	args = append(args, src)
+	cmd := exec.Command("go", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func goClean(src string) error {
+	cmd := exec.Command("go", "clean", src)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func readMain(items map[string]map[string]string) (map[string]string, error) {
+	if main, found := items["main"]; found {
+		return main, nil
+	}
+	return nil, fmt.Errorf("The main item is not found")
+}
+
 func appendImport(list imports, path string) alias {
 	if path == "" || path[0:1] == "." {
 		return ""
@@ -175,7 +283,14 @@ func appendImport(list imports, path string) alias {
 	}
 }
 
-func genSerializeType(id int, imp string, x Type) string {
+func checkApplication(application string) error {
+	if application == "" {
+		return fmt.Errorf("The application is not specified")
+	}
+	return nil
+}
+
+func genSerializeType(id int, imp string, x typeInfo) string {
 	return fmt.Sprintf("\tvar v%d %s.%s\n", id, imp, x.Name) +
 		fmt.Sprintf("\tdata = append(data, getType(&v%d))", id)
 }

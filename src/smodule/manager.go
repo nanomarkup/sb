@@ -4,19 +4,6 @@ import (
 	"fmt"
 )
 
-type Reader interface {
-	Lang() string
-	Items() map[string]map[string]string
-	Dependency(string, string) string
-	Main() (map[string]string, error)
-}
-
-type modules []Module
-
-type Manager struct {
-	Lang func() string
-}
-
 func (m *Manager) Init(module, lang string) error {
 	return addItem(module, lang, MainItemName)
 }

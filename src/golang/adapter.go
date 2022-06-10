@@ -8,12 +8,7 @@ import (
 	"strings"
 )
 
-type adapter struct {
-	code    map[string][]string
-	imports *imports
-}
-
-func (o *adapter) adapt(types []Type, typeA string, fieldA string, typeB string, ref bool) (string, error) {
+func (o *adapter) adapt(types []typeInfo, typeA string, fieldA string, typeB string, ref bool) (string, error) {
 	infoA := getType(types, typeA)
 	if infoA == nil {
 		return "", fmt.Errorf("\"%s\" type does not found", typeA)
@@ -53,8 +48,8 @@ func (o *adapter) adapt(types []Type, typeA string, fieldA string, typeB string,
 	code = append(code, fmt.Sprintf("type %s struct {\n", name))
 	code = append(code, fmt.Sprintf("\t%s.%s\n}\n\n", alias, infoB.Name))
 	// check methods
-	var fA Field
-	var fB Field
+	var fA field
+	var fB field
 	var iA int
 	var iB int
 	var iP int
@@ -173,7 +168,7 @@ func (o *adapter) adapt(types []Type, typeA string, fieldA string, typeB string,
 	return funcName, nil
 }
 
-func (o *adapter) resolveMethod(obj string, m1 Method, m2 Method) ([]string, error) {
+func (o *adapter) resolveMethod(obj string, m1 method, m2 method) ([]string, error) {
 	iA := 0
 	iB := 0
 	countA := len(m1.In)
@@ -183,8 +178,8 @@ func (o *adapter) resolveMethod(obj string, m1 Method, m2 Method) ([]string, err
 	outCode := []string{}
 	inputs := []string{}
 	outputs := []string{}
-	var fA Field
-	var fB Field
+	var fA field
+	var fB field
 	var name string
 	var err error
 	if countA > 0 && m1.In[0].Id == "." && m1.In[0].Kind == reflect.Ptr {
@@ -241,8 +236,8 @@ func (o *adapter) resolveMethod(obj string, m1 Method, m2 Method) ([]string, err
 	return inCode, nil
 }
 
-func (o *adapter) equals(l1 []Field, l2 []Field) bool {
-	var f2 Field
+func (o *adapter) equals(l1 []field, l2 []field) bool {
+	var f2 field
 	for i, f1 := range l1 {
 		f2 = l2[i]
 		if f1.Kind != f2.Kind || f1.Id != f2.Id {
@@ -252,7 +247,7 @@ func (o *adapter) equals(l1 []Field, l2 []Field) bool {
 	return true
 }
 
-func (o *adapter) resolveParameter(in bool, name1 string, f1 Field, name2 string, f2 Field) (string, []string, error) {
+func (o *adapter) resolveParameter(in bool, name1 string, f1 field, name2 string, f2 field) (string, []string, error) {
 	if f1.Kind == f2.Kind && f1.Id == f2.Id {
 		if in {
 			return name1, nil, nil

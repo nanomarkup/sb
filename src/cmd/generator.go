@@ -7,15 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Generator interface {
-	Generate(string) error
-}
-
-type CmdGenerator struct {
-	Generator
-	cobra.Command
-}
-
 func (v *CmdGenerator) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {

@@ -5,17 +5,11 @@ import (
 	"strings"
 )
 
-type resolver struct {
-	application string
-	entryPoint  string
-	items       map[string]map[string]string
-}
-
-func (r *resolver) resolve() (items, []Type, error) {
+func (r *resolver) resolve() (items, []typeInfo, error) {
 	id := ""
 	list := r.getItems()
 	items := map[string]bool{}
-	input := []Type{}
+	input := []typeInfo{}
 	for _, x := range list {
 		// the struct and interface types are supported only
 		if x.kind != itemKind.Struct {
@@ -28,14 +22,14 @@ func (r *resolver) resolve() (items, []Type, error) {
 		} else {
 			items[id] = true
 		}
-		input = append(input, Type{
+		input = append(input, typeInfo{
 			Id:      id,
 			Kind:    reflect.Struct,
 			Name:    x.name,
 			PkgPath: strings.TrimPrefix(x.path+x.pkg, "*"),
 		})
 	}
-	all := []Type{}
+	all := []typeInfo{}
 	if len(input) == 0 {
 		return list, all, nil
 	}
@@ -46,7 +40,7 @@ func (r *resolver) resolve() (items, []Type, error) {
 		}
 		all = append(all, curr...)
 		// get the next items to process
-		input = []Type{}
+		input = []typeInfo{}
 		for _, x := range curr {
 			// process all fields
 			if x.Fields != nil {
@@ -61,7 +55,7 @@ func (r *resolver) resolve() (items, []Type, error) {
 					} else {
 						items[f.Id] = true
 					}
-					input = append(input, Type{
+					input = append(input, typeInfo{
 						Id:      f.Id,
 						Kind:    f.Kind,
 						Name:    f.TypeName,
@@ -84,7 +78,7 @@ func (r *resolver) resolve() (items, []Type, error) {
 						} else {
 							items[f.Id] = true
 						}
-						input = append(input, Type{
+						input = append(input, typeInfo{
 							Id:      f.Id,
 							Kind:    f.Kind,
 							Name:    f.TypeName,
@@ -103,7 +97,7 @@ func (r *resolver) resolve() (items, []Type, error) {
 						} else {
 							items[f.Id] = true
 						}
-						input = append(input, Type{
+						input = append(input, typeInfo{
 							Id:      f.Id,
 							Kind:    f.Kind,
 							Name:    f.TypeName,

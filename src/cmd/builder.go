@@ -7,15 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Builder interface {
-	Build(string) error
-}
-
-type CmdBuilder struct {
-	Builder
-	cobra.Command
-}
-
 func (v *CmdBuilder) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {

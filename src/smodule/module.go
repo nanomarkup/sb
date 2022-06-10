@@ -19,24 +19,15 @@ var attrs = struct {
 	"%s %s\n",
 }
 
-type Item = map[string]string
-type Items = map[string]Item
-
-type Module struct {
-	name  string
-	lang  string
-	items Items
-}
-
-func (m *Module) Lang() string {
+func (m *module) Lang() string {
 	return m.lang
 }
 
-func (m *Module) Items() Items {
+func (m *module) Items() Items {
 	return m.items
 }
 
-func (m *Module) Main() (Item, error) {
+func (m *module) Main() (Item, error) {
 	main := m.items["main"]
 	if main == nil {
 		return nil, fmt.Errorf("the main item is not found")
@@ -45,7 +36,7 @@ func (m *Module) Main() (Item, error) {
 	}
 }
 
-func (m *Module) AddItem(item string) error {
+func (m *module) AddItem(item string) error {
 	if _, found := m.items[item]; found {
 		return fmt.Errorf("\"%s\" item already exists", item)
 	}
@@ -53,7 +44,7 @@ func (m *Module) AddItem(item string) error {
 	return nil
 }
 
-func (m *Module) AddDependency(item, dependency, resolver string, update bool) error {
+func (m *module) AddDependency(item, dependency, resolver string, update bool) error {
 	curr, found := m.items[item]
 	if !found {
 		return fmt.Errorf("\"%s\" item does not exist", item)
@@ -65,23 +56,23 @@ func (m *Module) AddDependency(item, dependency, resolver string, update bool) e
 	return nil
 }
 
-func (m *Module) DeleteItem(item string) error {
+func (m *module) DeleteItem(item string) error {
 	delete(m.items, item)
 	return nil
 }
 
-func (m *Module) DeleteDependency(item, dependency string) error {
+func (m *module) DeleteDependency(item, dependency string) error {
 	if curr, found := m.items[item]; found {
 		delete(curr, dependency)
 	}
 	return nil
 }
 
-func (m *Module) Language() string {
+func (m *module) Language() string {
 	return fmt.Sprintf(attrs.moduleFmt, m.lang)
 }
 
-func (m *Module) Dependency(item, dep string) string {
+func (m *module) Dependency(item, dep string) string {
 	if deps := m.items[item]; deps != nil {
 		if res, found := deps[dep]; found {
 			return fmt.Sprintf(attrs.depFmt, dep, res)

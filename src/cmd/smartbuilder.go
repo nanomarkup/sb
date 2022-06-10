@@ -6,19 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type SmartBuilder struct {
-	Runner       Runner
-	Reader       CmdReader
-	Builder      CmdBuilder
-	Cleaner      CmdCleaner
-	Generator    CmdGenerator
-	ModManager   CmdManager
-	ModAdder     CmdModAdder
-	ModDeler     CmdModDeler
-	ModIniter    CmdModIniter
-	SilentErrors bool
-}
-
 func (sb *SmartBuilder) Execute() error {
 	sb.Runner.init()
 	sb.Reader.init()

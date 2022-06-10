@@ -9,11 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type CmdModDeler struct {
-	ModManager
-	cobra.Command
-}
-
 func (v *CmdModDeler) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {

@@ -95,7 +95,7 @@ func (b *SmartBuilder) Init(lang string) error {
 	}
 }
 
-func (b *SmartBuilder) ReadAll(lang string) (Reader, error) {
+func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 	defer handleError()
 	mod, err := b.ModManager.ReadAll(lang)
 	if err != nil {
@@ -124,7 +124,7 @@ func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	return b.ModManager.DeleteDependency(item, dependency)
 }
 
-func (b *SmartBuilder) checkApplication(application string, reader Reader) (string, error) {
+func (b *SmartBuilder) checkApplication(application string, reader ModReader) (string, error) {
 	// check language
 	if _, found := suppLangs[reader.Lang()]; !found {
 		return "", fmt.Errorf("the current \"%s\" language is not supported", reader.Lang())

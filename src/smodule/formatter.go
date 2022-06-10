@@ -6,9 +6,6 @@ import (
 	"sort"
 )
 
-type Formatter struct {
-}
-
 func (f *Formatter) Item(name string, deps map[string]string) string {
 	if deps == nil {
 		return ""

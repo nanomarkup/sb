@@ -9,10 +9,6 @@ import (
 	"strings"
 )
 
-type Generator struct {
-	items map[string]map[string]string
-}
-
 func (g *Generator) Init(items map[string]map[string]string) {
 	g.items = items
 }
@@ -167,7 +163,7 @@ func (g *Generator) generateDepsFile(application, entryPoint string) error {
 	return nil
 }
 
-func (g *Generator) generateItems(entryPoint string, list items, types []Type) ([]string, imports, error) {
+func (g *Generator) generateItems(entryPoint string, list items, types []typeInfo) ([]string, imports, error) {
 	code := []string{}
 	imports := imports{}
 	adapter := adapter{}
@@ -273,7 +269,7 @@ func (g *Generator) getStructItems(original string, list items, result map[strin
 	}
 }
 
-func (g *Generator) areTypesCompatible(types []Type, typeA string, fieldA string, typeB string) (bool, error) {
+func (g *Generator) areTypesCompatible(types []typeInfo, typeA string, fieldA string, typeB string) (bool, error) {
 	// get input types
 	infoA := getType(types, typeA)
 	if infoA == nil {
@@ -305,8 +301,8 @@ func (g *Generator) areTypesCompatible(types []Type, typeA string, fieldA string
 		return false, fmt.Errorf("The receiver of \"%s\" type should be type of interface", fieldInfo.Id)
 	}
 	// check methods
-	var fA Field
-	var fB Field
+	var fA field
+	var fB field
 	var iA int
 	var iB int
 	var countA int

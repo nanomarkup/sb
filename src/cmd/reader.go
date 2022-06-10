@@ -9,15 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Reader interface {
-	Version() string
-}
-
-type CmdReader struct {
-	Reader
-	cobra.Command
-}
-
 func (v *CmdReader) init() {
 	v.SilenceUsage = true
 	v.Command.Run = func(cmd *cobra.Command, args []string) {

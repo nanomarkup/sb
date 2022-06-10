@@ -39,7 +39,7 @@ func (m *smoduleManager) DeleteDependency(item, dependency string) error {
 	return m.Manager.DeleteDependency(item, dependency)
 }
 
-func (m *smoduleManager) ReadAll(language string) (app.Reader, error) {
+func (m *smoduleManager) ReadAll(language string) (app.ModReader, error) {
 	m.Manager.Lang = m.Lang
 	return m.Manager.ReadAll(language)
 }

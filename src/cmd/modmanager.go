@@ -11,33 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type ModManager interface {
-	Init(lang string) error
-	AddItem(module, item string) error
-	AddDependency(item, dependency, resolver string, update bool) error
-	DeleteItem(item string) error
-	DeleteDependency(item, dependency string) error
-	ReadAll(lang string) (ModReader, error)
-}
-
-type ModReader interface {
-	Lang() string
-	Items() map[string]map[string]string
-	Dependency(string, string) string
-	Main() (map[string]string, error)
-}
-
-type ModFormatter interface {
-	Item(string, map[string]string) string
-	String(module ModReader) string
-}
-
-type CmdManager struct {
-	ModManager
-	ModFormatter
-	cobra.Command
-}
-
 var subCmds = struct {
 	add  string
 	del  string

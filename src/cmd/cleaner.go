@@ -7,15 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Cleaner interface {
-	Clean(string) error
-}
-
-type CmdCleaner struct {
-	Cleaner
-	cobra.Command
-}
-
 func (v *CmdCleaner) init() {
 	v.SilenceUsage = true
 	v.Command.RunE = func(cmd *cobra.Command, args []string) error {

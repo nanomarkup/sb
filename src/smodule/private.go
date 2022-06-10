@@ -10,6 +10,28 @@ import (
 	"strings"
 )
 
+const (
+	moduleExt string = ".sb"
+)
+
+type module struct {
+	name  string
+	lang  string
+	items Items
+}
+
+type Item = map[string]string
+type Items = map[string]Item
+type modules []module
+
+func getModuleName(fileName string) string {
+	if strings.HasSuffix(fileName, moduleExt) {
+		return fileName[0 : len(fileName)-len(moduleExt)]
+	} else {
+		return fileName
+	}
+}
+
 func split(line string) []string {
 	var res []string
 	its := strings.Split(line, " ")
@@ -32,8 +54,8 @@ func split(line string) []string {
 	return res
 }
 
-func loadModule(name string) (*Module, error) {
-	mod := Module{}
+func loadModule(name string) (*module, error) {
+	mod := module{}
 	mod.name = name
 	mod.items = Items{}
 
@@ -124,7 +146,7 @@ func loadModules(lang string) (modules, error) {
 	mods := modules{}
 	modLang := ""
 	modFound := false
-	var mod *Module
+	var mod *module
 	for _, f := range files {
 		fname := f.Name()
 		if filepath.Ext(fname) != ".sb" {
@@ -147,7 +169,7 @@ func loadModules(lang string) (modules, error) {
 			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
 		}
 		// add module
-		mods = append(mods, Module{name: GetModuleName(fname), lang: mod.lang, items: mod.items})
+		mods = append(mods, module{name: getModuleName(fname), lang: mod.lang, items: mod.items})
 	}
 	if modFound {
 		return mods, nil
@@ -157,7 +179,7 @@ func loadModules(lang string) (modules, error) {
 	}
 }
 
-func loadItems(mods modules) (*Module, error) {
+func loadItems(mods modules) (*module, error) {
 	all := Items{}
 	lang := ""
 	if len(mods) > 0 {
@@ -172,10 +194,10 @@ func loadItems(mods modules) (*Module, error) {
 			all[name] = data
 		}
 	}
-	return &Module{name: "", lang: lang, items: all}, nil
+	return &module{name: "", lang: lang, items: all}, nil
 }
 
-func saveModule(module *Module) error {
+func saveModule(module *module) error {
 	fileName := GetModuleFileName(module.name)
 	exists := IsModuleExists(fileName)
 	file, err := os.Create(fileName)
@@ -197,16 +219,16 @@ func saveModule(module *Module) error {
 	return err
 }
 
-func addItem(module, lang, item string) error {
+func addItem(moduleName, lang, item string) error {
 	// check the item is exist
 	if found, modName := IsItemExists(lang, item); found {
 		return fmt.Errorf(ItemExistsF, item, modName)
 	}
 	// load the existing module or create a new one
-	var mod *Module
+	var mod *module
 	var err error
-	if IsModuleExists(module) {
-		if mod, err = loadModule(module); err != nil {
+	if IsModuleExists(moduleName) {
+		if mod, err = loadModule(moduleName); err != nil {
 			return err
 		}
 		// check language of the selected module
@@ -214,7 +236,7 @@ func addItem(module, lang, item string) error {
 			return fmt.Errorf(ModuleLanguageMismatchF, mod.lang, mod.name, lang)
 		}
 	} else {
-		mod = &Module{name: module, lang: lang, items: Items{}}
+		mod = &module{name: moduleName, lang: lang, items: Items{}}
 	}
 	// add the item to the selected module
 	if err = mod.AddItem(item); err != nil {
@@ -224,7 +246,7 @@ func addItem(module, lang, item string) error {
 	}
 }
 
-func findItem(lang, item string) (*Module, error) {
+func findItem(lang, item string) (*module, error) {
 	wd, _ := os.Getwd()
 	mods, err := loadModules(lang)
 	if (err != nil) && (err.Error() != fmt.Sprintf(ModuleFilesMissingF, wd)) {

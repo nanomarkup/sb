@@ -1,17 +1,20 @@
 - test a global lang parameter
 - update documentation
 - use a short name for functions (try it for adapters)
-- provide functions for resolving different types
 - return an error message when getting type information using go.exe
 - support comments
 - check all methods in interfaces
 - broke sb file and fix an error message
+- use plugins for builders - https://github.com/hashicorp/go-plugin
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings
     - add a field initialization use a function
     - add a const item for declaring constants and use them in the module, it is a global item
+    - add metadata to a struct to describe its functionality (use it for generating apps!)
+    - provide functions for resolving different types 
     - use numbers as resolver
+    - use a "named type" as parameter (at least for interfaces)
 
 validate code
     - validate sb code before running the gen command
