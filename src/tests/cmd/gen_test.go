@@ -30,28 +30,28 @@ func (s *CmdSuite) TestGenAppMissing(c *check.C) {
 
 func (s *CmdSuite) TestGenSbApp(c *check.C) {
 	// create a temporary folder and change the current working directory
-	wd, _ := os.Getwd()
-	defer os.Chdir(wd)
-	viper.Set("GOWD", wd)
+	currFolder, _ := os.Getwd()
+	defer os.Chdir(currFolder)
+	viper.Set("GOWD", currFolder)
 	os.Chdir(c.MkDir())
 	// copy sb files
-	wd, _ = os.Getwd()
-	copyFile("e:\\Projects\\src\\github.com\\sapplications\\sbuilder\\src\\app.sb", wd+"\\app.sb")
-	copyFile("e:\\Projects\\src\\github.com\\sapplications\\sbuilder\\src\\cmd.sb", wd+"\\cmd.sb")
-	copyFile("e:\\Projects\\src\\github.com\\sapplications\\sbuilder\\src\\main.sb", wd+"\\main.sb")
+	wd, _ := os.Getwd()
+	copyFile(currFolder+"\\..\\..\\app.sb", wd+"\\app.sb")
+	copyFile(currFolder+"\\..\\..\\cmd.sb", wd+"\\cmd.sb")
+	copyFile(currFolder+"\\..\\..\\main.sb", wd+"\\main.sb")
 	// generate application's files
 	c.Assert(s.Gen(), check.IsNil)
 }
 
 func (s *CmdSuite) TestGenHelloWorldApp(c *check.C) {
 	// create a temporary folder and change the current working directory
-	wd, _ := os.Getwd()
-	defer os.Chdir(wd)
-	viper.Set("GOWD", wd)
+	currFolder, _ := os.Getwd()
+	defer os.Chdir(currFolder)
+	viper.Set("GOWD", currFolder)
 	os.Chdir(c.MkDir())
 	// copy sb files
-	wd, _ = os.Getwd()
-	copyFile("e:\\Projects\\src\\github.com\\sapplications\\sbuilder\\src\\samples\\main.sb", wd+"\\main.sb")
+	wd, _ := os.Getwd()
+	copyFile(currFolder+"\\..\\..\\samples\\main.sb", wd+"\\main.sb")
 	// generate application's files
 	c.Assert(s.Gen(), check.IsNil)
 }

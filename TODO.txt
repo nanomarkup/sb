@@ -6,6 +6,7 @@
 - check all methods in interfaces
 - broke sb file and fix an error message
 - use plugins for builders - https://github.com/hashicorp/go-plugin
+- fix all external dependencies like github.com/spf13/cobra
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings
