@@ -3,6 +3,8 @@ package app
 import (
 	"errors"
 	"fmt"
+
+	"github.com/sapplications/sbuilder/src/plugins"
 )
 
 func (b *SmartBuilder) Generate(application string) error {
@@ -19,8 +21,14 @@ func (b *SmartBuilder) Generate(application string) error {
 	// process application
 	switch mod.Lang() {
 	case langs.Go:
-		b.GoGenerator.Init(mod.Items())
-		if err := b.GoGenerator.Generate(application); err != nil {
+		client, raw, err := newPlugin("sgo")
+		if err != nil {
+			return err
+		}
+		defer client.Kill()
+		builder := raw.(plugins.Builder)
+		sources := mod.Items()
+		if err := builder.Generate(application, &sources); err != nil {
 			return err
 		}
 	default:
@@ -43,8 +51,14 @@ func (b *SmartBuilder) Build(application string) error {
 	// process application
 	switch mod.Lang() {
 	case langs.Go:
-		b.GoBuilder.Init(mod.Items())
-		if err := b.GoBuilder.Build(application); err != nil {
+		client, raw, err := newPlugin("sgo")
+		if err != nil {
+			return err
+		}
+		defer client.Kill()
+		builder := raw.(plugins.Builder)
+		sources := mod.Items()
+		if err := builder.Build(application, &sources); err != nil {
 			return err
 		}
 	default:
@@ -67,14 +81,14 @@ func (b *SmartBuilder) Clean(application string) error {
 	// process application
 	switch mod.Lang() {
 	case langs.Go:
-		// remove the built files
-		b.GoBuilder.Init(mod.Items())
-		if err := b.GoBuilder.Clean(application); err != nil {
+		client, raw, err := newPlugin("sgo")
+		if err != nil {
 			return err
 		}
-		// remove the generated files
-		b.GoGenerator.Init(mod.Items())
-		if err := b.GoGenerator.Clean(application); err != nil {
+		defer client.Kill()
+		builder := raw.(plugins.Builder)
+		sources := mod.Items()
+		if err := builder.Clean(application, &sources); err != nil {
 			return err
 		}
 	default:

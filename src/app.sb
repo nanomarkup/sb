@@ -3,10 +3,13 @@ module go
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
 	Lang github.com/sapplications/sbuilder/src/cmd.Language()
 	ModManager *github.com/sapplications/sbuilder/src/smodule.Manager
-	GoBuilder *github.com/sapplications/sbuilder/src/golang.Builder
-	GoGenerator *github.com/sapplications/sbuilder/src/golang.Generator
 )
 
 github.com/sapplications/sbuilder/src/smodule.Manager require (
 	Lang github.com/sapplications/sbuilder/src/cmd.Language()
+)
+
+github.com/sapplications/sbuilder/src/plugins/sgo.Plugin require (
+	Builder *github.com/sapplications/sbuilder/src/golang.Builder
+	Generator *github.com/sapplications/sbuilder/src/golang.Generator
 )

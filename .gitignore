@@ -1,5 +1,4 @@
 # Binary files
-*.exe
 *.exe~
 *.dll
 *.so
@@ -17,4 +16,5 @@
 .vscode
 
 /src/sb/
+/src/sgo/
 /src/samples/helloworld/

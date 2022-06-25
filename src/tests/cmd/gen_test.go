@@ -40,7 +40,7 @@ func (s *CmdSuite) TestGenSbApp(c *check.C) {
 	copyFile(currFolder+"\\..\\..\\cmd.sb", wd+"\\cmd.sb")
 	copyFile(currFolder+"\\..\\..\\main.sb", wd+"\\main.sb")
 	// generate application's files
-	c.Assert(s.Gen(), check.IsNil)
+	c.Assert(s.Gen("sb"), check.IsNil)
 }
 
 func (s *CmdSuite) TestGenHelloWorldApp(c *check.C) {

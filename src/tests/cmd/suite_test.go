@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	src "github.com/sapplications/sbuilder/src/cmd"
-	"github.com/sapplications/sbuilder/src/golang"
 	"gopkg.in/check.v1"
 )
 
@@ -35,7 +34,6 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb := appSmartBuilder{}
 	sb.Lang = lang
 	sb.ModManager = &smoduleManager{Lang: lang}
-	sb.GoGenerator = &golang.Generator{}
 
 	s.cmd = src.SmartBuilder{}
 	s.cmd.SilentErrors = true
@@ -75,17 +73,17 @@ func (s *CmdSuite) Mod(args ...string) error {
 	return s.cmd.Execute()
 }
 
-func (s *CmdSuite) Gen() error {
-	setCmd("gen")
+func (s *CmdSuite) Gen(args ...string) error {
+	setCmd("gen", args...)
 	return s.cmd.Execute()
 }
 
-func (s *CmdSuite) Build() error {
-	setCmd("build")
+func (s *CmdSuite) Build(args ...string) error {
+	setCmd("build", args...)
 	return s.cmd.Execute()
 }
 
-func (s *CmdSuite) Clean() error {
-	setCmd("clean")
+func (s *CmdSuite) Clean(args ...string) error {
+	setCmd("clean", args...)
 	return s.cmd.Execute()
 }

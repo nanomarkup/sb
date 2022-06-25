@@ -12,22 +12,8 @@ const (
 )
 
 type SmartBuilder struct {
-	Lang        func() string
-	ModManager  ModManager
-	GoBuilder   Builder
-	GoGenerator Generator
-}
-
-type Builder interface {
-	Init(items map[string]map[string]string)
-	Build(appName string) error
-	Clean(appName string) error
-}
-
-type Generator interface {
-	Init(items map[string]map[string]string)
-	Clean(appName string) error
-	Generate(appName string) error
+	Lang       func() string
+	ModManager ModManager
 }
 
 type ModManager interface {

@@ -9,6 +9,7 @@
 - fix all external dependencies like github.com/spf13/cobra
 
 core features
+    - add "run" command to run an application
     - add a struct initialization into an item use brackets for overriding global settings
     - add a field initialization use a function
     - add a const item for declaring constants and use them in the module, it is a global item
