@@ -3,8 +3,11 @@ package app
 import (
 	"errors"
 	"fmt"
+	"os"
+	"os/exec"
 
-	"github.com/sapplications/sbuilder/src/plugins"
+	"github.com/hashicorp/go-hclog"
+	"github.com/hashicorp/go-plugin"
 )
 
 func (b *SmartBuilder) Generate(application string) error {
@@ -21,12 +24,12 @@ func (b *SmartBuilder) Generate(application string) error {
 	// process application
 	switch mod.Lang() {
 	case langs.Go:
-		client, raw, err := newPlugin("sgo")
+		client, raw, err := b.newPlugin("sgo")
 		if err != nil {
 			return err
 		}
 		defer client.Kill()
-		builder := raw.(plugins.Builder)
+		builder := raw.(builder)
 		sources := mod.Items()
 		if err := builder.Generate(application, &sources); err != nil {
 			return err
@@ -51,12 +54,12 @@ func (b *SmartBuilder) Build(application string) error {
 	// process application
 	switch mod.Lang() {
 	case langs.Go:
-		client, raw, err := newPlugin("sgo")
+		client, raw, err := b.newPlugin("sgo")
 		if err != nil {
 			return err
 		}
 		defer client.Kill()
-		builder := raw.(plugins.Builder)
+		builder := raw.(builder)
 		sources := mod.Items()
 		if err := builder.Build(application, &sources); err != nil {
 			return err
@@ -81,12 +84,12 @@ func (b *SmartBuilder) Clean(application string) error {
 	// process application
 	switch mod.Lang() {
 	case langs.Go:
-		client, raw, err := newPlugin("sgo")
+		client, raw, err := b.newPlugin("sgo")
 		if err != nil {
 			return err
 		}
 		defer client.Kill()
-		builder := raw.(plugins.Builder)
+		builder := raw.(builder)
 		sources := mod.Items()
 		if err := builder.Clean(application, &sources); err != nil {
 			return err
@@ -136,6 +139,40 @@ func (b *SmartBuilder) DeleteItem(item string) error {
 func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	defer handleError()
 	return b.ModManager.DeleteDependency(item, dependency)
+}
+
+func (b *SmartBuilder) newPlugin(name string) (client *plugin.Client, raw interface{}, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Printf(ErrorMessageF, r)
+			if client != nil {
+				client.Kill()
+			}
+		}
+	}()
+	logger := hclog.New(&hclog.LoggerOptions{
+		Name:   "plugin",
+		Output: os.Stdout,
+		Level:  hclog.Error,
+	})
+	pluginMap := map[string]plugin.Plugin{
+		"sgo": b.Builder.(plugin.Plugin),
+	}
+	client = plugin.NewClient(&plugin.ClientConfig{
+		HandshakeConfig: handshakeConfig,
+		Plugins:         pluginMap,
+		Cmd:             exec.Command(fmt.Sprintf("%s.exe", name)),
+		Logger:          logger,
+	})
+	rpcClient, err := client.Client()
+	if err != nil {
+		return nil, nil, err
+	}
+	raw, err = rpcClient.Dispense(name)
+	if err != nil {
+		return nil, nil, err
+	}
+	return
 }
 
 func (b *SmartBuilder) checkApplication(application string, reader ModReader) (string, error) {

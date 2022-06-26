@@ -2,13 +2,15 @@ package app
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
-	"github.com/sapplications/sbuilder/src/plugins"
 )
+
+type builder interface {
+	Build(app string, sources *map[string]map[string]string) error
+	Clean(app string, sources *map[string]map[string]string) error
+	Generate(app string, sources *map[string]map[string]string) error
+}
 
 var langs = struct {
 	Go string
@@ -28,42 +30,6 @@ var handshakeConfig = plugin.HandshakeConfig{
 	ProtocolVersion:  1,
 	MagicCookieKey:   "SMART_PLUGIN",
 	MagicCookieValue: "sbuilder",
-}
-
-// pluginMap is the map of plugins we can dispense.
-var pluginMap = map[string]plugin.Plugin{
-	"sgo": &plugins.BuilderPlugin{},
-}
-
-func newPlugin(name string) (client *plugin.Client, raw interface{}, err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Printf(ErrorMessageF, r)
-			if client != nil {
-				client.Kill()
-			}
-		}
-	}()
-	logger := hclog.New(&hclog.LoggerOptions{
-		Name:   "plugin",
-		Output: os.Stdout,
-		Level:  hclog.Error,
-	})
-	client = plugin.NewClient(&plugin.ClientConfig{
-		HandshakeConfig: handshakeConfig,
-		Plugins:         pluginMap,
-		Cmd:             exec.Command(fmt.Sprintf("%s.exe", name)),
-		Logger:          logger,
-	})
-	rpcClient, err := client.Client()
-	if err != nil {
-		return nil, nil, err
-	}
-	raw, err = rpcClient.Dispense(name)
-	if err != nil {
-		return nil, nil, err
-	}
-	return
 }
 
 func handleError() {

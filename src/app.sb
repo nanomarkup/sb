@@ -2,6 +2,7 @@ module go
 
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
 	Lang github.com/sapplications/sbuilder/src/cmd.Language()
+	Builder *github.com/sapplications/sbuilder/src/plugins.BuilderPlugin
 	ModManager *github.com/sapplications/sbuilder/src/smodule.Manager
 )
 

@@ -280,9 +280,11 @@ func (g *Generator) areTypesCompatible(types []typeInfo, typeA string, fieldA st
 		return false, fmt.Errorf("\"%s\" type does not found", typeB)
 	}
 	fieldId := ""
+	var fieldOrigInfo field
 	for _, v := range infoA.Fields {
 		if v.FieldName == fieldA {
 			fieldId = v.Id
+			fieldOrigInfo = v
 			break
 		}
 	}
@@ -291,7 +293,12 @@ func (g *Generator) areTypesCompatible(types []typeInfo, typeA string, fieldA st
 	}
 	fieldInfo := getType(types, fieldId)
 	if fieldInfo == nil {
-		return false, fmt.Errorf("\"%s\" type does not found", fieldId)
+		if fieldOrigInfo.Id == "." && fieldOrigInfo.Kind == reflect.Interface && fieldOrigInfo.PkgPath == "" && fieldOrigInfo.TypeName == "" {
+			// it is type of interface{}
+			return true, nil
+		} else {
+			return false, fmt.Errorf("\"%s\" type does not found generator fieldId", fieldId)
+		}
 	}
 	// check compatibility of input types
 	if fieldInfo.Id == infoB.Id {

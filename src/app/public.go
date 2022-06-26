@@ -13,6 +13,7 @@ const (
 
 type SmartBuilder struct {
 	Lang       func() string
+	Builder    interface{}
 	ModManager ModManager
 }
 

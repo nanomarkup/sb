@@ -1,14 +1,18 @@
-- test a global lang parameter
-- update documentation
-- use a short name for functions (try it for adapters)
-- return an error message when getting type information using go.exe
-- support comments
-- check all methods in interfaces
-- broke sb file and fix an error message
-- use plugins for builders - https://github.com/hashicorp/go-plugin
-- fix all external dependencies like github.com/spf13/cobra
+improvements & bugs
+    - test a global lang parameter
+    - update documentation
+    - use a short name for functions (try it for adapters)
+    - return an error message when getting type information using go.exe
+    - check all methods in interfaces
+    - broke sb file and fix an error message
+    - fix all external dependencies - github.com/*
+    - validate sb code before running the gen command
+    - add the debug log messages
+    - resolve interfaces with different number of methods, typeA can have less number of methods than typeB
+          fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
 core features
+    - support comments
     - add "run" command to run an application
     - add a struct initialization into an item use brackets for overriding global settings
     - add a field initialization use a function
@@ -18,9 +22,5 @@ core features
     - use numbers as resolver
     - use a "named type" as parameter (at least for interfaces)
 
-validate code
-    - validate sb code before running the gen command
-
 tests
-    - refactor all tests
     - list all tests
