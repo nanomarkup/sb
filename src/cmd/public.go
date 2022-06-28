@@ -17,7 +17,7 @@ const (
 )
 
 type SmartBuilder struct {
-	Runner       Runner
+	Starter      Starter
 	Reader       CmdReader
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
@@ -29,7 +29,7 @@ type SmartBuilder struct {
 	SilentErrors bool
 }
 
-type Runner struct {
+type Starter struct {
 	cobra.Command
 }
 
@@ -112,5 +112,5 @@ type CmdModIniter struct {
 }
 
 func Language() string {
-	return runnerFlags.lang
+	return starterFlags.lang
 }

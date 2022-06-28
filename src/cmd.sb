@@ -1,7 +1,7 @@
 module go
 
 github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (	
-	Runner github.com/sapplications/sbuilder/src/cmd.Runner
+	Starter github.com/sapplications/sbuilder/src/cmd.Starter
 	Reader github.com/sapplications/sbuilder/src/cmd.CmdReader		
 	Builder github.com/sapplications/sbuilder/src/cmd.CmdBuilder
 	Cleaner github.com/sapplications/sbuilder/src/cmd.CmdCleaner
@@ -45,7 +45,7 @@ github.com/sapplications/sbuilder/src/cmd.ModIniter require (
 	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
-github.com/sapplications/sbuilder/src/cmd.Runner require (
+github.com/sapplications/sbuilder/src/cmd.Starter require (
 	Use "sb"
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."

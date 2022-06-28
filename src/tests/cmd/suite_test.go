@@ -67,7 +67,7 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.ModIniter = src.CmdModIniter{}
 	s.cmd.ModIniter.Use = "init"
 	s.cmd.ModIniter.ModManager = &sb
-	s.cmd.Runner.SilenceErrors = true
+	s.cmd.Starter.SilenceErrors = true
 }
 
 func (s *CmdSuite) Mod(args ...string) error {
