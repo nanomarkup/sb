@@ -12,14 +12,15 @@ improvements & bugs
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
 core features
-    - add "run" command to run an application
-    - add a struct initialization into an item use brackets for overriding global settings
-    - add a field initialization use a function
-    - add a const item for declaring constants and use them in the module, it is a global item
-    - add metadata to a struct to describe its functionality (use it for generating apps!)
+    - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
+    - add a field initialization use a function, usage: field func()
+    - add a const item for declaring constants and use them in the module, it is a global item. Usage: const.name
     - provide functions for resolving different types 
     - use numbers as resolver
     - use a "named type" as parameter (at least for interfaces)
+
+smart features
+    - add metadata to a struct to describe its functionality (use it for generating apps!)
 
 tests
     - list all tests

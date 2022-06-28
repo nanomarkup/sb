@@ -9,6 +9,7 @@ import (
 func (sb *SmartBuilder) Execute() error {
 	sb.Starter.init()
 	sb.Reader.init()
+	sb.Runner.init()
 	sb.Builder.init()
 	sb.Cleaner.init()
 	sb.Generator.init()
@@ -20,6 +21,7 @@ func (sb *SmartBuilder) Execute() error {
 	sb.Starter.AddCommand(&sb.Generator.Command)
 	sb.Starter.AddCommand(&sb.Builder.Command)
 	sb.Starter.AddCommand(&sb.Cleaner.Command)
+	sb.Starter.AddCommand(&sb.Runner.Command)
 	sb.Starter.AddCommand(&sb.Reader.Command)
 	sb.ModManager.AddCommand(&sb.ModIniter.Command)
 	sb.ModManager.AddCommand(&sb.ModAdder.Command)

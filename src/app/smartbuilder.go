@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
@@ -98,6 +99,41 @@ func (b *SmartBuilder) Clean(application string) error {
 		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
 	}
 	return nil
+}
+
+func (b *SmartBuilder) Run(application string) error {
+	defer handleError()
+	// load and check application
+	mod, err := b.ModManager.ReadAll(b.Lang())
+	if err != nil {
+		return err
+	}
+	application, err = b.checkApplication(application, mod)
+	if err != nil {
+		return err
+	}
+	// run an application
+	folder, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	folder = filepath.Join(folder, application)
+	application = fmt.Sprintf("%s.exe", application)
+	if _, err = os.Stat(filepath.Join(folder, application)); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("the system cannot find the \"%s\" application", application)
+		} else {
+			return err
+		}
+	}
+	wd, _ := os.Getwd()
+	if err = os.Chdir(folder); err != nil {
+		return err
+	}
+	cmd := exec.Command(application)
+	output, err := cmd.Output()
+	if err == nil {
+		fmt.Print(string(output))
+	}
+	os.Chdir(wd)
+	return err
 }
 
 func (b *SmartBuilder) Version() string {

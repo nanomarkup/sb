@@ -19,6 +19,7 @@ const (
 type SmartBuilder struct {
 	Starter      Starter
 	Reader       CmdReader
+	Runner       CmdRunner
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
 	Generator    CmdGenerator
@@ -58,6 +59,15 @@ type CmdCleaner struct {
 
 type Cleaner interface {
 	Clean(string) error
+}
+
+type CmdRunner struct {
+	Runner
+	cobra.Command
+}
+
+type Runner interface {
+	Run(string) error
 }
 
 type CmdGenerator struct {

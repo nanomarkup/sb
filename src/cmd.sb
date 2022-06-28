@@ -2,7 +2,8 @@ module go
 
 github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (	
 	Starter github.com/sapplications/sbuilder/src/cmd.Starter
-	Reader github.com/sapplications/sbuilder/src/cmd.CmdReader		
+	Reader github.com/sapplications/sbuilder/src/cmd.CmdReader
+	Runner github.com/sapplications/sbuilder/src/cmd.CmdRunner
 	Builder github.com/sapplications/sbuilder/src/cmd.CmdBuilder
 	Cleaner github.com/sapplications/sbuilder/src/cmd.CmdCleaner
 	Generator github.com/sapplications/sbuilder/src/cmd.CmdGenerator	
@@ -73,6 +74,14 @@ github.com/sapplications/sbuilder/src/cmd.CmdCleaner require (
 	Short "Remove generated files"
 	Long "Removes generated/compiled files."
 	Cleaner *github.com/sapplications/sbuilder/src/app.SmartBuilder
+)
+
+github.com/sapplications/sbuilder/src/cmd.CmdRunner require (
+	Use "run [application]"
+	Example "  run - run the current application\n  run hello - run 'hello' application"
+	Short "Run application"
+	Long "Runs the built application."
+	Runner *github.com/sapplications/sbuilder/src/app.SmartBuilder
 )
 
 github.com/sapplications/sbuilder/src/cmd.CmdReader require (
