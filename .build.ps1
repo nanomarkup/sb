@@ -73,6 +73,12 @@ task install-sgo {
 # Synopsis: Generate, build & install applications 
 task ginstall gbuild, install
 
+# Synopsis: Generate, build & install sb application
+task ginstall-sb gbuild-sb, install-sb
+
+# Synopsis: Generate, build & install sgo plugim
+task ginstall-sgo gbuild-sgo, install-sgo
+
 # Synopsis: Run tests
 task test {
     Set-Location -Path 'src\tests\cmd'

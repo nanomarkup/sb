@@ -71,6 +71,7 @@ func loadModule(name string) (*module, error) {
 	var line string
 	var slice []string
 	var index = 1
+	var cindex int
 	var length int
 	var bracketOpened = false
 	trimChars := " \t\n\r"
@@ -78,6 +79,11 @@ func loadModule(name string) (*module, error) {
 		line, err = reader.ReadString('\n')
 		if err != nil && err != io.EOF {
 			return nil, err
+		}
+		// remove comment
+		cindex = strings.Index(line, "//")
+		if cindex > 0 {
+			line = line[:cindex]
 		}
 		// process the line
 		line = strings.Trim(line, trimChars)

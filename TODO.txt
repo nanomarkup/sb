@@ -12,7 +12,6 @@ improvements & bugs
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
 core features
-    - support comments
     - add "run" command to run an application
     - add a struct initialization into an item use brackets for overriding global settings
     - add a field initialization use a function
