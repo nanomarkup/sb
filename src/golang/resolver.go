@@ -2,17 +2,22 @@ package golang
 
 import (
 	"reflect"
+	"strconv"
 	"strings"
 )
 
 func (r *resolver) resolve() (items, []typeInfo, error) {
 	id := ""
+	kind := reflect.Interface
 	list := r.getItems()
 	items := map[string]bool{}
 	input := []typeInfo{}
 	for _, x := range list {
 		// the struct and interface types are supported only
-		if x.kind != itemKind.Struct {
+		switch x.kind {
+		case itemKind.Struct:
+			kind = reflect.Struct
+		default:
 			continue
 		}
 		id = strings.TrimPrefix(x.original, "*")
@@ -24,7 +29,7 @@ func (r *resolver) resolve() (items, []typeInfo, error) {
 		}
 		input = append(input, typeInfo{
 			Id:      id,
-			Kind:    reflect.Struct,
+			Kind:    kind,
 			Name:    x.name,
 			PkgPath: strings.TrimPrefix(x.path+x.pkg, "*"),
 		})
@@ -136,7 +141,13 @@ func (r *resolver) getItem(itemName string, list items) *item {
 		name = itemName
 	} else {
 		// get path
-		data := strings.Split(itemName, pathSep)
+		var data []string
+		if pos := strings.Index(itemName, "("); pos > -1 {
+			kind = itemKind.Func
+			data = strings.Split(itemName[:pos], pathSep)
+		} else {
+			data = strings.Split(itemName, pathSep)
+		}
 		dataLen := len(data)
 		fullName := data[dataLen-1]
 		if dataLen > 1 {
@@ -151,10 +162,6 @@ func (r *resolver) getItem(itemName string, list items) *item {
 			if dataLen > 1 {
 				pkg = data[0]
 			}
-		}
-		// check and set type of func
-		if name != "" && strings.HasSuffix(name, "()") {
-			kind = itemKind.Func
 		}
 	}
 	// create an item
@@ -177,6 +184,34 @@ func (r *resolver) getItem(itemName string, list items) *item {
 		refIt = r.getItem(res, list)
 		if refIt != nil {
 			it.deps[dep] = *refIt
+		}
+	}
+	// process the input parameters for functions
+	if it.kind == itemKind.Func {
+		id := ""
+		name = it.original[strings.Index(it.original, "(")+1:]
+		name = name[0:strings.Index(name, ")")]
+		name = strings.Trim(name, " ")
+		if name != "" {
+			params := strings.Split(name, ",")
+			for index, param := range params {
+				id = strconv.Itoa(index)
+				if strings.HasPrefix(param, "\"") {
+					it.deps[id] = item{
+						itemKind.String,
+						"",
+						"",
+						"",
+						param,
+						make(items),
+					}
+				} else {
+					refIt = r.getItem(param, list)
+					if refIt != nil {
+						it.deps[id] = *refIt
+					}
+				}
+			}
 		}
 	}
 	// add simple and ref items to the result set and return it

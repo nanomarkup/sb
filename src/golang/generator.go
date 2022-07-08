@@ -173,12 +173,16 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 	g.getStructItems(entryPoint, list, its)
 	// generate code for all type of struct items
 	ref := false
+	name := ""
 	alias := ""
 	typeId1 := ""
 	typeId2 := ""
 	funcName := ""
+	parameter := ""
 	fullNameDefine := ""
 	fullNameReturn := ""
+	var err error
+	var field *field
 	for i := range its {
 		if it, found := list[i]; found {
 			switch it.kind {
@@ -210,7 +214,48 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 						switch v.kind {
 						case itemKind.Func:
 							alias = string(appendImport(imports, v.path+v.pkg))
-							code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, alias, strings.Replace(v.name, "()", "", 1)))
+							field, err = g.getFieldInfo(types, it.original, k)
+							if err != nil {
+								return nil, nil, err
+							}
+							switch field.Kind {
+							case reflect.Func:
+								// if it is a reference to a func then just return it as is
+								code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, alias, v.name))
+							case reflect.Struct:
+								// if it is a reference to a struct then perform it
+								name = v.name + "("
+								if len(v.deps) > 0 {
+									for n, d := range v.deps {
+										// process all parameters IN PROGRESS
+										parameter = ""
+										switch d.kind {
+										case itemKind.Func:
+											parameter = d.name
+										case itemKind.Struct:
+											funcName = fmt.Sprintf("Use%s%s", strings.Title(d.pkg), d.name)
+											if len(d.path) > 0 && d.path[0] == '*' {
+												funcName = funcName + "Ref"
+											}
+											parameter = funcName + "()"
+										case itemKind.String:
+											parameter = d.original
+										default:
+											return nil, nil, fmt.Errorf("\"%s\" type of parameter does not supported", d.original)
+										}
+
+										if n == "0" {
+											name = name + parameter
+										} else {
+											name = fmt.Sprintf("%s, %s", name, parameter)
+										}
+									}
+								}
+								name = name + ")"
+								code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, alias, name))
+							default:
+								return nil, nil, fmt.Errorf("\"%s\" type does not supported", v.original)
+							}
 						case itemKind.Struct:
 							typeId1 = it.original
 							if typeId1[0] == '*' {
@@ -259,14 +304,37 @@ func (g *Generator) getStructItems(original string, list items, result map[strin
 	if result[original] {
 		return
 	}
-	if it, found := list[original]; found && it.kind == itemKind.Struct {
-		result[original] = true
+	if it, found := list[original]; found {
+		if it.kind == itemKind.Struct {
+			result[original] = true
+		}
 		for _, v := range it.deps {
-			if v.kind == itemKind.Struct {
+			switch v.kind {
+			case itemKind.Func:
+				for _, d := range v.deps {
+					if d.kind == itemKind.Struct {
+						g.getStructItems(d.original, list, result)
+					}
+				}
+			case itemKind.Struct:
 				g.getStructItems(v.original, list, result)
 			}
 		}
 	}
+}
+
+func (g *Generator) getFieldInfo(types []typeInfo, item string, field string) (*field, error) {
+	item = strings.TrimPrefix(item, "*")
+	info := getType(types, item)
+	if info == nil {
+		return nil, fmt.Errorf("\"%s\" type does not found", item)
+	}
+	for _, v := range info.Fields {
+		if v.FieldName == field {
+			return &v, nil
+		}
+	}
+	return nil, fmt.Errorf("\"%s\" field is missing in \"%s\" type", field, item)
 }
 
 func (g *Generator) areTypesCompatible(types []typeInfo, typeA string, fieldA string, typeB string) (bool, error) {

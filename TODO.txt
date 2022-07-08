@@ -4,7 +4,6 @@ improvements & bugs
     - use a short name for functions (try it for adapters)
     - return an error message when getting type information using go.exe
     - check all methods in interfaces
-    - broke sb file and fix an error message
     - fix all external dependencies - github.com/*
     - validate sb code before running the gen command
     - add the debug log messages
@@ -13,7 +12,6 @@ improvements & bugs
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
-    - add a field initialization use a function, usage: field func()
     - add a const item for declaring constants and use them in the module, it is a global item. Usage: const.name
     - provide functions for resolving different types 
     - use numbers as resolver
@@ -24,3 +22,37 @@ smart features
 
 tests
     - list all tests
+
+
+type Logger interface {
+	Log(level int, msg string, args ...interface{})
+	Trace(msg string, args ...interface{})
+	Debug(msg string, args ...interface{})
+	Info(msg string, args ...interface{})
+	Warn(msg string, args ...interface{})
+	Error(msg string, args ...interface{})
+	IsTrace() bool
+	IsDebug() bool
+	IsInfo() bool
+	IsWarn() bool
+	IsError() bool
+	SetLevel(int)
+}
+
+var LogLever = struct {
+	NoLevel uint
+	Trace   uint
+	Debug   uint
+	Info    uint
+	Warn    uint
+	Error   uint
+	Off     uint
+}{
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+}
