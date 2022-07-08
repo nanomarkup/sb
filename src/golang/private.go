@@ -240,7 +240,12 @@ func goRun(src string) ([]byte, error) {
 			cmd.Dir = wd
 		}
 	}
-	return cmd.Output()
+	out, err := cmd.Output()
+	if e, ok := err.(*exec.ExitError); ok {
+		return out, fmt.Errorf("%s", e.Stderr)
+	} else {
+		return out, err
+	}
 }
 
 func goBuild(src, dst string) error {
