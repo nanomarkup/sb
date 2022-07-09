@@ -15,6 +15,7 @@ type SmartBuilder struct {
 	Lang       func() string
 	Builder    interface{}
 	ModManager ModManager
+	Logger     Logger
 }
 
 type ModManager interface {
@@ -31,4 +32,17 @@ type ModReader interface {
 	Items() map[string]map[string]string
 	Dependency(itemName, dependencyName string) string
 	Main() (map[string]string, error)
+}
+
+type Logger interface {
+	Trace(msg string, args ...interface{})
+	Debug(msg string, args ...interface{})
+	Info(msg string, args ...interface{})
+	Warn(msg string, args ...interface{})
+	Error(msg string, args ...interface{})
+	IsTrace() bool
+	IsDebug() bool
+	IsInfo() bool
+	IsWarn() bool
+	IsError() bool
 }

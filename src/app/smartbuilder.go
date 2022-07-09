@@ -13,6 +13,7 @@ import (
 
 func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("generating \"%s\" application", application))
 	// load and check application
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
@@ -43,6 +44,7 @@ func (b *SmartBuilder) Generate(application string) error {
 
 func (b *SmartBuilder) Build(application string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("building \"%s\" application", application))
 	// load and check application
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
@@ -73,6 +75,7 @@ func (b *SmartBuilder) Build(application string) error {
 
 func (b *SmartBuilder) Clean(application string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("cleaning \"%s\" application", application))
 	// load and check application
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
@@ -103,6 +106,7 @@ func (b *SmartBuilder) Clean(application string) error {
 
 func (b *SmartBuilder) Run(application string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("running \"%s\" application", application))
 	// load and check application
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
@@ -141,6 +145,7 @@ func (b *SmartBuilder) Version() string {
 }
 
 func (b *SmartBuilder) Init(lang string) error {
+	b.Logger.Info(fmt.Sprintf("initializing \"%s\" language", lang))
 	if _, found := suppLangs[lang]; found {
 		return b.ModManager.Init(DefaultModuleName, lang)
 	} else {
@@ -150,6 +155,7 @@ func (b *SmartBuilder) Init(lang string) error {
 
 func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("reading \"%s\" language", lang))
 	mod, err := b.ModManager.ReadAll(lang)
 	if err != nil {
 		return nil, err
@@ -159,21 +165,25 @@ func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 
 func (b *SmartBuilder) AddItem(module, item string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("adding \"%s\" item to \"%s\" module", item, module))
 	return b.ModManager.AddItem(module, item)
 }
 
 func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update bool) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("adding \"%s\" dependency to \"%s\" item", dependency, item))
 	return b.ModManager.AddDependency(item, dependency, resolver, update)
 }
 
 func (b *SmartBuilder) DeleteItem(item string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("deleting \"%s\" item", item))
 	return b.ModManager.DeleteItem(item)
 }
 
 func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	defer handleError()
+	b.Logger.Info(fmt.Sprintf("deleting \"%s\" dependency from \"%s\" item", dependency, item))
 	return b.ModManager.DeleteDependency(item, dependency)
 }
 

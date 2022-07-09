@@ -10,6 +10,7 @@ type RunnerImpl struct{}
 
 type Item1 struct {
 	Field1    Field1
+	Field1V2  Field1
 	Field2    Field2
 	Field3    Field3
 	Runner    Runner
@@ -28,6 +29,10 @@ type Field3 struct {
 }
 
 func NewField1() Field1 {
+	return Field1{}
+}
+
+func NewField1V2(name string) Field1 {
 	return Field1{}
 }
 

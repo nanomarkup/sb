@@ -11,6 +11,7 @@ func (b *Builder) Init(items map[string]map[string]string) {
 }
 
 func (b *Builder) Build(application string) error {
+	b.Logger.Info(fmt.Sprintf("building \"%s\" application", application))
 	if err := checkApplication(application); err != nil {
 		return err
 	}
@@ -22,6 +23,7 @@ func (b *Builder) Build(application string) error {
 		return fmt.Errorf("\"%s\" does not exist. Please use a \"generate\" command to create it.", filePath)
 	}
 	g := Generator{
+		b.Logger,
 		b.items,
 	}
 	// generate a golang main file if it is missing
@@ -41,6 +43,7 @@ func (b *Builder) Build(application string) error {
 }
 
 func (b *Builder) Clean(application string) error {
+	b.Logger.Info(fmt.Sprintf("cleaning \"%s\" application", application))
 	if err := checkApplication(application); err != nil {
 		return err
 	}

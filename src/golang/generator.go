@@ -14,6 +14,7 @@ func (g *Generator) Init(items map[string]map[string]string) {
 }
 
 func (g *Generator) Generate(application string) error {
+	g.Logger.Info(fmt.Sprintf("generating \"%s\" application", application))
 	if err := checkApplication(application); err != nil {
 		return err
 	}
@@ -27,6 +28,7 @@ func (g *Generator) Generate(application string) error {
 }
 
 func (g *Generator) Clean(application string) error {
+	g.Logger.Info(fmt.Sprintf("cleaning \"%s\" application", application))
 	if err := checkApplication(application); err != nil {
 		return err
 	}
@@ -222,7 +224,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 							case reflect.Func:
 								// if it is a reference to a func then just return it as is
 								code = append(code, fmt.Sprintf("\tv.%s = %s.%s\n", k, alias, v.name))
-							case reflect.Struct:
+							case reflect.Struct, reflect.Interface:
 								// if it is a reference to a struct then perform it
 								name = v.name + "("
 								if len(v.deps) > 0 {

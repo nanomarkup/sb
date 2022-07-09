@@ -4,6 +4,7 @@ github.com/sapplications/sbuilder/src/app.SmartBuilder require (
 	Lang github.com/sapplications/sbuilder/src/cmd.Language()
 	Builder *github.com/sapplications/sbuilder/src/plugins.BuilderPlugin
 	ModManager *github.com/sapplications/sbuilder/src/smodule.Manager
+	Logger github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.New("sb")
 )
 
 github.com/sapplications/sbuilder/src/smodule.Manager require (
@@ -13,4 +14,12 @@ github.com/sapplications/sbuilder/src/smodule.Manager require (
 github.com/sapplications/sbuilder/src/plugins/sgo.Plugin require (
 	Builder *github.com/sapplications/sbuilder/src/golang.Builder
 	Generator *github.com/sapplications/sbuilder/src/golang.Generator
+)
+
+github.com/sapplications/sbuilder/src/golang.Builder require (
+	Logger github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.New("sgo")
+)
+
+github.com/sapplications/sbuilder/src/golang.Generator require (
+	Logger github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.New("sgo")
 )
