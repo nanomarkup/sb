@@ -217,7 +217,7 @@ func (b *SmartBuilder) newPlugin(name string) (client *plugin.Client, raw interf
 		name: b.Builder.(plugin.Plugin),
 	}
 	client = plugin.NewClient(&plugin.ClientConfig{
-		HandshakeConfig: handshakeConfig,
+		HandshakeConfig: b.PluginHandshake,
 		Plugins:         pluginMap,
 		Cmd:             exec.Command(fmt.Sprintf("%s.exe", name)),
 		Logger:          logger,

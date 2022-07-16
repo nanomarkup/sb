@@ -1,12 +1,15 @@
 package sgo
 
+import "github.com/hashicorp/go-plugin"
+
 const (
-	AppName     string = "sgo"
+	AppName string = "sgo"
 )
 
 type Plugin struct {
 	Builder   Builder
 	Generator Generator
+	Handshake plugin.HandshakeConfig
 	Logger    Logger
 }
 

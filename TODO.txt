@@ -9,9 +9,8 @@ improvements & bugs
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
 core features
-    - move plugin.HandshakeConfig to the smart unit (require supporting an integer value)
     - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
-    - add a const item for declaring constants and use them in the module, it is a global item. Usage: const.name
+    - NEXT: add a define item for declaring defines and use them in the module, it is a special item. Usage: define.name
     - use a "named type" as parameter (at least for interfaces)
 
 smart features

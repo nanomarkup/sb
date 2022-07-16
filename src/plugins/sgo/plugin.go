@@ -17,7 +17,7 @@ func (p *Plugin) Execute() {
 		AppName: &plugins.BuilderPlugin{Impl: &builder},
 	}
 	plugin.Serve(&plugin.ServeConfig{
-		HandshakeConfig: handshakeConfig,
+		HandshakeConfig: p.Handshake,
 		Plugins:         pluginMap,
 	})
 }

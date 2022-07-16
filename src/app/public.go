@@ -1,5 +1,7 @@
 package app
 
+import "github.com/hashicorp/go-plugin"
+
 const (
 	AppName           string = "sb"
 	AppVersion        string = "1.0"
@@ -12,10 +14,11 @@ const (
 )
 
 type SmartBuilder struct {
-	Lang       func() string
-	Builder    interface{}
-	ModManager ModManager
-	Logger     Logger
+	Lang            func() string
+	Builder         interface{}
+	ModManager      ModManager
+	PluginHandshake plugin.HandshakeConfig
+	Logger          Logger
 }
 
 type ModManager interface {

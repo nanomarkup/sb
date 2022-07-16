@@ -154,7 +154,9 @@ func (g *Generator) generateDepsFile(application, entryPoint string) error {
 		case itemKind.Func:
 			writer.WriteString(fmt.Sprintf("\t%s.%s\n", entry.pkg, entry.name))
 		case itemKind.Struct:
-			writer.WriteString(fmt.Sprintf("\tapp := Use%s%s()\n", strings.Title(entry.pkg), entry.name))
+			funcName := fmt.Sprintf("\tapp := Use%s%s()\n", strings.Title(entry.pkg), entry.name)
+			funcName = strings.ReplaceAll(funcName, "-", "_")
+			writer.WriteString(funcName)
 			writer.WriteString(fmt.Sprintf("\tapp.Execute()\n"))
 		case itemKind.String:
 			writer.WriteString(fmt.Sprintf("\tfmt.Println(%s)\n", entry.original))
@@ -197,6 +199,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 				appendImport(imports, it.path+it.pkg)
 			case itemKind.Struct:
 				funcName = fmt.Sprintf("Use%s%s", strings.Title(it.pkg), it.name)
+				funcName = strings.ReplaceAll(funcName, "-", "_")
 				fullNameDefine = it.name
 				fullNameReturn = it.name
 				if len(it.path) > 0 {
@@ -245,6 +248,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 											parameter = d.name
 										case itemKind.Struct:
 											funcName = fmt.Sprintf("Use%s%s", strings.Title(d.pkg), d.name)
+											funcName = strings.ReplaceAll(funcName, "-", "_")
 											if len(d.path) > 0 && d.path[0] == '*' {
 												funcName = funcName + "Ref"
 											}
@@ -285,6 +289,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 							ref = len(v.path) > 0 && v.path[0] == '*'
 							if supported {
 								funcName = fmt.Sprintf("Use%s%s", strings.Title(v.pkg), v.name)
+								funcName = strings.ReplaceAll(funcName, "-", "_")
 								if ref {
 									funcName = funcName + "Ref"
 								}
