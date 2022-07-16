@@ -14,12 +14,14 @@ func (s *GoSuite) TestGenerate(c *check.C) {
 		map[string]map[string]string{
 			"main": {"test": "github.com/sapplications/sbuilder/src/tests/golang.Item1"},
 			"github.com/sapplications/sbuilder/src/tests/golang.Item1": {
+				"Int1":      "5",
+				"Float1":    "5.02",
 				"Field1":    "github.com/sapplications/sbuilder/src/tests/golang.NewField1()",
 				"Field1V2":  "github.com/sapplications/sbuilder/src/tests/golang.NewField1V2(\"Ariana\", \"Noha\")",
 				"Field2":    "github.com/sapplications/sbuilder/src/tests/golang.NewField2(\"Vitalii\")",
 				"Field3":    "github.com/sapplications/sbuilder/src/tests/golang.NewField3(github.com/sapplications/sbuilder/src/tests/golang.Field1)",
 				"Runner":    "*github.com/sapplications/sbuilder/src/tests/golang.RunnerImpl",
-				"Logger":    "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.NewFileOut(\"sgo\", \"sgo.log\")",
+				"Logger":    "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.NewFileOut(\"sgo\")",
 				"Hello":     "github.com/sapplications/sbuilder/src/tests/golang.Hello()",
 				"EmptyFunc": "github.com/sapplications/sbuilder/src/tests/golang.EmptyFunc()"},
 		},

@@ -139,6 +139,9 @@ func (r *resolver) getItem(itemName string, list items) *item {
 	if strings.HasPrefix(itemName, "\"") {
 		kind = itemKind.String
 		name = itemName
+	} else if _, err := strconv.ParseFloat(itemName, 64); err == nil {
+		kind = itemKind.Number
+		name = itemName
 	} else {
 		// get path
 		var data []string

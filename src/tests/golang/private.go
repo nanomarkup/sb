@@ -22,6 +22,8 @@ type Logger interface {
 type RunnerImpl struct{}
 
 type Item1 struct {
+	Int1      int
+	Float1    float32
 	Field1    Field1
 	Field1V2  Field1
 	Field2    Field2

@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"sort"
 	"strings"
 )
 
@@ -232,7 +233,11 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 								// if it is a reference to a struct then perform it
 								name = v.name + "("
 								if len(v.deps) > 0 {
-									for n, d := range v.deps {
+									keys := reflect.ValueOf(v.deps).MapKeys()
+									keysOrder := func(i, j int) bool { return keys[i].String() < keys[j].String() }
+									sort.Slice(keys, keysOrder)
+									for i, n := range keys {
+										d := v.deps[n.String()]
 										// process all parameters IN PROGRESS
 										parameter = ""
 										switch d.kind {
@@ -250,7 +255,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 											return nil, nil, fmt.Errorf("\"%s\" type of parameter does not supported", d.original)
 										}
 
-										if n == "0" {
+										if i == 0 {
 											name = name + parameter
 										} else {
 											name = fmt.Sprintf("%s, %s", name, parameter)
@@ -289,7 +294,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 								}
 								code = append(code, fmt.Sprintf("\tv.%s = %s()\n", k, funcName))
 							}
-						case itemKind.String:
+						case itemKind.String, itemKind.Number:
 							code = append(code, fmt.Sprintf("\tv.%s = %s\n", k, v.original))
 						}
 					}

@@ -55,10 +55,12 @@ var itemKind = struct {
 	Func   uint
 	Struct uint
 	String uint
+	Number uint
 }{
 	1,
 	2,
 	3,
+	4,
 }
 
 type typeInfo struct {
