@@ -1,4 +1,4 @@
-module go
+use go
 
 main require (
 	sb github.com/sapplications/sbuilder/src/cmd.SmartBuilder

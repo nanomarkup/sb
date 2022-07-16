@@ -8,13 +8,13 @@ import (
 )
 
 var attrs = struct {
-	module    string
-	moduleFmt string
-	itemFmt   string
-	depFmt    string
+	use     string
+	useFmt  string
+	itemFmt string
+	depFmt  string
 }{
-	"module",
-	"module %s\n",
+	"use",
+	"use %s\n",
 	"%s require (\n",
 	"%s %s\n",
 }
@@ -69,7 +69,7 @@ func (m *module) DeleteDependency(item, dependency string) error {
 }
 
 func (m *module) Language() string {
-	return fmt.Sprintf(attrs.moduleFmt, m.lang)
+	return fmt.Sprintf(attrs.useFmt, m.lang)
 }
 
 func (m *module) Dependency(item, dep string) string {

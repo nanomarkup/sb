@@ -101,8 +101,8 @@ func loadModule(name string) (*module, error) {
 				// check and initialize language
 				if token2 == "" {
 					return nil, fmt.Errorf("cannot parse the first token of " + fileName)
-				} else if token1 != attrs.module {
-					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.module)
+				} else if token1 != attrs.use {
+					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.use)
 				}
 				mod.lang = token2
 			} else {

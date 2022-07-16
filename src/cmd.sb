@@ -1,4 +1,4 @@
-module go
+use go
 
 github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (	
 	Starter github.com/sapplications/sbuilder/src/cmd.Starter

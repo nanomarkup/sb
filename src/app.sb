@@ -1,4 +1,4 @@
-module go
+use go
 
 github.com/sapplications/sbuilder/src/app.SmartBuilder require (
 	Lang github.com/sapplications/sbuilder/src/cmd.Language()
