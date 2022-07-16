@@ -58,10 +58,19 @@ func (m *Manager) DeleteDependency(item, dependency string) error {
 }
 
 func (m *Manager) ReadAll(lang string) (Reader, error) {
+	m.Logger.Trace(fmt.Sprintf("loading modules using \"%s\" language", lang))
 	mods, err := loadModules(lang)
 	if err == nil {
+		if mods == nil {
+			return &module{}, fmt.Errorf("cannot load modules using \"%s\" language", lang)
+		}
+		m.Logger.Trace("reading items")
 		return loadItems(mods)
 	} else {
-		return nil, err
+		return &module{}, err
 	}
+}
+
+func (m *Manager) SetLogger(logger Logger) {
+	m.Logger = logger
 }

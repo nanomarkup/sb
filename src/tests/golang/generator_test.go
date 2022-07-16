@@ -8,7 +8,7 @@ import (
 
 func (s *GoSuite) TestGenerate(c *check.C) {
 	g := golang.Generator{
-		Logger: helper.NewStdOut("sgo"),
+		Logger: helper.NewStdOut("sgo", helper.LogLever.Debug),
 	}
 	g.Init(
 		map[string]map[string]string{
@@ -21,7 +21,7 @@ func (s *GoSuite) TestGenerate(c *check.C) {
 				"Field2":    "github.com/sapplications/sbuilder/src/tests/golang.NewField2(\"Vitalii\")",
 				"Field3":    "github.com/sapplications/sbuilder/src/tests/golang.NewField3(github.com/sapplications/sbuilder/src/tests/golang.Field1)",
 				"Runner":    "*github.com/sapplications/sbuilder/src/tests/golang.RunnerImpl",
-				"Logger":    "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.NewFileOut(\"sgo\")",
+				"Logger":    "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.NewFileOut(\"sgo\", 3)",
 				"Hello":     "github.com/sapplications/sbuilder/src/tests/golang.Hello()",
 				"EmptyFunc": "github.com/sapplications/sbuilder/src/tests/golang.EmptyFunc()"},
 		},

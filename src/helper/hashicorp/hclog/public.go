@@ -26,23 +26,22 @@ var LogLever = struct {
 }
 
 // integer is not supported yet
-//func New(name string, level uint) hclog.Logger {
-func NewStdOut(name string) hclog.Logger {
+func NewStdOut(name string, level uint) hclog.Logger {
 	return hclog.New(&hclog.LoggerOptions{
 		Name:   name,
-		Level:  hclog.Level(LogLever.Info),
+		Level:  hclog.Level(level),
 		Output: os.Stdout,
 	})
 }
 
-func NewFileOut(name string) hclog.Logger {
+func NewFileOut(name string, level uint) hclog.Logger {
 	f, err := os.Create(fmt.Sprintf("%s.log", name))
 	if err != nil {
 		panic(err)
 	}
 	return hclog.New(&hclog.LoggerOptions{
 		Name:   name,
-		Level:  hclog.Level(LogLever.Info),
+		Level:  hclog.Level(level),
 		Output: f,
 	})
 }

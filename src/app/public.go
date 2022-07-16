@@ -25,6 +25,7 @@ type ModManager interface {
 	DeleteItem(itemName string) error
 	DeleteDependency(itemName, dependencyName string) error
 	ReadAll(language string) (ModReader, error)
+	SetLogger(logger Logger)
 }
 
 type ModReader interface {

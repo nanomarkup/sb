@@ -14,7 +14,6 @@ core features
     - move plugin.HandshakeConfig to the smart unit (require supporting an integer value)
     - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
     - add a const item for declaring constants and use them in the module, it is a global item. Usage: const.name
-    - NEXT: Update a logger to use a log level
     - use a "named type" as parameter (at least for interfaces)
 
 smart features

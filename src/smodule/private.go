@@ -69,10 +69,11 @@ func loadModule(name string) (*module, error) {
 	reader := bufio.NewReader(file)
 	var item string
 	var line string
-	var slice []string
+	var token1 string
+	var token2 string
+	var pos int
 	var index = 1
 	var cindex int
-	var length int
 	var bracketOpened = false
 	trimChars := " \t\n\r"
 	for {
@@ -88,46 +89,44 @@ func loadModule(name string) (*module, error) {
 		// process the line
 		line = strings.Trim(line, trimChars)
 		if line != "" {
-			slice = split(line)
-			if len(slice) == 0 {
-				continue
-			}
-			for i, s := range slice {
-				slice[i] = strings.Trim(s, trimChars)
+			pos = strings.Index(line, " ")
+			if pos > 0 {
+				token1 = strings.Trim(line[0:pos], trimChars)
+				token2 = strings.Trim(line[pos:], trimChars)
+			} else {
+				token1 = line
+				token2 = ""
 			}
 			if index == 1 {
 				// check and initialize language
-				if len(slice) != 2 {
+				if token2 == "" {
 					return nil, fmt.Errorf("cannot parse the first token of " + fileName)
-				} else if slice[0] != attrs.module {
+				} else if token1 != attrs.module {
 					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.module)
 				}
-				mod.lang = slice[1]
+				mod.lang = token2
 			} else {
 				// process items
-				length = len(slice)
 				if bracketOpened {
 					// add new dependency item
-					if length == 1 && slice[0] == ")" {
+					if (token1 == ")") && (token2 == "") {
 						item = ""
 						bracketOpened = false
-					} else if length != 2 {
-						return nil, fmt.Errorf("cannot parse the dependency token of " + fileName)
 					} else {
-						mod.items[item][slice[0]] = slice[1]
+						mod.items[item][token1] = token2
 					}
 				} else {
 					// add new item
-					if (length == 1) && (slice[0] == "(") && (item != "") {
+					if (token1 == "(") && (token2 == "") && (item != "") {
 						bracketOpened = true
-					} else if length < 2 {
+					} else if token2 == "" {
 						return nil, fmt.Errorf("cannot parse the item token of " + fileName)
-					} else if (slice[1] != "require") && (slice[1] != "require(") {
+					} else if (token2 != "require") && (token2 != "require(") && (token2 != "require (") {
 						return nil, fmt.Errorf("invalid token")
 					} else {
-						item = slice[0]
+						item = token1
 						mod.items[item] = Item{}
-						if (slice[1] == "require(") || (length > 2 && strings.TrimSuffix(slice[2], "\n") == "(") {
+						if (token2 == "require(") || (token2 == "require (") {
 							bracketOpened = true
 						}
 					}

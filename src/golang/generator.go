@@ -249,9 +249,11 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 												funcName = funcName + "Ref"
 											}
 											parameter = funcName + "()"
-										case itemKind.String:
+										case itemKind.String, itemKind.Number:
 											parameter = d.original
 										default:
+											g.Logger.Error(fmt.Sprintf("\"%s\" type of parameter does not supported:", d.original))
+											g.Logger.Error(fmt.Sprintf("\tkind=%d", d.kind))
 											return nil, nil, fmt.Errorf("\"%s\" type of parameter does not supported", d.original)
 										}
 

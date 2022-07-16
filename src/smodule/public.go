@@ -17,8 +17,22 @@ const (
 	ModuleLanguageMismatchF string = "the %s language of %s module is mismatch the %s selected language"
 )
 
+type Logger interface {
+	Trace(msg string, args ...interface{})
+	Debug(msg string, args ...interface{})
+	Info(msg string, args ...interface{})
+	Warn(msg string, args ...interface{})
+	Error(msg string, args ...interface{})
+	IsTrace() bool
+	IsDebug() bool
+	IsInfo() bool
+	IsWarn() bool
+	IsError() bool
+}
+
 type Manager struct {
-	Lang func() string
+	Lang   func() string
+	Logger Logger
 }
 
 type Reader interface {

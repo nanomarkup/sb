@@ -15,10 +15,12 @@ func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("generating \"%s\" application", application))
 	// load and check application
+	b.ModManager.SetLogger(b.Logger)
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
 	}
+	b.Logger.Trace(fmt.Sprintf("checking \"%s\" application", application))
 	application, err = b.checkApplication(application, mod)
 	if err != nil {
 		return err
@@ -33,6 +35,7 @@ func (b *SmartBuilder) Generate(application string) error {
 		defer client.Kill()
 		builder := raw.(builder)
 		sources := mod.Items()
+		b.Logger.Trace(fmt.Sprintf("generating \"%s\" application using sgo plugin", application))
 		if err := builder.Generate(application, &sources); err != nil {
 			return err
 		}
@@ -46,6 +49,7 @@ func (b *SmartBuilder) Build(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("building \"%s\" application", application))
 	// load and check application
+	b.ModManager.SetLogger(b.Logger)
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
@@ -77,6 +81,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("cleaning \"%s\" application", application))
 	// load and check application
+	b.ModManager.SetLogger(b.Logger)
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
@@ -108,6 +113,7 @@ func (b *SmartBuilder) Run(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("running \"%s\" application", application))
 	// load and check application
+	b.ModManager.SetLogger(b.Logger)
 	mod, err := b.ModManager.ReadAll(b.Lang())
 	if err != nil {
 		return err
@@ -146,6 +152,7 @@ func (b *SmartBuilder) Version() string {
 
 func (b *SmartBuilder) Init(lang string) error {
 	b.Logger.Info(fmt.Sprintf("initializing \"%s\" language", lang))
+	b.ModManager.SetLogger(b.Logger)
 	if _, found := suppLangs[lang]; found {
 		return b.ModManager.Init(DefaultModuleName, lang)
 	} else {
@@ -156,6 +163,7 @@ func (b *SmartBuilder) Init(lang string) error {
 func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("reading \"%s\" language", lang))
+	b.ModManager.SetLogger(b.Logger)
 	mod, err := b.ModManager.ReadAll(lang)
 	if err != nil {
 		return nil, err
@@ -166,24 +174,28 @@ func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 func (b *SmartBuilder) AddItem(module, item string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("adding \"%s\" item to \"%s\" module", item, module))
+	b.ModManager.SetLogger(b.Logger)
 	return b.ModManager.AddItem(module, item)
 }
 
 func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update bool) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("adding \"%s\" dependency to \"%s\" item", dependency, item))
+	b.ModManager.SetLogger(b.Logger)
 	return b.ModManager.AddDependency(item, dependency, resolver, update)
 }
 
 func (b *SmartBuilder) DeleteItem(item string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("deleting \"%s\" item", item))
+	b.ModManager.SetLogger(b.Logger)
 	return b.ModManager.DeleteItem(item)
 }
 
 func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("deleting \"%s\" dependency from \"%s\" item", dependency, item))
+	b.ModManager.SetLogger(b.Logger)
 	return b.ModManager.DeleteDependency(item, dependency)
 }
 
