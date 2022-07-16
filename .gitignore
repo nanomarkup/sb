@@ -14,6 +14,7 @@
 # vendor/
 
 .vscode
+*.log
 
 /src/sb/
 /src/sgo/

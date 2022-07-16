@@ -5,14 +5,15 @@ improvements & bugs
     - check all methods in interfaces
     - fix all external dependencies - github.com/*
     - validate sb code before running the gen command
+    - remove "require" text as well as brackets. Use ":" for an item initialization.
     - resolve interfaces with different number of methods, typeA can have less number of methods than typeB
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
 core features
+    - move plugin.HandshakeConfig to the smart unit (require supporting an integer value)
     - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
     - add a const item for declaring constants and use them in the module, it is a global item. Usage: const.name
-    - provide functions for resolving different types 
-    - use numbers as resolver
+    - NEXT: use numbers as resolver. Update a logger to use a log level
     - use a "named type" as parameter (at least for interfaces)
 
 smart features
@@ -20,3 +21,7 @@ smart features
 
 tests
     - list all tests
+
+help
+    - .sa - smart application unit
+    - .sb - smart builder unit

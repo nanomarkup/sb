@@ -196,6 +196,7 @@ func (r *resolver) getItem(itemName string, list items) *item {
 			params := strings.Split(name, ",")
 			for index, param := range params {
 				id = strconv.Itoa(index)
+				param = strings.Trim(param, " ")
 				if strings.HasPrefix(param, "\"") {
 					it.deps[id] = item{
 						itemKind.String,

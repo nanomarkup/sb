@@ -58,3 +58,7 @@ func (b *Builder) Clean(application string) error {
 	}
 	return goClean(folderPath)
 }
+
+func (b *Builder) SetLogger(logger Logger) {
+	b.Logger = logger
+}

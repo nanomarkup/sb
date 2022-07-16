@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/hashicorp/go-hclog"
@@ -26,10 +27,22 @@ var LogLever = struct {
 
 // integer is not supported yet
 //func New(name string, level uint) hclog.Logger {
-func New(name string) hclog.Logger {
+func NewStdOut(name string) hclog.Logger {
 	return hclog.New(&hclog.LoggerOptions{
 		Name:   name,
-		Output: os.Stdout,
 		Level:  hclog.Level(LogLever.Info),
+		Output: os.Stdout,
+	})
+}
+
+func NewFileOut(name string) hclog.Logger {
+	f, err := os.Create(fmt.Sprintf("%s.log", name))
+	if err != nil {
+		panic(err)
+	}
+	return hclog.New(&hclog.LoggerOptions{
+		Name:   name,
+		Level:  hclog.Level(LogLever.Info),
+		Output: f,
 	})
 }

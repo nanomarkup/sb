@@ -197,12 +197,12 @@ func (b *SmartBuilder) newPlugin(name string) (client *plugin.Client, raw interf
 		}
 	}()
 	logger := hclog.New(&hclog.LoggerOptions{
-		Name:   "plugin",
+		Name:   name,
 		Output: os.Stdout,
 		Level:  hclog.Error,
 	})
 	pluginMap := map[string]plugin.Plugin{
-		"sgo": b.Builder.(plugin.Plugin),
+		name: b.Builder.(plugin.Plugin),
 	}
 	client = plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: handshakeConfig,

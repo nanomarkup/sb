@@ -6,6 +6,19 @@ type Runner interface {
 	Run()
 }
 
+type Logger interface {
+	Trace(msg string, args ...interface{})
+	Debug(msg string, args ...interface{})
+	Info(msg string, args ...interface{})
+	Warn(msg string, args ...interface{})
+	Error(msg string, args ...interface{})
+	IsTrace() bool
+	IsDebug() bool
+	IsInfo() bool
+	IsWarn() bool
+	IsError() bool
+}
+
 type RunnerImpl struct{}
 
 type Item1 struct {
@@ -14,6 +27,7 @@ type Item1 struct {
 	Field2    Field2
 	Field3    Field3
 	Runner    Runner
+	Logger    Logger
 	Hello     func(string)
 	EmptyFunc func()
 }
@@ -32,7 +46,7 @@ func NewField1() Field1 {
 	return Field1{}
 }
 
-func NewField1V2(name string) Field1 {
+func NewField1V2(name string, value string) Field1 {
 	return Field1{}
 }
 

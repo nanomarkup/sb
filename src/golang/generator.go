@@ -60,6 +60,10 @@ func (g *Generator) Clean(application string) error {
 	return nil
 }
 
+func (g *Generator) SetLogger(logger Logger) {
+	g.Logger = logger
+}
+
 func (g *Generator) entryPoint(application string) (string, error) {
 	// read the main item
 	main, err := readMain(g.items)

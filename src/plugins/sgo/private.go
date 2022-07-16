@@ -1,12 +1,10 @@
 package sgo
 
 import (
-	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
 )
 
 type builder struct {
-	logger    hclog.Logger
 	builder   Builder
 	generator Generator
 }
