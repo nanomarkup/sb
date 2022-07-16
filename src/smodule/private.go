@@ -67,14 +67,13 @@ func loadModule(name string) (*module, error) {
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
-	var item string
-	var line string
-	var token1 string
-	var token2 string
-	var pos int
-	var index = 1
-	var cindex int
-	var bracketOpened = false
+	item := ""
+	line := ""
+	token1 := ""
+	token2 := ""
+	pos := 0
+	index := 1
+	cindex := 0
 	trimChars := " \t\n\r"
 	for {
 		line, err = reader.ReadString('\n')
@@ -107,29 +106,21 @@ func loadModule(name string) (*module, error) {
 				mod.lang = token2
 			} else {
 				// process items
-				if bracketOpened {
-					// add new dependency item
-					if (token1 == ")") && (token2 == "") {
-						item = ""
-						bracketOpened = false
-					} else {
-						mod.items[item][token1] = token2
+				if token1[len(token1)-1:] == ":" {
+					if token2 != "" {
+						return nil, fmt.Errorf("invalid syntax in \"%s\" line", line)
 					}
+					// parse the next item
+					item = token1[:len(token1)-1]
 				} else {
-					// add new item
-					if (token1 == "(") && (token2 == "") && (item != "") {
-						bracketOpened = true
-					} else if token2 == "" {
-						return nil, fmt.Errorf("cannot parse the item token of " + fileName)
-					} else if (token2 != "require") && (token2 != "require(") && (token2 != "require (") {
-						return nil, fmt.Errorf("invalid token")
-					} else {
-						item = token1
-						mod.items[item] = Item{}
-						if (token2 == "require(") || (token2 == "require (") {
-							bracketOpened = true
-						}
+					if token2 == "" {
+						return nil, fmt.Errorf("invalid syntax in \"%s\" line", line)
 					}
+					// add new dependency item
+					if mod.items[item] == nil {
+						mod.items[item] = Item{}
+					}
+					mod.items[item][token1] = token2
 				}
 			}
 			index++

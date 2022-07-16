@@ -1,5 +1,4 @@
 use go
 
-main require (
+main:
     helloworld "Hello World!"
-)

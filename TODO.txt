@@ -5,7 +5,6 @@ improvements & bugs
     - check all methods in interfaces
     - fix all external dependencies - github.com/*
     - validate sb code before running the gen command
-    - remove "require" text as well as brackets. Use ":" for an item initialization.
     - resolve interfaces with different number of methods, typeA can have less number of methods than typeB
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 

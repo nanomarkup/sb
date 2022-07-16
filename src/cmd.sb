@@ -1,6 +1,6 @@
 use go
 
-github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (	
+github.com/sapplications/sbuilder/src/cmd.SmartBuilder:
 	Starter github.com/sapplications/sbuilder/src/cmd.Starter
 	Reader github.com/sapplications/sbuilder/src/cmd.CmdReader
 	Runner github.com/sapplications/sbuilder/src/cmd.CmdRunner
@@ -11,82 +11,71 @@ github.com/sapplications/sbuilder/src/cmd.SmartBuilder require (
 	ModAdder github.com/sapplications/sbuilder/src/cmd.CmdModAdder
 	ModDeler github.com/sapplications/sbuilder/src/cmd.CmdModDeler
 	ModIniter github.com/sapplications/sbuilder/src/cmd.CmdModIniter
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdManager require (
+github.com/sapplications/sbuilder/src/cmd.CmdManager:
 	Use "mod"
 	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
 	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
 	ModFormatter *github.com/sapplications/sbuilder/src/smodule.Formatter
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdModAdder require (
+github.com/sapplications/sbuilder/src/cmd.CmdModAdder:
 	Use "add"
 	Example "  mod add hello - add 'hello' item\n  mod add hello Writer ConsoleWriter - add 'Writer' dependency item to 'hello' item"
 	Short "Add item or dependency"
 	Long "Adds items or dependencies to the exsiting item."
 	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.ModDeler require (
+github.com/sapplications/sbuilder/src/cmd.ModDeler:
 	Use "del"
 	Example "  mod del hello - delete 'hello' item with all dependencies\n  mod del hello Writer - delete 'Writer' dependency item from 'hello' item"
 	Short "Delete item or dependency"
 	Long "Deletes items or dependencies from the exsiting item."
 	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.ModIniter require (
+github.com/sapplications/sbuilder/src/cmd.ModIniter:
 	Use "init"
 	Example "  init go - generate a main.sb module for 'go' language"
 	Short "Add the main item"
 	Long "Creates a main.sb module and initialize it with the main item. If the main item is exist then do nothing."
 	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.Starter require (
+github.com/sapplications/sbuilder/src/cmd.Starter:
 	Use "sb"
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdGenerator require (
+github.com/sapplications/sbuilder/src/cmd.CmdGenerator:
 	Use "gen [application]"
 	Example "  gen - generate all items for the current application\n  gen hello - generate all items for 'hello' application"
 	Short "Generate application"
 	Long "Generates all items for an application."
 	Generator *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdBuilder require (
+github.com/sapplications/sbuilder/src/cmd.CmdBuilder:
 	Use "build [application]"
 	Example "  build - build the current application\n  build hello - build 'hello' application"
 	Short "Build application"
 	Long "Builds an application using the generated items."
 	Builder *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdCleaner require (
+github.com/sapplications/sbuilder/src/cmd.CmdCleaner:
 	Use "clean [application]"
 	Example "  clean - remove files for the current application\n  clean hello - remove files for 'hello' application"
 	Short "Remove generated files"
 	Long "Removes generated/compiled files."
 	Cleaner *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdRunner require (
+github.com/sapplications/sbuilder/src/cmd.CmdRunner:
 	Use "run [application]"
 	Example "  run - run the current application\n  run hello - run 'hello' application"
 	Short "Run application"
 	Long "Runs the built application."
 	Runner *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)
 
-github.com/sapplications/sbuilder/src/cmd.CmdReader require (
+github.com/sapplications/sbuilder/src/cmd.CmdReader:
 	Use "version"
 	Short "Print Smart Builder version"
 	Long "Prints the current Smart Builder version."
 	Reader *github.com/sapplications/sbuilder/src/app.SmartBuilder
-)

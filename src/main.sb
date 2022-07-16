@@ -1,6 +1,5 @@
 use go
 
-main require (
+main:
 	sb github.com/sapplications/sbuilder/src/cmd.SmartBuilder
 	sgo github.com/sapplications/sbuilder/src/plugins/sgo.Plugin
-)
