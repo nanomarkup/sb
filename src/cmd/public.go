@@ -5,6 +5,7 @@ import "github.com/spf13/cobra"
 const (
 	// error messages
 	ErrorMessageF           string = "Error: %v\n"
+	AppNameMissing          string = "application name is required"
 	SubcmdMissing           string = "subcommand is required"
 	ItemMissing             string = "item name is required"
 	ModOrDepMissing         string = "module name or dependency name is missing"
@@ -20,6 +21,7 @@ type SmartBuilder struct {
 	Starter      Starter
 	Reader       CmdReader
 	Runner       CmdRunner
+	Creator      CmdCreator
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
 	Generator    CmdGenerator
@@ -41,6 +43,15 @@ type CmdReader struct {
 
 type Reader interface {
 	Version() string
+}
+
+type CmdCreator struct {
+	Creator
+	cobra.Command
+}
+
+type Creator interface {
+	Create(string) error
 }
 
 type CmdBuilder struct {

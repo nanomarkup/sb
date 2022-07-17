@@ -4,6 +4,7 @@ use go
 	Starter {Src}/cmd.Starter
 	Reader {Src}/cmd.CmdReader
 	Runner {Src}/cmd.CmdRunner
+	Creator {Src}/cmd.CmdCreator
 	Builder {Src}/cmd.CmdBuilder
 	Cleaner {Src}/cmd.CmdCleaner
 	Generator {Src}/cmd.CmdGenerator	
@@ -46,10 +47,17 @@ use go
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."
 
+{Src}/cmd.CmdCreator:
+	Use "new [application]"
+	Example "  create hello - create 'hello' application"
+	Short "Create new application"
+	Long "Creates an application by generating smart builder units (.sb)\nusing smart application units (.sa)."
+	Creator *{Src}/app.SmartBuilder
+
 {Src}/cmd.CmdGenerator:
 	Use "gen [application]"
 	Example "  gen - generate all items for the current application\n  gen hello - generate all items for 'hello' application"
-	Short "Generate application"
+	Short "Generate units"
 	Long "Generates all items for an application."
 	Generator *{Src}/app.SmartBuilder
 

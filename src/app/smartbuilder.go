@@ -11,6 +11,10 @@ import (
 	"github.com/hashicorp/go-plugin"
 )
 
+func (b *SmartBuilder) Create(application string) error {
+	return nil
+}
+
 func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("generating \"%s\" application", application))
