@@ -1,81 +1,81 @@
 use go
 
-github.com/sapplications/sbuilder/src/cmd.SmartBuilder:
-	Starter github.com/sapplications/sbuilder/src/cmd.Starter
-	Reader github.com/sapplications/sbuilder/src/cmd.CmdReader
-	Runner github.com/sapplications/sbuilder/src/cmd.CmdRunner
-	Builder github.com/sapplications/sbuilder/src/cmd.CmdBuilder
-	Cleaner github.com/sapplications/sbuilder/src/cmd.CmdCleaner
-	Generator github.com/sapplications/sbuilder/src/cmd.CmdGenerator	
-	ModManager github.com/sapplications/sbuilder/src/cmd.CmdManager
-	ModAdder github.com/sapplications/sbuilder/src/cmd.CmdModAdder
-	ModDeler github.com/sapplications/sbuilder/src/cmd.CmdModDeler
-	ModIniter github.com/sapplications/sbuilder/src/cmd.CmdModIniter
+{Src}/cmd.SmartBuilder:
+	Starter {Src}/cmd.Starter
+	Reader {Src}/cmd.CmdReader
+	Runner {Src}/cmd.CmdRunner
+	Builder {Src}/cmd.CmdBuilder
+	Cleaner {Src}/cmd.CmdCleaner
+	Generator {Src}/cmd.CmdGenerator	
+	ModManager {Src}/cmd.CmdManager
+	ModAdder {Src}/cmd.CmdModAdder
+	ModDeler {Src}/cmd.CmdModDeler
+	ModIniter {Src}/cmd.CmdModIniter
 
-github.com/sapplications/sbuilder/src/cmd.CmdManager:
+{Src}/cmd.CmdManager:
 	Use "mod"
 	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
-	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
-	ModFormatter *github.com/sapplications/sbuilder/src/smodule.Formatter
+	ModManager *{Src}/app.SmartBuilder
+	ModFormatter *{Src}/smodule.Formatter
 
-github.com/sapplications/sbuilder/src/cmd.CmdModAdder:
+{Src}/cmd.CmdModAdder:
 	Use "add"
 	Example "  mod add hello - add 'hello' item\n  mod add hello Writer ConsoleWriter - add 'Writer' dependency item to 'hello' item"
 	Short "Add item or dependency"
 	Long "Adds items or dependencies to the exsiting item."
-	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModManager *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.ModDeler:
+{Src}/cmd.ModDeler:
 	Use "del"
 	Example "  mod del hello - delete 'hello' item with all dependencies\n  mod del hello Writer - delete 'Writer' dependency item from 'hello' item"
 	Short "Delete item or dependency"
 	Long "Deletes items or dependencies from the exsiting item."
-	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModManager *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.ModIniter:
+{Src}/cmd.ModIniter:
 	Use "init"
 	Example "  init go - generate a main.sb module for 'go' language"
 	Short "Add the main item"
 	Long "Creates a main.sb module and initialize it with the main item. If the main item is exist then do nothing."
-	ModManager *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	ModManager *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.Starter:
+{Src}/cmd.Starter:
 	Use "sb"
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."
 
-github.com/sapplications/sbuilder/src/cmd.CmdGenerator:
+{Src}/cmd.CmdGenerator:
 	Use "gen [application]"
 	Example "  gen - generate all items for the current application\n  gen hello - generate all items for 'hello' application"
 	Short "Generate application"
 	Long "Generates all items for an application."
-	Generator *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Generator *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.CmdBuilder:
+{Src}/cmd.CmdBuilder:
 	Use "build [application]"
 	Example "  build - build the current application\n  build hello - build 'hello' application"
 	Short "Build application"
 	Long "Builds an application using the generated items."
-	Builder *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Builder *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.CmdCleaner:
+{Src}/cmd.CmdCleaner:
 	Use "clean [application]"
 	Example "  clean - remove files for the current application\n  clean hello - remove files for 'hello' application"
 	Short "Remove generated files"
 	Long "Removes generated/compiled files."
-	Cleaner *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Cleaner *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.CmdRunner:
+{Src}/cmd.CmdRunner:
 	Use "run [application]"
 	Example "  run - run the current application\n  run hello - run 'hello' application"
 	Short "Run application"
 	Long "Runs the built application."
-	Runner *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Runner *{Src}/app.SmartBuilder
 
-github.com/sapplications/sbuilder/src/cmd.CmdReader:
+{Src}/cmd.CmdReader:
 	Use "version"
 	Short "Print Smart Builder version"
 	Long "Prints the current Smart Builder version."
-	Reader *github.com/sapplications/sbuilder/src/app.SmartBuilder
+	Reader *{Src}/app.SmartBuilder

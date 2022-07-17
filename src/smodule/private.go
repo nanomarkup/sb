@@ -191,77 +191,41 @@ func loadItems(mods modules) (*module, error) {
 		}
 	}
 	// process defines
-	beg := 0
-	end := 0
-	defineUpd := ""
-	defineOrg := ""
 	newItem := ""
+	var err error
 	if defines, found := all["define"]; found && len(defines) > 0 {
 		for item, deps := range all {
-			beg = strings.Index(item, "{")
-			if beg > 0 {
-				end = strings.Index(item, "}")
-				if end < beg {
-					return nil, fmt.Errorf("\"%s\" incorrect item name", item)
-				}
-				// update item name
-				defineOrg = item[beg : end+1]
-				defineUpd = strings.Trim(defineOrg, " {}")
-				if !strings.HasPrefix(defineUpd, "define.") {
-					return nil, fmt.Errorf("\"%s\" incorrect item name", item)
-				}
-				defineUpd = defineUpd[7:]
-				if value, found := defines[defineUpd]; found {
-					newItem = strings.Replace(item, defineOrg, value, 1)
-					all[newItem] = deps
-					delete(all, item)
-				} else {
-					return nil, fmt.Errorf("\"%s\" define is not declared", defineUpd)
-				}
+			if item == "define" {
+				continue
+			}
+			// update item name
+			newItem, err = applyDefines(item, defines)
+			if err != nil {
+				return nil, err
+			}
+			if newItem != item {
+				all[newItem] = deps
+				delete(all, item)
 			}
 			// process all dependencies
 			for dk, dv := range deps {
-				beg = strings.Index(dk, "{")
-				if beg > 0 {
-					end = strings.Index(dk, "}")
-					if end < beg {
-						return nil, fmt.Errorf("\"%s\" incorrect dependency name", dk)
-					}
-					// update dependency name
-					defineOrg = dk[beg : end+1]
-					defineUpd = strings.Trim(defineOrg, " {}")
-					if !strings.HasPrefix(defineUpd, "define.") {
-						return nil, fmt.Errorf("\"%s\" incorrect dependency name", dk)
-					}
-					defineUpd = defineUpd[7:]
-					if value, found := defines[defineUpd]; found {
-						newItem = strings.Replace(dk, defineOrg, value, 1)
-						deps[newItem] = dv
-						delete(deps, dk)
-						dk = newItem
-					} else {
-						return nil, fmt.Errorf("\"%s\" define is not declared", defineUpd)
-					}
+				// update dependency name
+				newItem, err = applyDefines(dk, defines)
+				if err != nil {
+					return nil, err
 				}
-				beg = strings.Index(dv, "{")
-				if beg > 0 {
-					end = strings.Index(dv, "}")
-					if end < beg {
-						return nil, fmt.Errorf("\"%s\" incorrect resolver", dv)
-					}
-					// update resolver
-					defineOrg = dv[beg : end+1]
-					defineUpd = strings.Trim(defineOrg, " {}")
-					if !strings.HasPrefix(defineUpd, "define.") {
-						return nil, fmt.Errorf("\"%s\" incorrect resolver", dv)
-					}
-					defineUpd = defineUpd[7:]
-					if value, found := defines[defineUpd]; found {
-						newItem = strings.Replace(dv, defineOrg, value, 1)
-						deps[dk] = newItem
-					} else {
-						return nil, fmt.Errorf("\"%s\" define is not declared", defineUpd)
-					}
+				if newItem != dk {
+					deps[newItem] = dv
+					delete(deps, dk)
+					dk = newItem
+				}
+				// update resolver
+				newItem, err = applyDefines(dv, defines)
+				if err != nil {
+					return nil, err
+				}
+				if newItem != dv {
+					deps[dk] = newItem
 				}
 			}
 		}
@@ -331,4 +295,26 @@ func findItem(lang, item string) (*module, error) {
 		}
 	}
 	return nil, nil
+}
+
+func applyDefines(item string, defines map[string]string) (string, error) {
+	beg := strings.Index(item, "{")
+	end := -1
+	defineOrg := ""
+	defineName := ""
+	for beg > -1 {
+		end = strings.Index(item, "}")
+		if end < beg {
+			return "", fmt.Errorf("\"%s\" incorrect item name", item)
+		}
+		defineOrg = item[beg : end+1]
+		defineName = strings.Trim(defineOrg, " {}")
+		if value, found := defines[defineName]; found {
+			item = strings.Replace(item, defineOrg, value, 1)
+		} else {
+			return "", fmt.Errorf("\"%s\" define is not declared", defineName)
+		}
+		beg = strings.Index(item, "{")
+	}
+	return item, nil
 }

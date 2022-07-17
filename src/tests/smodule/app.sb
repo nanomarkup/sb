@@ -1,0 +1,32 @@
+use go
+
+define:
+	Src github.com/sapplications/sbuilder/src
+	LogDefault 0
+	LogTrace 1
+	LogDebug 2
+	LogInfo 3
+	LogWarn 4
+	LogError 5
+	LogOff 6
+
+{define.Src}/app.SmartBuilder:
+	Lang github.com/sapplications/sbuilder/src/cmd.Language()
+	Builder *github.com/sapplications/sbuilder/src/plugins.BuilderPlugin
+	ModManager *github.com/sapplications/sbuilder/src/smodule.Manager
+	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
+	Logger {define.Src}/helper/hashicorp/hclog.NewStdOut("sb", {define.LogInfo})
+
+github.com/sapplications/sbuilder/src/smodule.Manager:
+	Lang github.com/sapplications/sbuilder/src/cmd.Language()
+
+github.com/sapplications/sbuilder/src/plugins/sgo.Plugin:
+	Builder *github.com/sapplications/sbuilder/src/golang.Builder
+	Generator *github.com/sapplications/sbuilder/src/golang.Generator
+	Handshake github.com/hashicorp/go-plugin.HandshakeConfig
+	Logger github.com/sapplications/sbuilder/src/helper/hashicorp/hclog.NewFileOut("sgo", {define.LogInfo})
+
+github.com/hashicorp/go-plugin.HandshakeConfig:
+	ProtocolVersion 1
+	MagicCookieKey "SMART_PLUGIN"
+	MagicCookieValue "sbuilder"

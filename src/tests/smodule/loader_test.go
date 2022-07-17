@@ -9,7 +9,6 @@ import (
 )
 
 func (s *SModuleSuite) TestLoading(c *check.C) {
-	copyFile("..\\..\\app.sb", "app.sb")
 	m := smodule.Manager{}
 	m.SetLogger(helper.NewStdOut("test", 1))
 	r, e := m.ReadAll("")

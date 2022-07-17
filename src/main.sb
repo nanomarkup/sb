@@ -1,5 +1,15 @@
 use go
 
+define:
+	Src github.com/sapplications/sbuilder/src
+	LogDefault 0
+	LogTrace 1
+	LogDebug 2
+	LogInfo 3
+	LogWarn 4
+	LogError 5
+	LogOff 6
+
 main:
-	sb github.com/sapplications/sbuilder/src/cmd.SmartBuilder
-	sgo github.com/sapplications/sbuilder/src/plugins/sgo.Plugin
+	sb {Src}/cmd.SmartBuilder
+	sgo {Src}/plugins/sgo.Plugin

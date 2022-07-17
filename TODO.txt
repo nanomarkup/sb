@@ -18,6 +18,11 @@ smart features
     - "application" - kind of application. It includes a set of features
     - "feature" - application feature. It includes a set of actions
     - "action" - to do a work
+    - the smart builder behavior:
+        - read smart builder application unit
+        - read all smart package units 
+        - generate smart builder unit according to the requirements and available smart packages
+        - build the application
 
 tests
     - list all tests
@@ -25,3 +30,4 @@ tests
 help
     - .sa - smart application unit
     - .sb - smart builder unit
+    - .sp - smart package unit. It will be created manually but it should be generated in the future. 
