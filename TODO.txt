@@ -10,7 +10,6 @@ improvements & bugs
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
-    - NEXT: add a define item for declaring defines and use them in the module, it is a special item. Usage: define.name
     - use a "named type" as parameter (at least for interfaces)
 
 smart features
