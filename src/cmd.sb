@@ -5,6 +5,7 @@ use go
 	Reader {Src}/cmd.CmdReader
 	Runner {Src}/cmd.CmdRunner
 	Creator {Src}/cmd.CmdCreator
+	Generator {Src}/cmd.CmdGenerator
 	Coder {Src}/cmd.CmdCoder	
 	Builder {Src}/cmd.CmdBuilder
 	Cleaner {Src}/cmd.CmdCleaner
@@ -51,8 +52,15 @@ use go
 	Use "new [application]"
 	Example "  create hello - create 'hello' application"
 	Short "Create new application"
-	Long "Creates an application by generating smart builder units (.sb)\nusing smart application units (.sa)."
+	Long "Creates an application by generating smart application unit (.sa file)."
 	Creator *{Src}/app.SmartBuilder
+
+{Src}/cmd.CmdGenerator:
+	Use "gen [application]"
+	Example "  generate hello - generate 'hello' application"
+	Short "Generate smart units"
+	Long "Generates smart builder unit (.sb) using smart application unit."
+	Generator *{Src}/app.SmartGenerator
 
 {Src}/cmd.CmdCoder:
 	Use "code [application]"

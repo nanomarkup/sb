@@ -43,3 +43,39 @@ help
     - .sa - smart application unit
     - .sb - smart builder unit
     - .sp - smart package unit. It will be created manually but it should be generated in the future. 
+
+
+example of a new sb file
+sb
+
+apps:
+    helloworld
+
+helloworld:
+    entry "Hello World!"
+
+
+example of sa file
+sa
+
+apps:
+    helloworld helloworld - optional resolver, the default is app name
+
+helloworld:    
+    name helloworld - optional, default the same as app name    
+    type console - optional, default is console
+    lang go - optional, default is go
+    entry helloworld/actions - optional, default is [appname/actions]
+    features helloworld/features - optional, default is [appname/features]
+    
+helloworld/actions:
+    // sb will supports some common actions
+    print "Hello World!"
+
+helloworld/features:
+    // describe all supported features
+    // the console implementation depends on the current list of features
+    commands ...
+    database ...
+    logger ...
+    interaction ...

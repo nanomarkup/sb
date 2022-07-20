@@ -21,6 +21,8 @@ type SmartBuilder struct {
 	Logger          Logger
 }
 
+type SmartGenerator struct{}
+
 type ModManager interface {
 	Init(moduleName, language string) error
 	AddItem(moduleName, itemName string) error
