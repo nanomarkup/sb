@@ -11,8 +11,8 @@ use go
 	Lang {Src}/cmd.Language()
 
 {Src}/plugins/sgo.Plugin:
+	Coder *{Src}/golang.Coder
 	Builder *{Src}/golang.Builder
-	Generator *{Src}/golang.Generator
 	Handshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger {Src}/helper/hashicorp/hclog.NewFileOut("sgo", {LogInfo})
 

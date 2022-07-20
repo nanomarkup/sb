@@ -22,9 +22,9 @@ type SmartBuilder struct {
 	Reader       CmdReader
 	Runner       CmdRunner
 	Creator      CmdCreator
+	Coder        CmdCoder
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
-	Generator    CmdGenerator
 	ModManager   CmdManager
 	ModAdder     CmdModAdder
 	ModDeler     CmdModDeler
@@ -81,12 +81,12 @@ type Runner interface {
 	Run(string) error
 }
 
-type CmdGenerator struct {
-	Generator
+type CmdCoder struct {
+	Coder
 	cobra.Command
 }
 
-type Generator interface {
+type Coder interface {
 	Generate(string) error
 }
 

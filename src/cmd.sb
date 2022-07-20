@@ -5,9 +5,9 @@ use go
 	Reader {Src}/cmd.CmdReader
 	Runner {Src}/cmd.CmdRunner
 	Creator {Src}/cmd.CmdCreator
+	Coder {Src}/cmd.CmdCoder	
 	Builder {Src}/cmd.CmdBuilder
 	Cleaner {Src}/cmd.CmdCleaner
-	Generator {Src}/cmd.CmdGenerator	
 	ModManager {Src}/cmd.CmdManager
 	ModAdder {Src}/cmd.CmdModAdder
 	ModDeler {Src}/cmd.CmdModDeler
@@ -54,12 +54,12 @@ use go
 	Long "Creates an application by generating smart builder units (.sb)\nusing smart application units (.sa)."
 	Creator *{Src}/app.SmartBuilder
 
-{Src}/cmd.CmdGenerator:
-	Use "gen [application]"
-	Example "  gen - generate all items for the current application\n  gen hello - generate all items for 'hello' application"
-	Short "Generate units"
-	Long "Generates all items for an application."
-	Generator *{Src}/app.SmartBuilder
+{Src}/cmd.CmdCoder:
+	Use "code [application]"
+	Example "  code - generate sources to build the application\n  code hello - generate sources for 'hello' application"
+	Short "Generate code"
+	Long "Generates code to build the application."
+	Coder *{Src}/app.SmartBuilder
 
 {Src}/cmd.CmdBuilder:
 	Use "build [application]"

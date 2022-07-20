@@ -10,11 +10,11 @@ import (
 	"strings"
 )
 
-func (g *Generator) Init(items map[string]map[string]string) {
+func (g *Coder) Init(items map[string]map[string]string) {
 	g.items = items
 }
 
-func (g *Generator) Generate(application string) error {
+func (g *Coder) Generate(application string) error {
 	g.Logger.Info(fmt.Sprintf("generating \"%s\" application", application))
 	if err := checkApplication(application); err != nil {
 		return err
@@ -28,7 +28,7 @@ func (g *Generator) Generate(application string) error {
 	}
 }
 
-func (g *Generator) Clean(application string) error {
+func (g *Coder) Clean(application string) error {
 	g.Logger.Info(fmt.Sprintf("cleaning \"%s\" application", application))
 	if err := checkApplication(application); err != nil {
 		return err
@@ -61,11 +61,11 @@ func (g *Generator) Clean(application string) error {
 	return nil
 }
 
-func (g *Generator) SetLogger(logger Logger) {
+func (g *Coder) SetLogger(logger Logger) {
 	g.Logger = logger
 }
 
-func (g *Generator) entryPoint(application string) (string, error) {
+func (g *Coder) entryPoint(application string) (string, error) {
 	// read the main item
 	main, err := readMain(g.items)
 	if err != nil {
@@ -79,7 +79,7 @@ func (g *Generator) entryPoint(application string) (string, error) {
 	return entry, nil
 }
 
-func (g *Generator) generateMainFile(application string) error {
+func (g *Coder) generateMainFile(application string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
@@ -101,7 +101,7 @@ func (g *Generator) generateMainFile(application string) error {
 	return nil
 }
 
-func (g *Generator) generateDepsFile(application, entryPoint string) error {
+func (g *Coder) generateDepsFile(application, entryPoint string) error {
 	// check and get info about all dependencies
 	r := resolver{
 		application,
@@ -172,7 +172,7 @@ func (g *Generator) generateDepsFile(application, entryPoint string) error {
 	return nil
 }
 
-func (g *Generator) generateItems(entryPoint string, list items, types []typeInfo) ([]string, imports, error) {
+func (g *Coder) generateItems(entryPoint string, list items, types []typeInfo) ([]string, imports, error) {
 	code := []string{}
 	imports := imports{}
 	adapter := adapter{}
@@ -318,7 +318,7 @@ func (g *Generator) generateItems(entryPoint string, list items, types []typeInf
 	return code, imports, nil
 }
 
-func (g *Generator) getStructItems(original string, list items, result map[string]bool) {
+func (g *Coder) getStructItems(original string, list items, result map[string]bool) {
 	if result[original] {
 		return
 	}
@@ -341,7 +341,7 @@ func (g *Generator) getStructItems(original string, list items, result map[strin
 	}
 }
 
-func (g *Generator) getFieldInfo(types []typeInfo, item string, field string) (*field, error) {
+func (g *Coder) getFieldInfo(types []typeInfo, item string, field string) (*field, error) {
 	item = strings.TrimPrefix(item, "*")
 	info := getType(types, item)
 	if info == nil {
@@ -355,7 +355,7 @@ func (g *Generator) getFieldInfo(types []typeInfo, item string, field string) (*
 	return nil, fmt.Errorf("\"%s\" field is missing in \"%s\" type", field, item)
 }
 
-func (g *Generator) areTypesCompatible(types []typeInfo, typeA string, fieldA string, typeB string) (bool, error) {
+func (g *Coder) areTypesCompatible(types []typeInfo, typeA string, fieldA string, typeB string) (bool, error) {
 	// get input types
 	infoA := getType(types, typeA)
 	if infoA == nil {
@@ -383,7 +383,7 @@ func (g *Generator) areTypesCompatible(types []typeInfo, typeA string, fieldA st
 			// it is type of interface{}
 			return true, nil
 		} else {
-			return false, fmt.Errorf("\"%s\" type does not found generator fieldId", fieldId)
+			return false, fmt.Errorf("\"%s\" type does not found Coder fieldId", fieldId)
 		}
 	}
 	// check compatibility of input types

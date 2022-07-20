@@ -15,16 +15,16 @@ func (b *builder) Clean(app string, sources *map[string]map[string]string) error
 		return err
 	}
 	// remove the generated files
-	b.generator.Init(*sources)
-	if err := b.generator.Clean(app); err != nil {
+	b.coder.Init(*sources)
+	if err := b.coder.Clean(app); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (b *builder) Generate(app string, sources *map[string]map[string]string) error {
-	b.generator.Init(*sources)
-	if err := b.generator.Generate(app); err != nil {
+	b.coder.Init(*sources)
+	if err := b.coder.Generate(app); err != nil {
 		return err
 	}
 	return nil

@@ -1,19 +1,19 @@
 
 # Synopsis: Generate sources
-task gen gen-sb, gen-sgo
+task code code-sb, code-sgo
 
 # Synopsis: Generate sb sources
-task gen-sb {
+task code-sb {
     Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'gen sb' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "gen sb" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code sb' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "code sb" command failed'
 }
 
 # Synopsis: Generate sgo sources
-task gen-sgo {
+task code-sgo {
     Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'gen sgo' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "gen sgo" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code sgo' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "code sgo" command failed'
 }
 
 # Synopsis: Build sources
@@ -34,19 +34,19 @@ task build-sgo {
 }
 
 # Synopsis: Generate & build sources
-task gbuild gbuild-sb, gbuild-sgo
+task cbuild cbuild-sb, cbuild-sgo
 
 # Synopsis: Generate & build sb application
-task gbuild-sb gen-sb, build-sb
+task cbuild-sb code-sb, build-sb
 
 # Synopsis: Generate & build sgo plugin
-task gbuild-sgo gen-sgo, build-sgo
+task cbuild-sgo code-sgo, build-sgo
 
 # Synopsis: Build samples
 task samples {
     Set-Location -Path 'src\samples'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'gen helloworld' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "gen helloworld" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code helloworld' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "code helloworld" command failed'
     $Status = Start-Process -FilePath 'sb' -ArgumentList 'build helloworld' -NoNewWindow -PassThru -Wait
     Assert($Status.ExitCode -eq 0) 'The "build helloworld" command failed'
 }
@@ -71,13 +71,13 @@ task install-sgo {
 }
 
 # Synopsis: Generate, build & install applications 
-task ginstall gbuild, install
+task cinstall cbuild, install
 
 # Synopsis: Generate, build & install sb application
-task ginstall-sb gbuild-sb, install-sb
+task cinstall-sb cbuild-sb, install-sb
 
 # Synopsis: Generate, build & install sgo plugim
-task ginstall-sgo gbuild-sgo, install-sgo
+task cinstall-sgo cbuild-sgo, install-sgo
 
 # Synopsis: Run tests
 task test {
@@ -86,4 +86,4 @@ task test {
     Assert($Status.ExitCode -eq 0) 'The test command failed'
 }
 
-task . gbuild, test, samples
+task . cbuild, test, samples

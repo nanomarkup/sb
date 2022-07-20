@@ -7,11 +7,11 @@ import (
 
 func (p *Plugin) Execute() {
 	builder := builder{
-		builder:   p.Builder,
-		generator: p.Generator,
+		coder:   p.Coder,
+		builder: p.Builder,
 	}
+	builder.coder.SetLogger(p.Logger)
 	builder.builder.SetLogger(p.Logger)
-	builder.generator.SetLogger(p.Logger)
 	// pluginMap is the map of plugins we can dispense.
 	var pluginMap = map[string]plugin.Plugin{
 		AppName: &plugins.BuilderPlugin{Impl: &builder},

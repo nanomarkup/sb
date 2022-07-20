@@ -22,7 +22,7 @@ func (b *Builder) Build(application string) error {
 	if _, err := os.Stat(filePath); err != nil {
 		return fmt.Errorf("\"%s\" does not exist. Please use a \"generate\" command to create it.", filePath)
 	}
-	g := Generator{
+	g := Coder{
 		b.Logger,
 		b.items,
 	}

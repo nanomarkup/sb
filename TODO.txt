@@ -5,8 +5,19 @@ improvements & bugs
     - check all methods in interfaces
     - fix all external dependencies - github.com/*
     - validate sb code before running the gen command
+    - rename the main item to apps item
+    - the apps item can be duplicated - merge all items
+    - the sb module will be started with sb word
+    - the application should be reference to the item, where the following optional items
+        - name - optional, default the same as app name  
+        - lang - optional, default is go
+        - entry - resolver, mandatory for sb unit
     - resolve interfaces with different number of methods, typeA can have less number of methods than typeB
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
+    - "new" command creates a new sa file
+    - "gen" command generates a new sb file
+    - "code" command generates files to build
+    - "build" command builds application
 
 core features
     - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
@@ -19,9 +30,10 @@ smart features
     - "feature" - application feature. It includes a set of actions
     - "action" - to do a work
     - the smart builder behavior:
-        - read smart builder application unit
-        - read all smart package units 
+        - read smart builder application unit using smodule package?
+        - read all smart package units using smodule package?
         - generate smart builder unit according to the requirements and available smart packages
+            - create "sapp" package for that
         - build the application
 
 tests

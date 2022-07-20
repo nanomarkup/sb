@@ -1,11 +1,11 @@
 package golang
 
-type Builder struct {
+type Coder struct {
 	Logger Logger
 	items  map[string]map[string]string
 }
 
-type Generator struct {
+type Builder struct {
 	Logger Logger
 	items  map[string]map[string]string
 }
