@@ -1,3 +1,13 @@
+function GenDoc {
+    param (
+        [string]$PackageName
+    )
+    $CurrLocation = Get-Location
+    Set-Location -Path $PackageName
+    $Status = Start-Process -FilePath 'go' -ArgumentList 'doc -all' -RedirectStandardOutput 'readme.txt' -NoNewWindow -PassThru -Wait 
+    Set-Location -Path $CurrLocation
+    Assert($Status.ExitCode -eq 0) 'The "go doc" command failed'
+}
 
 # Synopsis: Generate sources
 task code code-sb, code-sgo
@@ -84,6 +94,18 @@ task test {
     Set-Location -Path 'src\tests\cmd'
     $Status = Start-Process -FilePath 'go' -ArgumentList 'test' -NoNewWindow -PassThru -Wait
     Assert($Status.ExitCode -eq 0) 'The test command failed'
+}
+
+# Synopsis: Generate documentation
+task doc {
+    Set-Location -Path 'src'
+    GenDoc -PackageName 'app'
+    GenDoc -PackageName 'cmd'
+    GenDoc -PackageName 'golang'
+    GenDoc -PackageName 'helper\hashicorp\hclog'
+    GenDoc -PackageName 'plugins'
+    GenDoc -PackageName 'plugins\sgo'
+    GenDoc -PackageName 'smodule'
 }
 
 task . cbuild, test, samples

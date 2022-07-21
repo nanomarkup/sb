@@ -1,0 +1,19 @@
+package plugins // import "github.com/sapplications/sbuilder/src/plugins"
+
+
+TYPES
+
+type Builder interface {
+	Build(app string, sources *map[string]map[string]string) error
+	Clean(app string, sources *map[string]map[string]string) error
+	Generate(app string, sources *map[string]map[string]string) error
+}
+
+type BuilderPlugin struct {
+	Impl Builder
+}
+
+func (BuilderPlugin) Client(b *plugin.MuxBroker, c *rpc.Client) (interface{}, error)
+
+func (p *BuilderPlugin) Server(*plugin.MuxBroker) (interface{}, error)
+

@@ -1,0 +1,29 @@
+package helper // import "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog"
+
+
+VARIABLES
+
+var LogLever = struct {
+	NoLevel uint
+	Trace   uint
+	Debug   uint
+	Info    uint
+	Warn    uint
+	Error   uint
+	Off     uint
+}{
+	0,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+}
+
+FUNCTIONS
+
+func NewFileOut(name string, level uint) hclog.Logger
+func NewStdOut(name string, level uint) hclog.Logger
+    integer is not supported yet
+
