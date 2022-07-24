@@ -108,4 +108,4 @@ task doc {
     GenDoc -PackageName 'smodule'
 }
 
-task . cbuild, test, samples
+task . cbuild, test, samples, doc

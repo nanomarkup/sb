@@ -20,6 +20,11 @@ type module struct {
 	items Items
 }
 
+type moduleAsync struct {
+	mod *module
+	err error
+}
+
 type Item = map[string]string
 type Items = map[string]Item
 type modules []module
@@ -133,6 +138,11 @@ func loadModule(name string) (*module, error) {
 	return &mod, nil
 }
 
+func loadModuleAsync(name string, res chan<- moduleAsync) {
+	m, e := loadModule(name)
+	res <- moduleAsync{m, e}
+}
+
 func loadModules(lang string) (modules, error) {
 	// read and check all modules in the working directory
 	files, err := ioutil.ReadDir(".")
@@ -141,33 +151,35 @@ func loadModules(lang string) (modules, error) {
 	}
 	mods := modules{}
 	modLang := ""
-	modFound := false
-	var mod *module
+	var item chan moduleAsync
+	items := []chan moduleAsync{}
 	for _, f := range files {
 		fname := f.Name()
 		if filepath.Ext(fname) != ".sb" {
 			continue
 		}
-		modFound = true
-		// load module
-		if mod, err = loadModule(fname); err != nil {
-			return nil, err
-		}
+		item = make(chan moduleAsync)
+		items = append(items, item)
+		go loadModuleAsync(fname, item)
+	}
+	// wait and process all loaded modules
+	for _, it := range items {
+		item := <-it
 		// validate the loaded module
-		if lang != "" && lang != mod.lang {
+		if lang != "" && lang != item.mod.lang {
 			// skip the loaded module if the language is not the selected language
 			continue
 		}
 		if modLang == "" {
-			modLang = mod.lang
+			modLang = item.mod.lang
 		}
-		if modLang != mod.lang {
-			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", fname)
+		if modLang != item.mod.lang {
+			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", item.mod.name)
 		}
 		// add module
-		mods = append(mods, module{name: getModuleName(fname), lang: mod.lang, items: mod.items})
+		mods = append(mods, module{name: getModuleName(item.mod.name), lang: item.mod.lang, items: item.mod.items})
 	}
-	if modFound {
+	if len(mods) > 0 {
 		return mods, nil
 	} else {
 		wd, _ := os.Getwd()
