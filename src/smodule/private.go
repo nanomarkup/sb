@@ -165,6 +165,13 @@ func loadModules(lang string) (modules, error) {
 	// wait and process all loaded modules
 	for _, it := range items {
 		item := <-it
+		if err != nil {
+			continue
+		}
+		if item.err != nil {
+			err = item.err
+			continue
+		}
 		// validate the loaded module
 		if lang != "" && lang != item.mod.lang {
 			// skip the loaded module if the language is not the selected language
@@ -179,7 +186,9 @@ func loadModules(lang string) (modules, error) {
 		// add module
 		mods = append(mods, module{name: getModuleName(item.mod.name), lang: item.mod.lang, items: item.mod.items})
 	}
-	if len(mods) > 0 {
+	if err != nil {
+		return nil, err
+	} else if len(mods) > 0 {
 		return mods, nil
 	} else {
 		wd, _ := os.Getwd()
