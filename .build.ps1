@@ -43,6 +43,15 @@ task build-sgo {
     Assert($Status.ExitCode -eq 0) 'The "build sgo" command failed'
 }
 
+# Synopsis: Build samples
+task build-samples {
+    Set-Location -Path 'src\samples'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code helloworld' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "code helloworld" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'build helloworld' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "build helloworld" command failed'
+}
+
 # Synopsis: Generate & build sources
 task cbuild cbuild-sb, cbuild-sgo
 
@@ -52,14 +61,29 @@ task cbuild-sb code-sb, build-sb
 # Synopsis: Generate & build sgo plugin
 task cbuild-sgo code-sgo, build-sgo
 
-# Synopsis: Build samples
-task samples {
-    Set-Location -Path 'src\samples'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code helloworld' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "code helloworld" command failed'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'build helloworld' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "build helloworld" command failed'
+# Synopsis: Clean sb application
+task clean-sb {
+    Set-Location -Path 'src'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean sb' -NoNewWindow -PassThru -Wait 
+    Assert($Status.ExitCode -eq 0) 'The "clean sb" command failed'
 }
+
+# Synopsis: Clean sgo plugin
+task clean-sgo {
+    Set-Location -Path 'src'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean sgo' -NoNewWindow -PassThru -Wait 
+    Assert($Status.ExitCode -eq 0) 'The "clean sgo" command failed'
+}
+
+# Synopsis: Build samples
+task clean-samples {
+    Set-Location -Path 'src\samples'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean helloworld' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "clean helloworld" command failed'
+}
+
+# Synopsis: Clean applications, plugins & samples
+task clean clean-sb, clean-sgo, clean-samples
 
 # Synopsis: Install applications & plugins
 task install install-sb, install-sgo
@@ -108,4 +132,4 @@ task doc {
     GenDoc -PackageName 'smodule'
 }
 
-task . cbuild, test, samples, doc
+task . cbuild, build-samples, test, clean, doc
