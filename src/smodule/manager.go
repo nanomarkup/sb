@@ -60,13 +60,13 @@ func (m *Manager) DeleteDependency(item, dependency string) error {
 }
 
 func (m *Manager) ReadAll(lang string) (Reader, error) {
-	m.Logger.Trace(fmt.Sprintf("loading modules using \"%s\" language", lang))
+	m.logTrace(fmt.Sprintf("loading modules using \"%s\" language", lang))
 	mods, err := loadModules(lang)
 	if err == nil {
 		if mods == nil {
 			return &module{}, fmt.Errorf("cannot load modules using \"%s\" language", lang)
 		}
-		m.Logger.Trace("reading items")
+		m.logTrace("reading items")
 		return loadItems(mods)
 	} else {
 		return &module{}, err
@@ -75,4 +75,34 @@ func (m *Manager) ReadAll(lang string) (Reader, error) {
 
 func (m *Manager) SetLogger(logger Logger) {
 	m.Logger = logger
+}
+
+func (m *Manager) logTrace(message string) {
+	if m.Logger != nil {
+		m.Logger.Trace(message)
+	}
+}
+
+func (m *Manager) logDebug(message string) {
+	if m.Logger != nil {
+		m.Logger.Debug(message)
+	}
+}
+
+func (m *Manager) logInfo(message string) {
+	if m.Logger != nil {
+		m.Logger.Info(message)
+	}
+}
+
+func (m *Manager) logWarn(message string) {
+	if m.Logger != nil {
+		m.Logger.Warn(message)
+	}
+}
+
+func (m *Manager) logError(message string) {
+	if m.Logger != nil {
+		m.Logger.Error(message)
+	}
 }

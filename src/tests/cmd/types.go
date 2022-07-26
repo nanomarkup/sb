@@ -43,3 +43,6 @@ func (m *smoduleManager) ReadAll(language string) (app.ModReader, error) {
 	m.Manager.Lang = m.Lang
 	return m.Manager.ReadAll(language)
 }
+
+func (m *smoduleManager) SetLogger(logger app.Logger) {
+}

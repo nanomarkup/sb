@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	src "github.com/sapplications/sbuilder/src/cmd"
-	helper "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog"
 	"github.com/sapplications/sbuilder/src/plugins"
 	"gopkg.in/check.v1"
 )
@@ -37,8 +36,7 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb.Lang = lang
 	sb.Builder = &plugins.BuilderPlugin{}
 	sb.ModManager = &smoduleManager{
-		Lang:   lang,
-		Logger: helper.NewStdOut("test", 1),
+		Lang: lang,
 	}
 
 	s.cmd = src.SmartBuilder{}

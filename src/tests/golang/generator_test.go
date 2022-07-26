@@ -7,7 +7,7 @@ import (
 )
 
 func (s *GoSuite) TestGenerate(c *check.C) {
-	g := golang.Generator{
+	g := golang.Coder{
 		Logger: helper.NewStdOut("sgo", helper.LogLever.Debug),
 	}
 	g.Init(
