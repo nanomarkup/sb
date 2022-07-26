@@ -1,6 +1,5 @@
-// Package cmd represents Command Line Interface
-//
-// Copyright © 2022 Vitalii Noha vitalii.noga@gmail.com
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
 package cmd
 
 import (

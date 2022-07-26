@@ -87,7 +87,7 @@ use go
 	Use "run [application]"
 	Example "  run - run the current application\n  run hello - run 'hello' application"
 	Short "Run application"
-	Long "Runs the built application."
+	Long "Runs the application."
 	Runner *{Src}/app.SmartBuilder
 
 {Src}/cmd.CmdReader:

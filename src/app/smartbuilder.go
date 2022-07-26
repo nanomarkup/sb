@@ -1,3 +1,5 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
 package app
 
 import (
@@ -11,10 +13,12 @@ import (
 	"github.com/hashicorp/go-plugin"
 )
 
+// Create creates an application by generating smart application unit (.sa file).
 func (b *SmartBuilder) Create(application string) error {
 	return nil
 }
 
+// Generate generates smart builder unit (.sb) using smart application unit.
 func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("generating \"%s\" application", application))
@@ -49,6 +53,7 @@ func (b *SmartBuilder) Generate(application string) error {
 	return nil
 }
 
+// Build builds an application using the generated items.
 func (b *SmartBuilder) Build(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("building \"%s\" application", application))
@@ -81,6 +86,7 @@ func (b *SmartBuilder) Build(application string) error {
 	return nil
 }
 
+// Clean removes generated/compiled files.
 func (b *SmartBuilder) Clean(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("cleaning \"%s\" application", application))
@@ -113,6 +119,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	return nil
 }
 
+// Run runs the application.
 func (b *SmartBuilder) Run(application string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("running \"%s\" application", application))
@@ -150,10 +157,13 @@ func (b *SmartBuilder) Run(application string) error {
 	return err
 }
 
+// Version displays a version of the application.
 func (b *SmartBuilder) Version() string {
 	return AppVersionString
 }
 
+// Init creates a main.sb module and initialize it with the main item.
+// If the main item is exist then do nothing.
 func (b *SmartBuilder) Init(lang string) error {
 	b.Logger.Info(fmt.Sprintf("initializing \"%s\" language", lang))
 	b.ModManager.SetLogger(b.Logger)
@@ -164,6 +174,7 @@ func (b *SmartBuilder) Init(lang string) error {
 	}
 }
 
+// ReadAll loads modules.
 func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("reading \"%s\" language", lang))
@@ -175,6 +186,7 @@ func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
 	return mod, nil
 }
 
+// AddItem adds an item to the module.
 func (b *SmartBuilder) AddItem(module, item string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("adding \"%s\" item to \"%s\" module", item, module))
@@ -182,6 +194,7 @@ func (b *SmartBuilder) AddItem(module, item string) error {
 	return b.ModManager.AddItem(module, item)
 }
 
+// AddDependency adds a dependency to the item.
 func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update bool) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("adding \"%s\" dependency to \"%s\" item", dependency, item))
@@ -189,6 +202,7 @@ func (b *SmartBuilder) AddDependency(item, dependency, resolver string, update b
 	return b.ModManager.AddDependency(item, dependency, resolver, update)
 }
 
+// DeleteItem deletes the item from the module.
 func (b *SmartBuilder) DeleteItem(item string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("deleting \"%s\" item", item))
@@ -196,6 +210,7 @@ func (b *SmartBuilder) DeleteItem(item string) error {
 	return b.ModManager.DeleteItem(item)
 }
 
+// DeleteDependency deletes the dependency from the item.
 func (b *SmartBuilder) DeleteDependency(item, dependency string) error {
 	defer handleError()
 	b.Logger.Info(fmt.Sprintf("deleting \"%s\" dependency from \"%s\" item", dependency, item))

@@ -1,5 +1,6 @@
 package golang // import "github.com/sapplications/sbuilder/src/golang"
 
+Package golang generates Go sources of an application.
 
 TYPES
 

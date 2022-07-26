@@ -1,3 +1,6 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
+// Package helper provides methods for using "github.com/hashicorp/go-hclog" sources.
 package helper
 
 import (
@@ -25,7 +28,6 @@ var LogLever = struct {
 	6,
 }
 
-// integer is not supported yet
 func NewStdOut(name string, level uint) hclog.Logger {
 	return hclog.New(&hclog.LoggerOptions{
 		Name:   name,

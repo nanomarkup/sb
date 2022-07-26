@@ -1,6 +1,5 @@
-// Package smod manages smart module
-//
-// Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
 package smodule
 
 import (

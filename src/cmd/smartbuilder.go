@@ -1,3 +1,5 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
 package cmd
 
 import (
@@ -6,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Execute initializes commands and displays them in the console.
 func (sb *SmartBuilder) Execute() error {
 	sb.Starter.init()
 	sb.Reader.init()

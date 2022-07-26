@@ -1,3 +1,7 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
+// Package app implements a Smart Builder application.
+// It is the next generation of building applications using independent bussiness components.
 package app
 
 import "github.com/hashicorp/go-plugin"
@@ -13,6 +17,7 @@ const (
 	ApplicationIsMissing    string = "does not found any application in the main"
 )
 
+// SmartBuilder manages modules and builds the application.
 type SmartBuilder struct {
 	Lang            func() string
 	Builder         interface{}
@@ -21,8 +26,10 @@ type SmartBuilder struct {
 	Logger          Logger
 }
 
+// SmartGenerator generates smart builder unit (.sb) using smart application unit.
 type SmartGenerator struct{}
 
+// ModManager describes methods for managing a module.
 type ModManager interface {
 	Init(moduleName, language string) error
 	AddItem(moduleName, itemName string) error
@@ -33,6 +40,7 @@ type ModManager interface {
 	SetLogger(logger Logger)
 }
 
+// ModReader describes methods for getting module attributes.
 type ModReader interface {
 	Lang() string
 	Items() map[string]map[string]string
@@ -40,6 +48,7 @@ type ModReader interface {
 	Main() (map[string]string, error)
 }
 
+// Logger describes methods for logging messages.
 type Logger interface {
 	Trace(msg string, args ...interface{})
 	Debug(msg string, args ...interface{})

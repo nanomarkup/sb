@@ -1,5 +1,7 @@
 package helper // import "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog"
 
+Package helper provides methods for using "github.com/hashicorp/go-hclog"
+sources.
 
 VARIABLES
 
@@ -25,5 +27,3 @@ FUNCTIONS
 
 func NewFileOut(name string, level uint) hclog.Logger
 func NewStdOut(name string, level uint) hclog.Logger
-    integer is not supported yet
-

@@ -1,8 +1,6 @@
 package smodule // import "github.com/sapplications/sbuilder/src/smodule"
 
-Package smod manages smart module
-
-Copyright © 2020 Vitalii Noha vitalii.noga@gmail.com
+Package smodule manages modules.
 
 CONSTANTS
 

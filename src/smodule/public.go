@@ -1,3 +1,6 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
+// Package smodule manages modules.
 package smodule
 
 import (

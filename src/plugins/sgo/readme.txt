@@ -1,5 +1,7 @@
 package sgo // import "github.com/sapplications/sbuilder/src/plugins/sgo"
 
+Package sgo implements a sgo plugin. It generates Go sources of an
+application.
 
 CONSTANTS
 

@@ -1,3 +1,6 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
+// Package plugins implements common objects for supporting plugins.
 package plugins
 
 type Builder interface {

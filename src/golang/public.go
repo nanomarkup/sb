@@ -1,3 +1,6 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
+// Package golang generates Go sources of an application.
 package golang
 
 type Coder struct {

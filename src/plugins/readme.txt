@@ -1,5 +1,6 @@
 package plugins // import "github.com/sapplications/sbuilder/src/plugins"
 
+Package plugins implements common objects for supporting plugins.
 
 TYPES
 

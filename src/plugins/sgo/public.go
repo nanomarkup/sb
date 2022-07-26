@@ -1,3 +1,6 @@
+// Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
+
+// Package sgo implements a sgo plugin. It generates Go sources of an application.
 package sgo
 
 import "github.com/hashicorp/go-plugin"
