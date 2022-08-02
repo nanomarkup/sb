@@ -1,5 +1,8 @@
 use go
 
+sgo:
+    entry {Src}/plugins/sgo.Plugin
+
 {Src}/plugins/sgo.Plugin:
 	Coder *{Src}/golang.Coder
 	Builder *{Src}/golang.Builder

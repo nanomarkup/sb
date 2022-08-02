@@ -120,7 +120,7 @@ func loadModule(name string) (*module, error) {
 					// parse the next item
 					item = token1[:len(token1)-1]
 				} else {
-					if token2 == "" {
+					if item != "apps" && token2 == "" {
 						return nil, fmt.Errorf("invalid syntax in \"%s\" line", line)
 					}
 					// add new dependency item
@@ -216,9 +216,9 @@ func loadItems(mods modules) (*module, error) {
 	// process defines
 	newItem := ""
 	var err error
-	if defines, found := all["define"]; found && len(defines) > 0 {
+	if defines, found := all["defines"]; found && len(defines) > 0 {
 		for item, deps := range all {
-			if item == "define" {
+			if item == "defines" {
 				continue
 			}
 			// update item name
@@ -252,7 +252,7 @@ func loadItems(mods modules) (*module, error) {
 				}
 			}
 		}
-		delete(all, "define")
+		delete(all, "defines")
 	}
 	return &module{name: "", lang: lang, items: all}, nil
 }

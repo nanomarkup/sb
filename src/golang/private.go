@@ -23,8 +23,12 @@ import (
 const (
 	// appFileName constant returns package's app file name
 	appFileName string = "app.go"
-	// DepsFileName constant returns name of file with all dependencies
+	// depsFileName constant returns name of file with all dependencies
 	depsFileName string = "deps.go"
+	// appsItemName constant returns a main item name
+	appsItemName string = "apps"
+	// entryAttrName constant returns an entry attribute name of the application
+	entryAttrName string = "entry"
 )
 
 type adapter struct {
@@ -271,11 +275,11 @@ func goClean(src string) error {
 	return cmd.Run()
 }
 
-func readApps(items map[string]map[string]string) (map[string]string, error) {
-	if apps, found := items["apps"]; found {
+func readItem(name string, items map[string]map[string]string) (map[string]string, error) {
+	if apps, found := items[name]; found {
 		return apps, nil
 	}
-	return nil, fmt.Errorf("The apps item is not found")
+	return nil, fmt.Errorf("The %s item is not found", name)
 }
 
 func appendImport(list imports, path string) alias {

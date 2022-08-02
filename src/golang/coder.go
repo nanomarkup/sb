@@ -39,7 +39,7 @@ func (g *Coder) Clean(application string) error {
 	if application == "" {
 		return fmt.Errorf("The application is not specified")
 	}
-	if apps, err := readApps(g.items); err == nil {
+	if apps, err := readItem(appsItemName, g.items); err == nil {
 		if _, found := apps[application]; found {
 			if dir, err := os.Getwd(); err == nil {
 				folderPath := filepath.Join(dir, application)
@@ -69,14 +69,23 @@ func (g *Coder) SetLogger(logger Logger) {
 
 func (g *Coder) entryPoint(application string) (string, error) {
 	// read the apps item
-	apps, err := readApps(g.items)
+	apps, err := readItem(appsItemName, g.items)
 	if err != nil {
 		return "", err
 	}
-	// read the application
-	entry, found := apps[application]
+	// check the applicatin is exist
+	if _, found := apps[application]; !found {
+		return "", fmt.Errorf("The selected \"%s\" application does not found", application)
+	}
+	// read app details
+	info, err := readItem(application, g.items)
+	if err != nil {
+		return "", err
+	}
+	// get entry point
+	entry, found := info[entryAttrName]
 	if !found {
-		return "", fmt.Errorf("The selected \"%s\" application is not found", application)
+		return "", fmt.Errorf("The \"%s\" attribute is not exist for the \"%s\" application", entryAttrName, application)
 	}
 	return entry, nil
 }
@@ -95,7 +104,7 @@ func (g *Coder) generateAppFile(application string) error {
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
-	writer.WriteString("package app\n\n")
+	writer.WriteString("package main\n\n")
 	writer.WriteString(fmt.Sprintf("const AppName = \"%s\"\n\n", application))
 	writer.WriteString("func main() {\n")
 	writer.WriteString("\tExecute()\n")
@@ -136,7 +145,7 @@ func (g *Coder) generateDepsFile(application, entryPoint string) error {
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
-	writer.WriteString(fmt.Sprintf("package app\n\n"))
+	writer.WriteString(fmt.Sprintf("package main\n\n"))
 	// write the import section
 	if len(imports) > 0 {
 		writer.WriteString("import (\n")

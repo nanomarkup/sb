@@ -1,6 +1,10 @@
 use go
 
-define:
+apps:
+	sb
+	sgo
+
+defines:
 	Src github.com/sapplications/sbuilder/src
 	LogDefault 0
 	LogTrace 1
@@ -9,10 +13,6 @@ define:
 	LogWarn 4
 	LogError 5
 	LogOff 6
-
-apps:
-	sb {Src}/cmd.SmartBuilder
-	sgo {Src}/plugins/sgo.Plugin
 
 github.com/hashicorp/go-plugin.HandshakeConfig:
 	ProtocolVersion 1

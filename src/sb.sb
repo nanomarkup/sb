@@ -1,5 +1,8 @@
 use go
 
+sb: 
+	entry {Src}/cmd.SmartBuilder
+
 {Src}/cmd.SmartBuilder:
 	Starter {Src}/cmd.Starter
 	Reader {Src}/cmd.CmdReader
