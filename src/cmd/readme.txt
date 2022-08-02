@@ -93,8 +93,8 @@ type CmdModIniter struct {
 	ModManager
 	cobra.Command
 }
-    CmdModIniter command creates a main.sb module and initialize it with the
-    main item. If the main item is exist then do nothing.
+    CmdModIniter command creates a apps.sb module and initialize it with the
+    apps item. If the apps item is exist then do nothing.
 
 type CmdReader struct {
 	Reader
@@ -147,7 +147,7 @@ type ModReader interface {
 	Lang() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
-	Main() (map[string]string, error)
+	Apps() (map[string]string, error)
 }
     ModReader describes methods for getting module attributes.
 
@@ -184,5 +184,5 @@ func (sb *SmartBuilder) Execute() error
 type Starter struct {
 	cobra.Command
 }
-    Starter command is the main command contains all commands to display.
+    Starter command is the apps command contains all commands to display.
 

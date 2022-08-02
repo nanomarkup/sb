@@ -9,11 +9,11 @@ const (
 	AppName           string = "sb"
 	AppVersion        string = "1.0"
 	AppVersionString  string = AppName + " version " + AppVersion
-	DefaultModuleName string = "main"
+	DefaultModuleName string = "apps"
 	// error messages
 	ErrorMessageF           string = "Error: %v\n"
 	LanguageIsNotSupportedF string = "the current \"%s\" language is not supported\n"
-	ApplicationIsMissing    string = "does not found any application in the main"
+	ApplicationIsMissing    string = "does not found any application in the apps"
 )
 
 TYPES
@@ -47,7 +47,7 @@ type ModReader interface {
 	Lang() string
 	Items() map[string]map[string]string
 	Dependency(itemName, dependencyName string) string
-	Main() (map[string]string, error)
+	Apps() (map[string]string, error)
 }
     ModReader describes methods for getting module attributes.
 
@@ -86,8 +86,8 @@ func (b *SmartBuilder) Generate(application string) error
     Generate generates smart builder unit (.sb) using smart application unit.
 
 func (b *SmartBuilder) Init(lang string) error
-    Init creates a main.sb module and initialize it with the main item. If the
-    main item is exist then do nothing.
+    Init creates a apps.sb module and initialize it with the apps item. If the
+    apps item is exist then do nothing.
 
 func (b *SmartBuilder) ReadAll(lang string) (ModReader, error)
     ReadAll loads modules.

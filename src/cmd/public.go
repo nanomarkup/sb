@@ -37,7 +37,7 @@ type SmartBuilder struct {
 	SilentErrors bool
 }
 
-// Starter command is the main command contains all commands to display.
+// Starter command is the apps command contains all commands to display.
 type Starter struct {
 	cobra.Command
 }
@@ -141,7 +141,7 @@ type ModReader interface {
 	Lang() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
-	Main() (map[string]string, error)
+	Apps() (map[string]string, error)
 }
 
 // ModFormatter describes methods for formatting module attributes and returns it as a string.
@@ -162,8 +162,8 @@ type CmdModDeler struct {
 	cobra.Command
 }
 
-// CmdModIniter command creates a main.sb module and initialize it with the main item.
-// If the main item is exist then do nothing.
+// CmdModIniter command creates a apps.sb module and initialize it with the apps item.
+// If the apps item is exist then do nothing.
 type CmdModIniter struct {
 	ModManager
 	cobra.Command

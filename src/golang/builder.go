@@ -28,11 +28,11 @@ func (b *Builder) Build(application string) error {
 		b.Logger,
 		b.items,
 	}
-	// generate a golang main file if it is missing
-	filePath = filepath.Join(folderPath, mainFileName)
+	// generate a golang apps file if it is missing
+	filePath = filepath.Join(folderPath, appFileName)
 	if _, err := os.Stat(filePath); err != nil {
 		if os.IsNotExist(err) {
-			if err := g.generateMainFile(application); err != nil {
+			if err := g.generateAppFile(application); err != nil {
 				return err
 			}
 		} else {

@@ -5,7 +5,7 @@ Package smodule manages modules.
 CONSTANTS
 
 const (
-	MainItemName string = "main"
+	AppsItemName string = "apps"
 	// notifications
 	ModuleIsCreatedF string = "%s file has been created\n"
 	// errors
@@ -70,6 +70,6 @@ type Reader interface {
 	Lang() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
-	Main() (map[string]string, error)
+	Apps() (map[string]string, error)
 }
 

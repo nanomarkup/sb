@@ -38,9 +38,9 @@ use go
 
 {Src}/cmd.ModIniter:
 	Use "init"
-	Example "  init go - generate a main.sb module for 'go' language"
-	Short "Add the main item"
-	Long "Creates a main.sb module and initialize it with the main item. If the main item is exist then do nothing."
+	Example "  init go - generate a apps.sb module for 'go' language"
+	Short "Add the apps item"
+	Long "Creates a apps.sb module and initialize it with the apps item. If the apps item is exist then do nothing."
 	ModManager *{Src}/app.SmartBuilder
 
 {Src}/cmd.Starter:
@@ -95,3 +95,13 @@ use go
 	Short "Print Smart Builder version"
 	Long "Prints the current Smart Builder version."
 	Reader *{Src}/app.SmartBuilder
+
+{Src}/app.SmartBuilder:
+	Lang {Src}/cmd.Language()
+	Builder *{Src}/plugins.BuilderPlugin
+	ModManager *{Src}/smodule.Manager
+	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
+	Logger {Src}/helper/hashicorp/hclog.NewStdOut("sb", {LogInfo})
+
+{Src}/smodule.Manager:
+	Lang {Src}/cmd.Language()

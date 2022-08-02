@@ -39,12 +39,12 @@ func (g *Coder) Clean(application string) error {
 	if application == "" {
 		return fmt.Errorf("The application is not specified")
 	}
-	if main, err := readMain(g.items); err == nil {
-		if _, found := main[application]; found {
+	if apps, err := readApps(g.items); err == nil {
+		if _, found := apps[application]; found {
 			if dir, err := os.Getwd(); err == nil {
 				folderPath := filepath.Join(dir, application)
-				// remove the main file
-				filePath := filepath.Join(folderPath, mainFileName)
+				// remove the apps file
+				filePath := filepath.Join(folderPath, appFileName)
 				if _, err := os.Stat(filePath); err == nil {
 					os.Remove(filePath)
 				}
@@ -68,25 +68,25 @@ func (g *Coder) SetLogger(logger Logger) {
 }
 
 func (g *Coder) entryPoint(application string) (string, error) {
-	// read the main item
-	main, err := readMain(g.items)
+	// read the apps item
+	apps, err := readApps(g.items)
 	if err != nil {
 		return "", err
 	}
 	// read the application
-	entry, found := main[application]
+	entry, found := apps[application]
 	if !found {
 		return "", fmt.Errorf("The selected \"%s\" application is not found", application)
 	}
 	return entry, nil
 }
 
-func (g *Coder) generateMainFile(application string) error {
+func (g *Coder) generateAppFile(application string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
-	filePath := filepath.Join(wd, application, mainFileName)
+	filePath := filepath.Join(wd, application, appFileName)
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -95,7 +95,7 @@ func (g *Coder) generateMainFile(application string) error {
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
-	writer.WriteString("package main\n\n")
+	writer.WriteString("package app\n\n")
 	writer.WriteString(fmt.Sprintf("const AppName = \"%s\"\n\n", application))
 	writer.WriteString("func main() {\n")
 	writer.WriteString("\tExecute()\n")
@@ -136,7 +136,7 @@ func (g *Coder) generateDepsFile(application, entryPoint string) error {
 
 	writer := bufio.NewWriter(file)
 	defer writer.Flush()
-	writer.WriteString(fmt.Sprintf("package main\n\n"))
+	writer.WriteString(fmt.Sprintf("package app\n\n"))
 	// write the import section
 	if len(imports) > 0 {
 		writer.WriteString("import (\n")

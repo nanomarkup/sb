@@ -119,12 +119,12 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 	os.Chdir(c.MkDir())
 	// initialize a new module
 	c.Assert(s.Mod("init", lang()), check.IsNil)
-	// add a new dependency item (application) to the main item
+	// add a new dependency item (application) to the apps item
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
 	name := "hello"
 	resolver := "\"Hello World!\""
-	err := cmd.Mod("add", smodule.MainItemName, name, resolver)
+	err := cmd.Mod("add", smodule.AppsItemName, name, resolver)
 	c.Assert(err, check.IsNil)
 	// TODO verify the added dependency...
 }

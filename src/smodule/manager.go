@@ -7,7 +7,7 @@ import (
 )
 
 func (m *Manager) Init(module, lang string) error {
-	return addItem(module, lang, MainItemName)
+	return addItem(module, lang, AppsItemName)
 }
 
 func (m *Manager) AddItem(module, item string) error {

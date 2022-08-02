@@ -26,12 +26,12 @@ func (m *module) Items() Items {
 	return m.items
 }
 
-func (m *module) Main() (Item, error) {
-	main := m.items["main"]
-	if main == nil {
-		return nil, fmt.Errorf("the main item is not found")
+func (m *module) Apps() (Item, error) {
+	apps := m.items["apps"]
+	if apps == nil {
+		return nil, fmt.Errorf("the apps item is not found")
 	} else {
-		return main, nil
+		return apps, nil
 	}
 }
 

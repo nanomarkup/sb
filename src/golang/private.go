@@ -21,8 +21,8 @@ import (
 )
 
 const (
-	// MainFileName constant returns package's main file name
-	mainFileName string = "main.go"
+	// appFileName constant returns package's app file name
+	appFileName string = "app.go"
 	// DepsFileName constant returns name of file with all dependencies
 	depsFileName string = "deps.go"
 )
@@ -271,11 +271,11 @@ func goClean(src string) error {
 	return cmd.Run()
 }
 
-func readMain(items map[string]map[string]string) (map[string]string, error) {
-	if main, found := items["main"]; found {
-		return main, nil
+func readApps(items map[string]map[string]string) (map[string]string, error) {
+	if apps, found := items["apps"]; found {
+		return apps, nil
 	}
-	return nil, fmt.Errorf("The main item is not found")
+	return nil, fmt.Errorf("The apps item is not found")
 }
 
 func appendImport(list imports, path string) alias {

@@ -10,11 +10,11 @@ const (
 	AppName           string = "sb"
 	AppVersion        string = "1.0"
 	AppVersionString  string = AppName + " version " + AppVersion
-	DefaultModuleName string = "main"
+	DefaultModuleName string = "apps"
 	// error messages
 	ErrorMessageF           string = "Error: %v\n"
 	LanguageIsNotSupportedF string = "the current \"%s\" language is not supported\n"
-	ApplicationIsMissing    string = "does not found any application in the main"
+	ApplicationIsMissing    string = "does not found any application in the apps"
 )
 
 // SmartBuilder manages modules and builds the application.
@@ -45,7 +45,7 @@ type ModReader interface {
 	Lang() string
 	Items() map[string]map[string]string
 	Dependency(itemName, dependencyName string) string
-	Main() (map[string]string, error)
+	Apps() (map[string]string, error)
 }
 
 // Logger describes methods for logging messages.

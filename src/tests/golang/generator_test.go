@@ -12,7 +12,7 @@ func (s *GoSuite) TestGenerate(c *check.C) {
 	}
 	g.Init(
 		map[string]map[string]string{
-			"main": {"test": "github.com/sapplications/sbuilder/src/tests/golang.Item1"},
+			"apps": {"test": "github.com/sapplications/sbuilder/src/tests/golang.Item1"},
 			"github.com/sapplications/sbuilder/src/tests/golang.Item1": {
 				"Int1":      "5",
 				"Float1":    "5.02",

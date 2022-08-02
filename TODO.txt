@@ -5,7 +5,6 @@ improvements & bugs
     - check all methods in interfaces
     - fix all external dependencies - github.com/*
     - validate sb code before running the gen command
-    - rename the main item to apps item
     - the apps item can be duplicated - merge all items
     - IN PROGRESS the sb module will be started with sb word
     - the application should be reference to the item, where the following optional items
@@ -48,6 +47,7 @@ apps:
     helloworld
 
 helloworld:
+    lang go
     entry "Hello World!"
 
 

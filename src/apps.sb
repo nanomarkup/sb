@@ -10,6 +10,11 @@ define:
 	LogError 5
 	LogOff 6
 
-main:
+apps:
 	sb {Src}/cmd.SmartBuilder
 	sgo {Src}/plugins/sgo.Plugin
+
+github.com/hashicorp/go-plugin.HandshakeConfig:
+	ProtocolVersion 1
+	MagicCookieKey "SMART_PLUGIN"
+	MagicCookieValue "sbuilder"

@@ -162,8 +162,8 @@ func (b *SmartBuilder) Version() string {
 	return AppVersionString
 }
 
-// Init creates a main.sb module and initialize it with the main item.
-// If the main item is exist then do nothing.
+// Init creates a apps.sb module and initialize it with the apps item.
+// If the apps item is exist then do nothing.
 func (b *SmartBuilder) Init(lang string) error {
 	b.logInfo(fmt.Sprintf("initializing \"%s\" language", lang))
 	b.ModManager.SetLogger(b.Logger)
@@ -257,27 +257,27 @@ func (b *SmartBuilder) checkApplication(application string, reader ModReader) (s
 	if _, found := suppLangs[reader.Lang()]; !found {
 		return "", fmt.Errorf("the current \"%s\" language is not supported", reader.Lang())
 	}
-	// read the main item
-	main, err := reader.Main()
+	// read the apps item
+	apps, err := reader.Apps()
 	if err != nil {
 		return "", err
 	}
 	// check the number of existing applications
-	if len(main) == 0 {
+	if len(apps) == 0 {
 		return "", errors.New(ApplicationIsMissing)
 	}
 	// read the current application if it is not specified and only one is exist
 	if application == "" {
-		if len(main) != 1 {
+		if len(apps) != 1 {
 			return "", fmt.Errorf("the application is not specified")
 		}
 		// select the existing application
-		for key := range main {
+		for key := range apps {
 			application = key
 		}
 	}
 	// check the application is exist
-	if _, found := main[application]; !found && application != "" {
+	if _, found := apps[application]; !found && application != "" {
 		return "", fmt.Errorf("the selected \"%s\" application is not found", application)
 	}
 	return application, nil

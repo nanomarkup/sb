@@ -1,4 +1,4 @@
 use go
 
-main:
+apps:
     helloworld "Hello World!"
