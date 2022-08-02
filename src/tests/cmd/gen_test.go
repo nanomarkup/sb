@@ -42,9 +42,9 @@ func (s *CmdSuite) TestGenSbApp(c *check.C) {
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
-	copyFile(currFolder+"\\..\\..\\app.sb", wd+"\\app.sb")
-	copyFile(currFolder+"\\..\\..\\cmd.sb", wd+"\\cmd.sb")
-	copyFile(currFolder+"\\..\\..\\main.sb", wd+"\\main.sb")
+	copyFile(currFolder+"\\..\\..\\apps.sb", wd+"\\apps.sb")
+	copyFile(currFolder+"\\..\\..\\sb.sb", wd+"\\sb.sb")
+	copyFile(currFolder+"\\..\\..\\sgo.sb", wd+"\\sgo.sb")
 	// generate application's files
 	c.Assert(s.Gen("sb"), check.IsNil)
 }
@@ -59,7 +59,7 @@ func (s *CmdSuite) TestGenHelloWorldApp(c *check.C) {
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
-	copyFile(currFolder+"\\..\\..\\samples\\main.sb", wd+"\\main.sb")
+	copyFile(currFolder+"\\..\\..\\samples\\app.sb", wd+"\\app.sb")
 	// generate application's files
 	c.Assert(s.Gen(), check.IsNil)
 }
