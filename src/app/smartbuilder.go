@@ -33,22 +33,25 @@ func (b *SmartBuilder) Generate(application string) error {
 	if err != nil {
 		return err
 	}
+	info, err := mod.App(application)
+	if err != nil {
+		return err
+	}
+	coder, found := info[coderAttrName]
+	if !found {
+		fmt.Errorf("The \"%s\" attribute is missing for \"%s\" application", coderAttrName, application)
+	}
 	// process application
-	switch mod.Lang() {
-	case langs.Go:
-		client, raw, err := b.newPlugin("sgo")
-		if err != nil {
-			return err
-		}
-		defer client.Kill()
-		builder := raw.(builder)
-		sources := mod.Items()
-		b.logTrace(fmt.Sprintf("generating \"%s\" application using sgo plugin", application))
-		if err := builder.Generate(application, &sources); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
+	client, raw, err := b.newPlugin(coder)
+	if err != nil {
+		return err
+	}
+	defer client.Kill()
+	builder := raw.(builder)
+	sources := mod.Items()
+	b.logTrace(fmt.Sprintf("generating \"%s\" application using sgo plugin", application))
+	if err := builder.Generate(application, &sources); err != nil {
+		return err
 	}
 	return nil
 }
@@ -67,21 +70,24 @@ func (b *SmartBuilder) Build(application string) error {
 	if err != nil {
 		return err
 	}
+	info, err := mod.App(application)
+	if err != nil {
+		return err
+	}
+	coder, found := info[coderAttrName]
+	if !found {
+		fmt.Errorf("The \"%s\" attribute is missing for \"%s\" application", coderAttrName, application)
+	}
 	// process application
-	switch mod.Lang() {
-	case langs.Go:
-		client, raw, err := b.newPlugin("sgo")
-		if err != nil {
-			return err
-		}
-		defer client.Kill()
-		builder := raw.(builder)
-		sources := mod.Items()
-		if err := builder.Build(application, &sources); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
+	client, raw, err := b.newPlugin(coder)
+	if err != nil {
+		return err
+	}
+	defer client.Kill()
+	builder := raw.(builder)
+	sources := mod.Items()
+	if err := builder.Build(application, &sources); err != nil {
+		return err
 	}
 	return nil
 }
@@ -100,21 +106,24 @@ func (b *SmartBuilder) Clean(application string) error {
 	if err != nil {
 		return err
 	}
+	info, err := mod.App(application)
+	if err != nil {
+		return err
+	}
+	coder, found := info[coderAttrName]
+	if !found {
+		fmt.Errorf("The \"%s\" attribute is missing for \"%s\" application", coderAttrName, application)
+	}
 	// process application
-	switch mod.Lang() {
-	case langs.Go:
-		client, raw, err := b.newPlugin("sgo")
-		if err != nil {
-			return err
-		}
-		defer client.Kill()
-		builder := raw.(builder)
-		sources := mod.Items()
-		if err := builder.Clean(application, &sources); err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("\"%s\" language is not supported", mod.Lang())
+	client, raw, err := b.newPlugin(coder)
+	if err != nil {
+		return err
+	}
+	defer client.Kill()
+	builder := raw.(builder)
+	sources := mod.Items()
+	if err := builder.Clean(application, &sources); err != nil {
+		return err
 	}
 	return nil
 }
@@ -167,11 +176,7 @@ func (b *SmartBuilder) Version() string {
 func (b *SmartBuilder) Init(lang string) error {
 	b.logInfo(fmt.Sprintf("initializing \"%s\" language", lang))
 	b.ModManager.SetLogger(b.Logger)
-	if _, found := suppLangs[lang]; found {
-		return b.ModManager.Init(DefaultModuleName, lang)
-	} else {
-		return fmt.Errorf(LanguageIsNotSupportedF, lang)
-	}
+	return b.ModManager.Init(DefaultModuleName, lang)
 }
 
 // ReadAll loads modules.
@@ -253,21 +258,16 @@ func (b *SmartBuilder) newPlugin(name string) (client *plugin.Client, raw interf
 }
 
 func (b *SmartBuilder) checkApplication(application string, reader ModReader) (string, error) {
-	// check language
-	if _, found := suppLangs[reader.Lang()]; !found {
-		return "", fmt.Errorf("the current \"%s\" language is not supported", reader.Lang())
-	}
-	// read the apps item
-	apps, err := reader.Apps()
-	if err != nil {
-		return "", err
-	}
-	// check the number of existing applications
-	if len(apps) == 0 {
-		return "", errors.New(ApplicationIsMissing)
-	}
 	// read the current application if it is not specified and only one is exist
 	if application == "" {
+		apps, err := reader.Apps()
+		if err != nil {
+			return "", err
+		}
+		// check the number of existing applications
+		if len(apps) == 0 {
+			return "", errors.New(ApplicationIsMissing)
+		}
 		if len(apps) != 1 {
 			return "", fmt.Errorf("the application is not specified")
 		}
@@ -275,10 +275,6 @@ func (b *SmartBuilder) checkApplication(application string, reader ModReader) (s
 		for key := range apps {
 			application = key
 		}
-	}
-	// check the application is exist
-	if _, found := apps[application]; !found && application != "" {
-		return "", fmt.Errorf("the selected \"%s\" application is not found", application)
 	}
 	return application, nil
 }

@@ -26,6 +26,23 @@ func (m *module) Items() Items {
 	return m.items
 }
 
+func (m *module) App(name string) (Item, error) {
+	apps, err := m.Apps()
+	if err != nil {
+		return nil, err
+	}
+	// check the applicatin is exist
+	if _, found := apps[name]; !found {
+		return nil, fmt.Errorf("The selected \"%s\" application is not found", name)
+	}
+	// read application data
+	info, found := m.items[name]
+	if !found {
+		return nil, fmt.Errorf("the \"%s\" item is not found", name)
+	}
+	return info, nil
+}
+
 func (m *module) Apps() (Item, error) {
 	apps := m.items["apps"]
 	if apps == nil {

@@ -1,6 +1,7 @@
 use go
 
 sb: 
+	coder sgo
 	entry {Src}/cmd.SmartBuilder
 
 {Src}/cmd.SmartBuilder:

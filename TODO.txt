@@ -1,16 +1,14 @@
 improvements & bugs
-    - test a global lang parameter
+    - NEXT remove the language 
+    - move sgo coder to a separate project
     - update documentation
     - use a short name for functions (try it for adapters)
     - check all methods in interfaces
     - fix all external dependencies - github.com/*
     - validate sb code before running the gen command
-    - the apps item can be duplicated - merge all items
-    - IN PROGRESS the sb module will be started with sb word
+    - the sb module will be started with sb word
     - the application should be reference to the item, where the following optional items
         - name - optional, default the same as app name  
-        - lang - optional, default is go
-        - entry - resolver, mandatory for sb unit
     - resolve interfaces with different number of methods, typeA can have less number of methods than typeB
           fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
@@ -35,9 +33,10 @@ tests
     - list all tests
 
 help
-    - .sa - smart application unit
-    - .sb - smart builder unit
+    - .sa - smart application unit. Includes a declarative syntax for describing the application
+    - .sb - smart builder unit. It can be generated using .sa unit.
     - .sp - smart package unit. It will be created manually but it should be generated in the future. 
+            Describes the exported items. The smart builder will use it for generating .sb unit.
 
 
 example of a new sb file
@@ -47,7 +46,7 @@ apps:
     helloworld
 
 helloworld:
-    lang go
+    coder sgo
     entry "Hello World!"
 
 
@@ -55,12 +54,12 @@ example of sa file
 sa
 
 apps:
-    helloworld helloworld - optional resolver, the default is app name
+    helloworld
 
 helloworld:    
     name helloworld - optional, default the same as app name    
     type console - optional, default is console
-    lang go - optional, default is go
+    coder sgo - optional, default is sgo
     entry helloworld/actions - optional, default is [appname/actions]
     features helloworld/features - optional, default is [appname/features]
     

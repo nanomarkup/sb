@@ -25,12 +25,6 @@ func (s *CmdSuite) TestModInitLanguageMissing(c *check.C) {
 	c.Assert(s.Mod("init"), check.ErrorMatches, src.LanguageMissing)
 }
 
-func (s *CmdSuite) TestModInitLanguageIsNotSupported(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
-	c.Assert(s.Mod("init", "delphi"), check.ErrorMatches, fmt.Sprintf(app.LanguageIsNotSupportedF, "delphi"))
-}
-
 func (s *CmdSuite) TestModInit(c *check.C) {
 	c.Skip("Needs to fix...")
 	return

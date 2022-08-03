@@ -6,20 +6,14 @@ import (
 	"fmt"
 )
 
+const (
+	coderAttrName string = "coder"
+)
+
 type builder interface {
 	Build(app string, sources *map[string]map[string]string) error
 	Clean(app string, sources *map[string]map[string]string) error
 	Generate(app string, sources *map[string]map[string]string) error
-}
-
-var langs = struct {
-	Go string
-}{
-	"go",
-}
-
-var suppLangs = map[string]bool{
-	langs.Go: true,
 }
 
 func handleError() {

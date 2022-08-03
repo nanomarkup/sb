@@ -1,6 +1,7 @@
 use go
 
 sgo:
+    coder sgo
     entry {Src}/plugins/sgo.Plugin
 
 {Src}/plugins/sgo.Plugin:
