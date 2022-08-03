@@ -6,16 +6,16 @@ import (
 	"fmt"
 )
 
-func (m *Manager) Init(module, lang string) error {
-	return addItem(module, lang, AppsItemName)
+func (m *Manager) Init(module string) error {
+	return addItem(module, "sb", AppsItemName)
 }
 
 func (m *Manager) AddItem(module, item string) error {
-	return addItem(module, m.Lang(), item)
+	return addItem(module, "sb", item)
 }
 
 func (m *Manager) AddDependency(item, dependency, resolver string, update bool) error {
-	mod, err := findItem(m.Lang(), item)
+	mod, err := findItem("sb", item)
 	if err != nil {
 		return err
 	} else if mod == nil {
@@ -30,7 +30,7 @@ func (m *Manager) AddDependency(item, dependency, resolver string, update bool) 
 }
 
 func (m *Manager) DeleteItem(item string) error {
-	mod, err := findItem(m.Lang(), item)
+	mod, err := findItem("sb", item)
 	if err != nil {
 		return err
 	} else if mod != nil {
@@ -45,7 +45,7 @@ func (m *Manager) DeleteItem(item string) error {
 }
 
 func (m *Manager) DeleteDependency(item, dependency string) error {
-	mod, err := findItem(m.Lang(), item)
+	mod, err := findItem("sb", item)
 	if err != nil {
 		return err
 	} else if mod != nil {
@@ -59,12 +59,12 @@ func (m *Manager) DeleteDependency(item, dependency string) error {
 	}
 }
 
-func (m *Manager) ReadAll(lang string) (Reader, error) {
-	m.logTrace(fmt.Sprintf("loading modules using \"%s\" language", lang))
-	mods, err := loadModules(lang)
+func (m *Manager) ReadAll(kind string) (Reader, error) {
+	m.logTrace(fmt.Sprintf("loading \"%s\" modules", kind))
+	mods, err := loadModules(kind)
 	if err == nil {
 		if mods == nil {
-			return &module{}, fmt.Errorf("cannot load modules using \"%s\" language", lang)
+			return &module{}, fmt.Errorf("cannot load \"%s\" modules", kind)
 		}
 		m.logTrace("reading items")
 		return loadItems(mods)

@@ -21,8 +21,8 @@ func (s *CmdSuite) TestModUnknownSubcmd(c *check.C) {
 
 // test the init subcommand
 
-func (s *CmdSuite) TestModInitLanguageMissing(c *check.C) {
-	c.Assert(s.Mod("init"), check.ErrorMatches, src.LanguageMissing)
+func (s *CmdSuite) TestModInitKindMissing(c *check.C) {
+	s.Mod("init")
 }
 
 func (s *CmdSuite) TestModInit(c *check.C) {
@@ -33,10 +33,10 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
 	// initialize a new module
-	c.Assert(s.Mod("init", lang()), check.IsNil)
+	c.Assert(s.Mod("init", modType.sb), check.IsNil)
 	// read the created module
-	m := smodule.Manager{Lang: lang}
-	_, err := m.ReadAll(lang())
+	m := smodule.Manager{}
+	_, err := m.ReadAll(modType.sb)
 	if err != nil {
 		t, _ := ioutil.ReadFile(smodule.GetModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
@@ -67,8 +67,8 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(smodule.IsModuleExists(modName), check.Equals, true)
 	// read the created module
-	m := smodule.Manager{Lang: lang}
-	_, err = m.ReadAll(lang())
+	m := smodule.Manager{}
+	_, err = m.ReadAll(modType.sb)
 	if err != nil {
 		t, _ := ioutil.ReadFile(smodule.GetModuleFileName(modName))
 		fmt.Print(string(t))
@@ -84,7 +84,7 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
 	// initialize a new module
-	c.Assert(s.Mod("init", lang()), check.IsNil)
+	c.Assert(s.Mod("init", modType.sb), check.IsNil)
 	// add a new item use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
@@ -92,8 +92,8 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	err := cmd.Mod("add", name, app.DefaultModuleName)
 	c.Assert(err, check.IsNil)
 	// read the created module
-	mod := smodule.Manager{Lang: lang}
-	r, err := mod.ReadAll(lang())
+	mod := smodule.Manager{}
+	r, err := mod.ReadAll(modType.sb)
 	if err != nil {
 		t, _ := ioutil.ReadFile(smodule.GetModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
@@ -112,7 +112,7 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
 	// initialize a new module
-	c.Assert(s.Mod("init", lang()), check.IsNil)
+	c.Assert(s.Mod("init", modType.sb), check.IsNil)
 	// add a new dependency item (application) to the apps item
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
@@ -143,7 +143,7 @@ func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {
 	// initialize a new module use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
-	c.Assert(cmd.Mod("init", lang()), check.IsNil)
+	c.Assert(cmd.Mod("init", modType.sb), check.IsNil)
 	// try to delete the missing item
 	err := s.Mod("del", "helloItem")
 	c.Assert(err, check.IsNil)
@@ -159,7 +159,7 @@ func (s *CmdSuite) TestModDelItem(c *check.C) {
 	// initialize a new module use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
-	c.Assert(cmd.Mod("init", lang()), check.IsNil)
+	c.Assert(cmd.Mod("init", modType.sb), check.IsNil)
 	// add a new item use a new cmd
 	cmd = CmdSuite{}
 	cmd.SetUpTest(nil)
@@ -170,14 +170,13 @@ func (s *CmdSuite) TestModDelItem(c *check.C) {
 	err = s.Mod("del", name)
 	c.Assert(err, check.IsNil)
 	// check the item does not exist
-	found, _ := smodule.IsItemExists(lang(), name)
+	found, _ := smodule.IsItemExists(modType.sb, name)
 	c.Assert(found, check.Equals, false)
 }
 
 // mod del|edit|list
 // NameMissing             = "\"--name\" parameter is required"
 // ModuleMissing           = "\"--mod\" parameter is required"
-// LanguageMissing         = "Language parameter is required"
 // ResolverMissing         = "\"--resolver\" parameter is required"
 // DependencyMissing       = "\"--dep\" parameter is required"
 // ItemDoesNotExistF       = "\"%s\" item does not exist"

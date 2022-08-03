@@ -1,5 +1,4 @@
 improvements & bugs
-    - NEXT remove the language 
     - move sgo coder to a separate project
     - update documentation
     - use a short name for functions (try it for adapters)

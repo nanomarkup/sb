@@ -10,6 +10,16 @@ const (
 	coderAttrName string = "coder"
 )
 
+var modKind = struct {
+	sa string
+	sb string
+	sp string
+}{
+	"sa",
+	"sb",
+	"sp",
+}
+
 type builder interface {
 	Build(app string, sources *map[string]map[string]string) error
 	Clean(app string, sources *map[string]map[string]string) error

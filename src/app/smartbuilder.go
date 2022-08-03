@@ -24,7 +24,7 @@ func (b *SmartBuilder) Generate(application string) error {
 	b.logInfo(fmt.Sprintf("generating \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(modKind.sb)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (b *SmartBuilder) Build(application string) error {
 	b.logInfo(fmt.Sprintf("building \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(modKind.sb)
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	b.logInfo(fmt.Sprintf("cleaning \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(modKind.sb)
 	if err != nil {
 		return err
 	}
@@ -134,7 +134,7 @@ func (b *SmartBuilder) Run(application string) error {
 	b.logInfo(fmt.Sprintf("running \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(b.Lang())
+	mod, err := b.ModManager.ReadAll(modKind.sb)
 	if err != nil {
 		return err
 	}
@@ -173,18 +173,18 @@ func (b *SmartBuilder) Version() string {
 
 // Init creates a apps.sb module and initialize it with the apps item.
 // If the apps item is exist then do nothing.
-func (b *SmartBuilder) Init(lang string) error {
-	b.logInfo(fmt.Sprintf("initializing \"%s\" language", lang))
+func (b *SmartBuilder) Init() error {
+	b.logInfo(fmt.Sprintf("initializing module"))
 	b.ModManager.SetLogger(b.Logger)
-	return b.ModManager.Init(DefaultModuleName, lang)
+	return b.ModManager.Init(DefaultModuleName)
 }
 
 // ReadAll loads modules.
-func (b *SmartBuilder) ReadAll(lang string) (ModReader, error) {
+func (b *SmartBuilder) ReadAll(kind string) (ModReader, error) {
 	defer handleError()
-	b.logInfo(fmt.Sprintf("reading \"%s\" language", lang))
+	b.logInfo(fmt.Sprintf("reading \"%s\" modules", kind))
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(lang)
+	mod, err := b.ModManager.ReadAll(kind)
 	if err != nil {
 		return nil, err
 	}

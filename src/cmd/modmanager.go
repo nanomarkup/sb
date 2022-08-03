@@ -82,7 +82,7 @@ func (v *CmdManager) init() {
 			if depStr != "" && itemStr == "" {
 				return errors.New(ItemMissing)
 			}
-			mod, err := v.ModManager.ReadAll(Language())
+			mod, err := v.ModManager.ReadAll("sb")
 			if err != nil {
 				return err
 			} else if *depFlags.all {

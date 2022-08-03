@@ -18,7 +18,6 @@ const (
 
 // SmartBuilder manages modules and builds the application.
 type SmartBuilder struct {
-	Lang            func() string
 	Builder         interface{}
 	ModManager      ModManager
 	PluginHandshake plugin.HandshakeConfig
@@ -30,18 +29,17 @@ type SmartGenerator struct{}
 
 // ModManager describes methods for managing a module.
 type ModManager interface {
-	Init(moduleName, language string) error
+	Init(moduleName string) error
 	AddItem(moduleName, itemName string) error
 	AddDependency(itemName, dependencyName, resolver string, update bool) error
 	DeleteItem(itemName string) error
 	DeleteDependency(itemName, dependencyName string) error
-	ReadAll(language string) (ModReader, error)
+	ReadAll(kind string) (ModReader, error)
 	SetLogger(logger Logger)
 }
 
 // ModReader describes methods for getting module attributes.
 type ModReader interface {
-	Lang() string
 	Items() map[string]map[string]string
 	Dependency(itemName, dependencyName string) string
 	App(name string) (map[string]string, error)

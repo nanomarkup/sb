@@ -13,10 +13,6 @@ func Test(t *testing.T) {
 	check.TestingT(t)
 }
 
-func lang() string {
-	return "go"
-}
-
 func setCmd(cmd string, args ...string) {
 	os.Args = os.Args[:1]
 	os.Args = append(os.Args, cmd)
@@ -33,11 +29,8 @@ var _ = check.Suite(&CmdSuite{})
 
 func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb := appSmartBuilder{}
-	sb.Lang = lang
 	sb.Builder = &plugins.BuilderPlugin{}
-	sb.ModManager = &smoduleManager{
-		Lang: lang,
-	}
+	sb.ModManager = &smoduleManager{}
 
 	s.cmd = src.SmartBuilder{}
 	s.cmd.SilentErrors = true

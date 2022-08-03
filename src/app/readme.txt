@@ -32,18 +32,17 @@ type Logger interface {
     Logger describes methods for logging messages.
 
 type ModManager interface {
-	Init(moduleName, language string) error
+	Init(moduleName string) error
 	AddItem(moduleName, itemName string) error
 	AddDependency(itemName, dependencyName, resolver string, update bool) error
 	DeleteItem(itemName string) error
 	DeleteDependency(itemName, dependencyName string) error
-	ReadAll(language string) (ModReader, error)
+	ReadAll(kind string) (ModReader, error)
 	SetLogger(logger Logger)
 }
     ModManager describes methods for managing a module.
 
 type ModReader interface {
-	Lang() string
 	Items() map[string]map[string]string
 	Dependency(itemName, dependencyName string) string
 	App(name string) (map[string]string, error)
@@ -52,7 +51,6 @@ type ModReader interface {
     ModReader describes methods for getting module attributes.
 
 type SmartBuilder struct {
-	Lang            func() string
 	Builder         interface{}
 	ModManager      ModManager
 	PluginHandshake plugin.HandshakeConfig
@@ -85,11 +83,11 @@ func (b *SmartBuilder) DeleteItem(item string) error
 func (b *SmartBuilder) Generate(application string) error
     Generate generates smart builder unit (.sb) using smart application unit.
 
-func (b *SmartBuilder) Init(lang string) error
+func (b *SmartBuilder) Init() error
     Init creates a apps.sb module and initialize it with the apps item. If the
     apps item is exist then do nothing.
 
-func (b *SmartBuilder) ReadAll(lang string) (ModReader, error)
+func (b *SmartBuilder) ReadAll(kind string) (ModReader, error)
     ReadAll loads modules.
 
 func (b *SmartBuilder) Run(application string) error

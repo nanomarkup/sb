@@ -18,7 +18,7 @@ const (
 
 type module struct {
 	name  string
-	lang  string
+	kind  string
 	items Items
 }
 
@@ -61,7 +61,7 @@ func split(line string) []string {
 	return res
 }
 
-func loadModule(name string) (*module, error) {
+func loadModule(name string, kind string) (*module, error) {
 	mod := module{}
 	mod.name = name
 	mod.items = Items{}
@@ -104,13 +104,11 @@ func loadModule(name string) (*module, error) {
 				token2 = ""
 			}
 			if index == 1 {
-				// check and initialize language
-				if token2 == "" {
-					return nil, fmt.Errorf("cannot parse the first token of " + fileName)
-				} else if token1 != attrs.use {
-					return nil, fmt.Errorf("the first token should be \"%s\"", attrs.use)
+				// check and initialize a kind of module
+				if token1 != kind || token2 != "" {
+					return nil, fmt.Errorf("the first token should be \"%s\"", kind)
 				}
-				mod.lang = token2
+				mod.kind = token1
 			} else {
 				// process items
 				if token1[len(token1)-1:] == ":" {
@@ -140,29 +138,32 @@ func loadModule(name string) (*module, error) {
 	return &mod, nil
 }
 
-func loadModuleAsync(name string, res chan<- moduleAsync) {
-	m, e := loadModule(name)
+func loadModuleAsync(name string, kind string, res chan<- moduleAsync) {
+	m, e := loadModule(name, kind)
 	res <- moduleAsync{m, e}
 }
 
-func loadModules(lang string) (modules, error) {
+func loadModules(kind string) (modules, error) {
+	if kind == "" {
+		return nil, fmt.Errorf("kind of modules to load is not specified")
+	}
 	// read and check all modules in the working directory
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
 		return nil, err
 	}
 	mods := modules{}
-	modLang := ""
+	modExt := fmt.Sprintf(".%s", kind)
 	var item chan moduleAsync
 	items := []chan moduleAsync{}
 	for _, f := range files {
 		fname := f.Name()
-		if filepath.Ext(fname) != ".sb" {
+		if filepath.Ext(fname) != modExt {
 			continue
 		}
 		item = make(chan moduleAsync)
 		items = append(items, item)
-		go loadModuleAsync(fname, item)
+		go loadModuleAsync(fname, kind, item)
 	}
 	// wait and process all loaded modules
 	for _, it := range items {
@@ -175,18 +176,11 @@ func loadModules(lang string) (modules, error) {
 			continue
 		}
 		// validate the loaded module
-		if lang != "" && lang != item.mod.lang {
-			// skip the loaded module if the language is not the selected language
+		if kind != item.mod.kind {
 			continue
 		}
-		if modLang == "" {
-			modLang = item.mod.lang
-		}
-		if modLang != item.mod.lang {
-			return nil, fmt.Errorf("the language of \"%s\" module do not match other modules", item.mod.name)
-		}
 		// add module
-		mods = append(mods, module{name: getModuleName(item.mod.name), lang: item.mod.lang, items: item.mod.items})
+		mods = append(mods, module{name: getModuleName(item.mod.name), kind: item.mod.kind, items: item.mod.items})
 	}
 	if err != nil {
 		return nil, err
@@ -200,9 +194,9 @@ func loadModules(lang string) (modules, error) {
 
 func loadItems(mods modules) (*module, error) {
 	all := Items{}
-	lang := ""
+	kind := ""
 	if len(mods) > 0 {
-		lang = mods[0].lang
+		kind = mods[0].kind
 	}
 	for _, m := range mods {
 		// read all items and validate them
@@ -254,7 +248,7 @@ func loadItems(mods modules) (*module, error) {
 		}
 		delete(all, "defines")
 	}
-	return &module{name: "", lang: lang, items: all}, nil
+	return &module{name: "", kind: kind, items: all}, nil
 }
 
 func saveModule(module *module) error {
@@ -279,24 +273,24 @@ func saveModule(module *module) error {
 	return err
 }
 
-func addItem(moduleName, lang, item string) error {
+func addItem(moduleName, kind, item string) error {
 	// check the item is exist
-	if found, modName := IsItemExists(lang, item); found {
+	if found, modName := IsItemExists(kind, item); found {
 		return fmt.Errorf(ItemExistsF, item, modName)
 	}
 	// load the existing module or create a new one
 	var mod *module
 	var err error
 	if IsModuleExists(moduleName) {
-		if mod, err = loadModule(moduleName); err != nil {
+		if mod, err = loadModule(moduleName, kind); err != nil {
 			return err
 		}
-		// check language of the selected module
-		if mod.lang != lang {
-			return fmt.Errorf(ModuleLanguageMismatchF, mod.lang, mod.name, lang)
+		// check kind of the selected module
+		if mod.kind != kind {
+			return fmt.Errorf(ModuleKindMismatchF, mod.kind, mod.name, kind)
 		}
 	} else {
-		mod = &module{name: moduleName, lang: lang, items: Items{}}
+		mod = &module{name: moduleName, kind: kind, items: Items{}}
 	}
 	// add the item to the selected module
 	if err = mod.AddItem(item); err != nil {
@@ -306,9 +300,9 @@ func addItem(moduleName, lang, item string) error {
 	}
 }
 
-func findItem(lang, item string) (*module, error) {
+func findItem(kind, item string) (*module, error) {
 	wd, _ := os.Getwd()
-	mods, err := loadModules(lang)
+	mods, err := loadModules(kind)
 	if (err != nil) && (err.Error() != fmt.Sprintf(ModuleFilesMissingF, wd)) {
 		return nil, err
 	}

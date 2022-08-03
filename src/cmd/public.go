@@ -12,7 +12,6 @@ const (
 	SubcmdMissing           string = "subcommand is required"
 	ItemMissing             string = "item name is required"
 	ModOrDepMissing         string = "module name or dependency name is missing"
-	LanguageMissing         string = "language parameter is required"
 	ResolverMissing         string = "resolver is required"
 	DependencyMissing       string = "\"--dep\" parameter is required"
 	ItemDoesNotExistF       string = "\"%s\" item does not exist\n"
@@ -128,17 +127,16 @@ type CmdManager struct {
 
 // ModManager describes methods for managing application items and dependencies.
 type ModManager interface {
-	Init(lang string) error
+	Init() error
 	AddItem(module, item string) error
 	AddDependency(item, dependency, resolver string, update bool) error
 	DeleteItem(item string) error
 	DeleteDependency(item, dependency string) error
-	ReadAll(lang string) (ModReader, error)
+	ReadAll(kind string) (ModReader, error)
 }
 
 // ModReader describes methods for getting module attributes.
 type ModReader interface {
-	Lang() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
 	Apps() (map[string]string, error)
@@ -167,9 +165,4 @@ type CmdModDeler struct {
 type CmdModIniter struct {
 	ModManager
 	cobra.Command
-}
-
-// Language returns the current language.
-func Language() string {
-	return starterFlags.lang
 }

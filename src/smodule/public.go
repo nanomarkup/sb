@@ -14,10 +14,10 @@ const (
 	// notifications
 	ModuleIsCreatedF string = "%s file has been created\n"
 	// errors
-	ItemExistsF             string = "the %s item already exists in %s module"
-	ItemIsMissingF          string = "the %s item does not exist"
-	ModuleFilesMissingF     string = "no sb files in %s"
-	ModuleLanguageMismatchF string = "the %s language of %s module is mismatch the %s selected language"
+	ItemExistsF         string = "the %s item already exists in %s module"
+	ItemIsMissingF      string = "the %s item does not exist"
+	ModuleFilesMissingF string = "no sb files in %s"
+	ModuleKindMismatchF string = "the %s kind of %s module is mismatch the %s selected kind"
 )
 
 type Logger interface {
@@ -34,12 +34,11 @@ type Logger interface {
 }
 
 type Manager struct {
-	Lang   func() string
 	Logger Logger
 }
 
 type Reader interface {
-	Lang() string
+	Kind() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
 	App(string) (map[string]string, error)
@@ -62,9 +61,9 @@ func IsModuleExists(name string) bool {
 	return err == nil
 }
 
-func IsItemExists(lang, item string) (bool, string) {
+func IsItemExists(kind, item string) (bool, string) {
 	wd, _ := os.Getwd()
-	mods, err := loadModules(lang)
+	mods, err := loadModules(kind)
 	if (err != nil) && (err.Error() != fmt.Sprintf(ModuleFilesMissingF, wd)) {
 		return false, ""
 	}

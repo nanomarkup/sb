@@ -9,16 +9,16 @@ const (
 	// notifications
 	ModuleIsCreatedF string = "%s file has been created\n"
 	// errors
-	ItemExistsF             string = "the %s item already exists in %s module"
-	ItemIsMissingF          string = "the %s item does not exist"
-	ModuleFilesMissingF     string = "no sb files in %s"
-	ModuleLanguageMismatchF string = "the %s language of %s module is mismatch the %s selected language"
+	ItemExistsF         string = "the %s item already exists in %s module"
+	ItemIsMissingF      string = "the %s item does not exist"
+	ModuleFilesMissingF string = "no sb files in %s"
+	ModuleKindMismatchF string = "the %s kind of %s module is mismatch the %s selected kind"
 )
 
 FUNCTIONS
 
 func GetModuleFileName(name string) string
-func IsItemExists(lang, item string) (bool, string)
+func IsItemExists(kind, item string) (bool, string)
 func IsModuleExists(name string) bool
 
 TYPES
@@ -48,7 +48,6 @@ type Logger interface {
 }
 
 type Manager struct {
-	Lang   func() string
 	Logger Logger
 }
 
@@ -60,14 +59,14 @@ func (m *Manager) DeleteDependency(item, dependency string) error
 
 func (m *Manager) DeleteItem(item string) error
 
-func (m *Manager) Init(module, lang string) error
+func (m *Manager) Init(module string) error
 
-func (m *Manager) ReadAll(lang string) (Reader, error)
+func (m *Manager) ReadAll(kind string) (Reader, error)
 
 func (m *Manager) SetLogger(logger Logger)
 
 type Reader interface {
-	Lang() string
+	Kind() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
 	App(string) (map[string]string, error)
