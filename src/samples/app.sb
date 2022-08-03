@@ -1,4 +1,8 @@
 use go
 
 apps:
-    helloworld "Hello World!"
+    helloworld
+
+helloworld:
+    coder sgo
+    entry "Hello World!"

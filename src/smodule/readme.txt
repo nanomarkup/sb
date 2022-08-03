@@ -70,6 +70,7 @@ type Reader interface {
 	Lang() string
 	Items() map[string]map[string]string
 	Dependency(string, string) string
+	App(string) (map[string]string, error)
 	Apps() (map[string]string, error)
 }
 
