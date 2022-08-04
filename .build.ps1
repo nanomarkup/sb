@@ -10,37 +10,27 @@ function GenDoc {
 }
 
 # Synopsis: Generate sources
-task code code-sb, code-sgo
-
-# Synopsis: Generate sb sources
-task code-sb {
+task code {
     Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code sb' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "code sb" command failed'
-}
-
-# Synopsis: Generate sgo sources
-task code-sgo {
-    Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code sgo' -NoNewWindow -PassThru -Wait
-    Assert($Status.ExitCode -eq 0) 'The "code sgo" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'code' -NoNewWindow -PassThru -Wait
+    Assert($Status.ExitCode -eq 0) 'The "code" command failed'
 }
 
 # Synopsis: Build sources
-task build build-sb, build-sgo
-
-# Synopsis: Build sb application
-task build-sb {
+task build {
     Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'build sb' -NoNewWindow -PassThru -Wait 
-    Assert($Status.ExitCode -eq 0) 'The "build sb" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'build' -NoNewWindow -PassThru -Wait 
+    Assert($Status.ExitCode -eq 0) 'The "build" command failed'
 }
 
-# Synopsis: Build sgo plugin
-task build-sgo {
+# Synopsis: Generate & build sources
+task cbuild code, build
+
+# Synopsis: Remove generated files
+task clean {
     Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'build sgo' -NoNewWindow -PassThru -Wait 
-    Assert($Status.ExitCode -eq 0) 'The "build sgo" command failed'
+    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean' -NoNewWindow -PassThru -Wait 
+    Assert($Status.ExitCode -eq 0) 'The "clean" command failed'
 }
 
 # Synopsis: Build samples
@@ -52,66 +42,26 @@ task build-samples {
     Assert($Status.ExitCode -eq 0) 'The "build helloworld" command failed'
 }
 
-# Synopsis: Generate & build sources
-task cbuild cbuild-sb, cbuild-sgo
-
-# Synopsis: Generate & build sb application
-task cbuild-sb code-sb, build-sb
-
-# Synopsis: Generate & build sgo plugin
-task cbuild-sgo code-sgo, build-sgo
-
-# Synopsis: Clean sb application
-task clean-sb {
-    Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean sb' -NoNewWindow -PassThru -Wait 
-    Assert($Status.ExitCode -eq 0) 'The "clean sb" command failed'
-}
-
-# Synopsis: Clean sgo plugin
-task clean-sgo {
-    Set-Location -Path 'src'
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean sgo' -NoNewWindow -PassThru -Wait 
-    Assert($Status.ExitCode -eq 0) 'The "clean sgo" command failed'
-}
-
-# Synopsis: Build samples
+# Synopsis: Clean samples
 task clean-samples {
     Set-Location -Path 'src\samples'
     $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean helloworld' -NoNewWindow -PassThru -Wait
     Assert($Status.ExitCode -eq 0) 'The "clean helloworld" command failed'
 }
 
-# Synopsis: Clean applications, plugins & samples
-task clean clean-sb, clean-sgo, clean-samples
+# Synopsis: Remove all generated files
+task clean-all clean, clean-samples
 
-# Synopsis: Install applications & plugins
-task install install-sb, install-sgo
-
-# Synopsis: Install sb application
-task install-sb {
+# Synopsis: Install application
+task install {
     $GoPath = "${Env:GOPATH}".TrimEnd(';')
     Set-Location -Path 'src\sb'
     Copy-Item -Path 'sb.exe' -Destination '..\..\bin\'    
     Copy-Item -Path 'sb.exe' -Destination "$GoPath\bin\"
 }
 
-# Synopsis: Install sgo plugin
-task install-sgo {
-    $GoPath = "${Env:GOPATH}".TrimEnd(';')
-    Set-Location -Path 'src\sgo'
-    Copy-Item -Path 'sgo.exe' -Destination '..\..\bin\'
-    Copy-Item -Path 'sgo.exe' -Destination "$GoPath\bin\"
-}
-
-# Synopsis: Generate, build & install applications 
+# Synopsis: Generate, build & install application
 task cinstall cbuild, install
-
-# Synopsis: Generate, build & install sb application
-task cinstall-sb cbuild-sb, install-sb
-
-# Synopsis: Generate, build & install sgo plugim
-task cinstall-sgo cbuild-sgo, install-sgo
 
 # Synopsis: Run tests
 task test {
@@ -125,11 +75,9 @@ task doc {
     Set-Location -Path 'src'
     GenDoc -PackageName 'app'
     GenDoc -PackageName 'cmd'
-    GenDoc -PackageName 'golang'
     GenDoc -PackageName 'helper\hashicorp\hclog'
     GenDoc -PackageName 'plugins'
-    GenDoc -PackageName 'plugins\sgo'
     GenDoc -PackageName 'smodule'
 }
 
-task . cbuild, build-samples, test, clean, doc
+task . cbuild, build-samples, test, clean-all, doc

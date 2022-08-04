@@ -1,20 +1,7 @@
 improvements & bugs
-    - move sgo coder to a separate project
-    - update documentation
-    - use a short name for functions (try it for adapters)
-    - check all methods in interfaces
-    - fix all external dependencies - github.com/*
-    - validate sb code before running the gen command
-    - the sb module will be started with sb word
-    - the application should be reference to the item, where the following optional items
-        - name - optional, default the same as app name  
-    - resolve interfaces with different number of methods, typeA can have less number of methods than typeB
-          fix "Builder    interface{}" to "Builder    builder" of "SmartBuilder" struct in "app" package
 
 core features
-    - add a struct initialization into an item use brackets for overriding global settings, usage: field struct { code }
-    - use a "named type" as parameter (at least for interfaces)
-
+    
 smart features
     - add metadata to a struct to describe its functionality (use it for generating apps!)
     - use "application", "feature", and "action" items for describing application requirements
@@ -36,18 +23,6 @@ help
     - .sb - smart builder unit. It can be generated using .sa unit.
     - .sp - smart package unit. It will be created manually but it should be generated in the future. 
             Describes the exported items. The smart builder will use it for generating .sb unit.
-
-
-example of a new sb file
-sb
-
-apps:
-    helloworld
-
-helloworld:
-    coder sgo
-    entry "Hello World!"
-
 
 example of sa file
 sa

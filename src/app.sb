@@ -1,5 +1,18 @@
 sb
 
+apps:
+	sb
+
+defines:
+	Src github.com/sapplications/sbuilder/src
+	LogDefault 0
+	LogTrace 1
+	LogDebug 2
+	LogInfo 3
+	LogWarn 4
+	LogError 5
+	LogOff 6
+
 sb: 
 	coder sgo
 	entry {Src}/cmd.SmartBuilder
@@ -105,3 +118,8 @@ sb:
 	ModManager *{Src}/smodule.Manager
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger {Src}/helper/hashicorp/hclog.NewStdOut("sb", {LogInfo})
+
+github.com/hashicorp/go-plugin.HandshakeConfig:
+	ProtocolVersion 1
+	MagicCookieKey "SMART_PLUGIN"
+	MagicCookieValue "sbuilder"

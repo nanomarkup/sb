@@ -17,6 +17,5 @@
 *.log
 
 /src/sb/
-/src/sgo/
 /src/samples/helloworld/
 test/
