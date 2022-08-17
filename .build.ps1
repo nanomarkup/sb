@@ -77,7 +77,6 @@ task doc {
     GenDoc -PackageName 'cmd'
     GenDoc -PackageName 'helper\hashicorp\hclog'
     GenDoc -PackageName 'plugins'
-    GenDoc -PackageName 'smodule'
 }
 
 task . cbuild, build-samples, test, clean-all, doc

@@ -12,7 +12,7 @@ define:
 
 {define.Src}/app.SmartBuilder:
 	Builder *github.com/sapplications/sbuilder/src/plugins.BuilderPlugin
-	ModManager *github.com/sapplications/sbuilder/src/smodule.Manager
+	ModManager *github.com/sapplications/slod/src.Manager
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger {define.Src}/helper/hashicorp/hclog.NewStdOut("sb", {define.LogInfo})
 

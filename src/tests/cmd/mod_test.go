@@ -7,7 +7,7 @@ import (
 
 	"github.com/sapplications/sbuilder/src/app"
 	src "github.com/sapplications/sbuilder/src/cmd"
-	smodule "github.com/sapplications/slod/src"
+	"github.com/sapplications/slod/src"
 	"gopkg.in/check.v1"
 )
 
@@ -35,10 +35,10 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 	// initialize a new module
 	c.Assert(s.Mod("init", modType.sb), check.IsNil)
 	// read the created module
-	m := smodule.Manager{}
+	m := slod.Manager{}
 	_, err := m.ReadAll(modType.sb)
 	if err != nil {
-		t, _ := ioutil.ReadFile(smodule.GetModuleFileName(app.DefaultModuleName))
+		t, _ := ioutil.ReadFile(slod.GetModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
 		c.Error(err)
 	}
@@ -65,12 +65,12 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 	modName := "new"
 	err := s.Mod("add", "helloItem", modName)
 	c.Assert(err, check.IsNil)
-	c.Assert(smodule.IsModuleExists(modName), check.Equals, true)
+	c.Assert(slod.IsModuleExists(modName), check.Equals, true)
 	// read the created module
-	m := smodule.Manager{}
+	m := slod.Manager{}
 	_, err = m.ReadAll(modType.sb)
 	if err != nil {
-		t, _ := ioutil.ReadFile(smodule.GetModuleFileName(modName))
+		t, _ := ioutil.ReadFile(slod.GetModuleFileName(modName))
 		fmt.Print(string(t))
 		c.Error(err)
 	}
@@ -92,10 +92,10 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	err := cmd.Mod("add", name, app.DefaultModuleName)
 	c.Assert(err, check.IsNil)
 	// read the created module
-	mod := smodule.Manager{}
+	mod := slod.Manager{}
 	r, err := mod.ReadAll(modType.sb)
 	if err != nil {
-		t, _ := ioutil.ReadFile(smodule.GetModuleFileName(app.DefaultModuleName))
+		t, _ := ioutil.ReadFile(slod.GetModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
 		c.Error(err)
 	} else {
@@ -118,7 +118,7 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 	cmd.SetUpTest(nil)
 	name := "hello"
 	resolver := "\"Hello World!\""
-	err := cmd.Mod("add", smodule.AppsItemName, name, resolver)
+	err := cmd.Mod("add", slod.AppsItemName, name, resolver)
 	c.Assert(err, check.IsNil)
 	// TODO verify the added dependency...
 }
@@ -171,7 +171,7 @@ func (s *CmdSuite) TestModDelItem(c *check.C) {
 	err = s.Mod("del", name)
 	c.Assert(err, check.IsNil)
 	// check the item does not exist
-	found, _ := smodule.IsItemExists(modType.sb, name)
+	found, _ := slod.IsItemExists(modType.sb, name)
 	c.Assert(found, check.Equals, false)
 }
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/sapplications/sbuilder/src/app"
 	"github.com/sapplications/sbuilder/src/cmd"
+	slod "github.com/sapplications/slod/src"
 )
 
 var modType = struct {
