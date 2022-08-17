@@ -37,7 +37,7 @@ sb:
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
 	ModManager *{Src}/app.SmartBuilder
-	ModFormatter *{Src}/smodule.Formatter
+	ModFormatter *github.com/sapplications/slod/src.Formatter
 
 {Src}/cmd.CmdModAdder:
 	Use "add"
@@ -115,7 +115,7 @@ sb:
 
 {Src}/app.SmartBuilder:
 	Builder *{Src}/plugins.BuilderPlugin
-	ModManager *{Src}/smodule.Manager
+	ModManager *github.com/sapplications/slod/src.Manager
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger {Src}/helper/hashicorp/hclog.NewStdOut("sb", {LogInfo})
 

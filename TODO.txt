@@ -1,3 +1,6 @@
+Create a new application - slod (smart language of dependencies). Move smodule package to slod. Refactor sources.
+
+
 improvements & bugs
 
 core features
@@ -30,7 +33,7 @@ sa
 apps:
     helloworld
 
-helloworld:    
+helloworld:
     name helloworld - optional, default the same as app name    
     type console - optional, default is console
     coder sgo - optional, default is sgo

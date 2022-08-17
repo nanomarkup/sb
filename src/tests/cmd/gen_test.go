@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/sapplications/sbuilder/src/app"
-	"github.com/sapplications/sbuilder/src/smodule"
+	"github.com/sapplications/slod/src"
 	"github.com/spf13/viper"
 	"gopkg.in/check.v1"
 )
@@ -14,7 +14,7 @@ import (
 func (s *CmdSuite) TestGenEmpty(c *check.C) {
 	c.Skip("Needs to fix...")
 	return
-	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(smodule.ModuleFilesMissingF, ".*"))
+	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(slod.ModuleFilesMissingF, ".*"))
 }
 
 func (s *CmdSuite) TestGenAppMissing(c *check.C) {

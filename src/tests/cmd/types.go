@@ -3,7 +3,6 @@ package cmd
 import (
 	"github.com/sapplications/sbuilder/src/app"
 	"github.com/sapplications/sbuilder/src/cmd"
-	src "github.com/sapplications/sbuilder/src/smodule"
 )
 
 var modType = struct {
@@ -25,7 +24,7 @@ func (b *appSmartBuilder) ReadAll(kind string) (cmd.ModReader, error) {
 }
 
 type smoduleManager struct {
-	src.Manager
+	slod.Manager
 }
 
 func (m *smoduleManager) AddItem(module, item string) error {

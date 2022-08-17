@@ -7,7 +7,7 @@ import (
 
 	"github.com/sapplications/sbuilder/src/app"
 	src "github.com/sapplications/sbuilder/src/cmd"
-	"github.com/sapplications/sbuilder/src/smodule"
+	smodule "github.com/sapplications/slod/src"
 	"gopkg.in/check.v1"
 )
 
