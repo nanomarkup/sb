@@ -189,8 +189,8 @@ github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFR
 github.com/rogpeppe/go-internal v1.6.1 h1:/FiVV8dS/e+YqF2JvO3yXRFbBLTIuSDkuC7aBOAvL+k=
 github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTEfhy4qGm1nDQc=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
-github.com/sapplications/slod v0.0.0-20220817204658-60d0b9d45880 h1:9xldjy7GwfgWp8inqy8/YKS96G1R2zwNsFXuaXv7eR8=
-github.com/sapplications/slod v0.0.0-20220817204658-60d0b9d45880/go.mod h1:bCgrbh14yG218qzILRYW88AIktZ4mQDq2EuwdAEOKsY=
+github.com/sapplications/smod v0.0.0-20220818071755-e651f3bc5ee6 h1:n3M8IvlT/7dVf68iWkSth+kgqDplle0meVRUufUiPkc=
+github.com/sapplications/smod v0.0.0-20220818071755-e651f3bc5ee6/go.mod h1:ea8HvgK6T+GlVGZOuuSJ55btDurhvLktFmeYyxtfEPA=
 github.com/spf13/afero v1.8.2 h1:xehSyVa0YnHWsJ49JFljMpg1HX19V6NDZ1fkm1Xznbo=
 github.com/spf13/afero v1.8.2/go.mod h1:CtAatgMJh6bJEIs48Ay/FOnkljP3WeGUG0MC1RfAqwo=
 github.com/spf13/cast v1.5.0 h1:rj3WzYc11XZaIZMPKmwP96zkFEnnAmV8s6XbB2aY32w=

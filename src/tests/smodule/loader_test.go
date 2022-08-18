@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	helper "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog"
-	"github.com/sapplications/slod/src"
+	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )
 
 func (s *SModuleSuite) TestLoading(c *check.C) {
-	m := slod.Manager{}
+	m := lod.Manager{}
 	m.SetLogger(helper.NewStdOut("test", 1))
 	r, e := m.ReadAll("")
 	if e != nil {

@@ -1,6 +1,3 @@
-Create a new application - slod (smart language of dependencies). Move smodule package to slod. Refactor sources.
-
-
 improvements & bugs
 
 core features

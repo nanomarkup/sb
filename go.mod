@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/hashicorp/go-hclog v1.2.2
 	github.com/hashicorp/go-plugin v1.4.4
-	github.com/sapplications/slod v0.0.0-20220817204658-60d0b9d45880
+	github.com/sapplications/smod v0.0.0-20220818071755-e651f3bc5ee6
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
