@@ -4,7 +4,6 @@ import (
 	"os"
 	"testing"
 
-	src "github.com/sapplications/sb/cmd"
 	"github.com/sapplications/sb/plugins"
 	"gopkg.in/check.v1"
 )
@@ -22,7 +21,7 @@ func setCmd(cmd string, args ...string) {
 }
 
 type CmdSuite struct {
-	cmd src.SmartBuilder
+	cmd SmartBuilder
 }
 
 var _ = check.Suite(&CmdSuite{})
@@ -32,34 +31,34 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb.Builder = &plugins.BuilderPlugin{}
 	sb.ModManager = &smoduleManager{}
 
-	s.cmd = src.SmartBuilder{}
+	s.cmd = SmartBuilder{}
 	s.cmd.SilentErrors = true
 
-	s.cmd.ModManager = src.CmdManager{}
+	s.cmd.ModManager = CmdManager{}
 	s.cmd.ModManager.Use = "mod"
 	s.cmd.ModManager.ModManager = &sb
 
-	s.cmd.Builder = src.CmdBuilder{}
+	s.cmd.Builder = CmdBuilder{}
 	s.cmd.Builder.Use = "build"
 	s.cmd.Builder.Builder = &sb
 
-	s.cmd.Cleaner = src.CmdCleaner{}
+	s.cmd.Cleaner = CmdCleaner{}
 	s.cmd.Cleaner.Use = "clean"
 	s.cmd.Cleaner.Cleaner = &sb
 
-	s.cmd.Generator = src.CmdGenerator{}
+	s.cmd.Generator = CmdGenerator{}
 	s.cmd.Generator.Use = "gen"
 	s.cmd.Generator.Generator = &sb
 
-	s.cmd.ModAdder = src.CmdModAdder{}
+	s.cmd.ModAdder = CmdModAdder{}
 	s.cmd.ModAdder.Use = "add"
 	s.cmd.ModAdder.ModManager = &sb
 
-	s.cmd.ModDeler = src.CmdModDeler{}
+	s.cmd.ModDeler = CmdModDeler{}
 	s.cmd.ModDeler.Use = "del"
 	s.cmd.ModDeler.ModManager = &sb
 
-	s.cmd.ModIniter = src.CmdModIniter{}
+	s.cmd.ModIniter = CmdModIniter{}
 	s.cmd.ModIniter.Use = "init"
 	s.cmd.ModIniter.ModManager = &sb
 	s.cmd.Starter.SilenceErrors = true

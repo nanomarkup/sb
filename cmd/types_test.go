@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/sapplications/sb/app"
-	"github.com/sapplications/sb/cmd"
 	"github.com/sapplications/smod/lod"
 )
 
@@ -20,7 +19,7 @@ type appSmartBuilder struct {
 	app.SmartBuilder
 }
 
-func (b *appSmartBuilder) ReadAll(kind string) (cmd.ModReader, error) {
+func (b *appSmartBuilder) ReadAll(kind string) (ModReader, error) {
 	return b.SmartBuilder.ReadAll(kind)
 }
 

@@ -6,17 +6,16 @@ import (
 	"os"
 
 	"github.com/sapplications/sb/app"
-	src "github.com/sapplications/sb/cmd"
 	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )
 
 func (s *CmdSuite) TestModSubcmdMissing(c *check.C) {
-	c.Assert(s.Mod(), check.ErrorMatches, src.SubcmdMissing)
+	c.Assert(s.Mod(), check.ErrorMatches, SubcmdMissing)
 }
 
 func (s *CmdSuite) TestModUnknownSubcmd(c *check.C) {
-	c.Assert(s.Mod("test"), check.ErrorMatches, fmt.Sprintf(src.UnknownSubcmdF, "test"))
+	c.Assert(s.Mod("test"), check.ErrorMatches, fmt.Sprintf(UnknownSubcmdF, "test"))
 }
 
 // test the init subcommand
@@ -47,11 +46,11 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 // test the add subcommand
 
 func (s *CmdSuite) TestModAddItemMissing(c *check.C) {
-	c.Assert(s.Mod("add"), check.ErrorMatches, src.ItemMissing)
+	c.Assert(s.Mod("add"), check.ErrorMatches, ItemMissing)
 }
 
 func (s *CmdSuite) TestModAddModuleMissing(c *check.C) {
-	c.Assert(s.Mod("add", "helloItem"), check.ErrorMatches, src.ModOrDepMissing)
+	c.Assert(s.Mod("add", "helloItem"), check.ErrorMatches, ModOrDepMissing)
 }
 
 func (s *CmdSuite) TestModAddEmpty(c *check.C) {
@@ -131,7 +130,7 @@ func (s *CmdSuite) TestModDelModuleMissing(c *check.C) {
 }
 
 func (s *CmdSuite) TestModDelItemMissing(c *check.C) {
-	c.Assert(s.Mod("del"), check.ErrorMatches, src.ItemMissing)
+	c.Assert(s.Mod("del"), check.ErrorMatches, ItemMissing)
 }
 
 func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {

@@ -62,7 +62,7 @@ task cinstall cbuild, install
 
 # Synopsis: Run tests
 task test {
-    Set-Location -Path 'tests\cmd'
+    Set-Location -Path 'cmd'
     $Status = Start-Process -FilePath 'go' -ArgumentList 'test' -NoNewWindow -PassThru -Wait
     Assert($Status.ExitCode -eq 0) 'The test command failed'
 }
