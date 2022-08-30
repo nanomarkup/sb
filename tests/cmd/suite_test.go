@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	src "github.com/sapplications/sbuilder/src/cmd"
-	"github.com/sapplications/sbuilder/src/plugins"
+	src "github.com/sapplications/sb/cmd"
+	"github.com/sapplications/sb/plugins"
 	"gopkg.in/check.v1"
 )
 

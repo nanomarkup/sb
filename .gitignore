@@ -16,6 +16,6 @@
 .vscode
 *.log
 
-/src/sb/
-/src/samples/helloworld/
+/sb/
+/samples/helloworld/
 test/

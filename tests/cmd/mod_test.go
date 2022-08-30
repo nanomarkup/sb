@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/sapplications/sbuilder/src/app"
-	src "github.com/sapplications/sbuilder/src/cmd"
+	"github.com/sapplications/sb/app"
+	src "github.com/sapplications/sb/cmd"
 	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )

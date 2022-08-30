@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/sapplications/sbuilder/src/app"
+	"github.com/sapplications/sb/app"
 	"github.com/sapplications/smod/lod"
 	"github.com/spf13/viper"
 	"gopkg.in/check.v1"

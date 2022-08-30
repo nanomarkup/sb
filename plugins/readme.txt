@@ -1,4 +1,4 @@
-package plugins // import "github.com/sapplications/sbuilder/src/plugins"
+package plugins // import "github.com/sapplications/sb/plugins"
 
 Package plugins implements common objects for supporting plugins.
 

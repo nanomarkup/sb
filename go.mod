@@ -1,11 +1,11 @@
-module github.com/sapplications/sbuilder
+module github.com/sapplications/sb
 
 go 1.18
 
 require (
-	github.com/hashicorp/go-hclog v1.2.2
-	github.com/hashicorp/go-plugin v1.4.4
-	github.com/sapplications/smod v0.0.0-20220818071755-e651f3bc5ee6
+	github.com/hashicorp/go-hclog v1.3.0
+	github.com/hashicorp/go-plugin v1.4.5
+	github.com/sapplications/smod/lod v0.0.0-20220830080918-87070037b4df
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c

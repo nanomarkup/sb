@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/sapplications/sbuilder/src/app"
-	"github.com/sapplications/sbuilder/src/cmd"
+	"github.com/sapplications/sb/app"
+	"github.com/sapplications/sb/cmd"
 	"github.com/sapplications/smod/lod"
 )
 

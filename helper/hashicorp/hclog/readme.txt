@@ -1,4 +1,4 @@
-package helper // import "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog"
+package helper // import "github.com/sapplications/sb/helper/hashicorp/hclog"
 
 Package helper provides methods for using "github.com/hashicorp/go-hclog"
 sources.

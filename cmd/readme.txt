@@ -1,4 +1,4 @@
-package cmd // import "github.com/sapplications/sbuilder/src/cmd"
+package cmd // import "github.com/sapplications/sb/cmd"
 
 Package cmd represents Command Line Interface.
 

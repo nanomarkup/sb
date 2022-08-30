@@ -3,7 +3,7 @@ package smodule
 import (
 	"fmt"
 
-	helper "github.com/sapplications/sbuilder/src/helper/hashicorp/hclog"
+	helper "github.com/sapplications/sb/helper/hashicorp/hclog"
 	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )

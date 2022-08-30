@@ -1,4 +1,4 @@
-package app // import "github.com/sapplications/sbuilder/src/app"
+package app // import "github.com/sapplications/sb/app"
 
 Package app implements a Smart Builder application. It is the next
 generation of building applications using independent bussiness components.

@@ -1,4 +1,5 @@
 improvements & bugs
+    - move tests/smodule to smod/lod/tests
 
 core features
     
