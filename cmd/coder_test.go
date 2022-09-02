@@ -6,20 +6,17 @@ import (
 	"os"
 
 	"github.com/sapplications/sb/app"
+	sgo "github.com/sapplications/sgo/app"
 	"github.com/sapplications/smod/lod"
 	"github.com/spf13/viper"
 	"gopkg.in/check.v1"
 )
 
-func (s *CmdSuite) TestGenEmpty(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
-	c.Assert(s.Gen(), check.ErrorMatches, fmt.Sprintf(lod.ModuleFilesMissingF, ".*"))
+func (s *CmdSuite) TestCodeEmpty(c *check.C) {
+	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(lod.ModuleFilesMissingF, ".*"))
 }
 
-func (s *CmdSuite) TestGenAppMissing(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
+func (s *CmdSuite) TestCodeAppMissing(c *check.C) {
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -29,10 +26,10 @@ func (s *CmdSuite) TestGenAppMissing(c *check.C) {
 	cmd.SetUpTest(nil)
 	c.Assert(cmd.Mod("init", app.ModKind.SB), check.IsNil)
 	// try to generate the empty module
-	c.Assert(s.Gen(), check.ErrorMatches, app.AppIsMissing)
+	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(sgo.ItemIsMissingF, lod.AppsItemName))
 }
 
-func (s *CmdSuite) TestGenSbApp(c *check.C) {
+func (s *CmdSuite) TestCodeSbApp(c *check.C) {
 	c.Skip("Needs to fix...")
 	return
 	// create a temporary folder and change the current working directory
@@ -42,16 +39,12 @@ func (s *CmdSuite) TestGenSbApp(c *check.C) {
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
-	copyFile(currFolder+"\\..\\..\\apps.sb", wd+"\\apps.sb")
-	copyFile(currFolder+"\\..\\..\\sb.sb", wd+"\\sb.sb")
-	copyFile(currFolder+"\\..\\..\\sgo.sb", wd+"\\sgo.sb")
+	copyFile(currFolder+"\\..\\app.sb", wd+"\\app.sb")
 	// generate application's files
-	c.Assert(s.Gen("sb"), check.IsNil)
+	c.Assert(s.Code("sb"), check.IsNil)
 }
 
-func (s *CmdSuite) TestGenHelloWorldApp(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
+func (s *CmdSuite) TestCodeHelloWorldApp(c *check.C) {
 	// create a temporary folder and change the current working directory
 	currFolder, _ := os.Getwd()
 	defer os.Chdir(currFolder)
@@ -59,9 +52,9 @@ func (s *CmdSuite) TestGenHelloWorldApp(c *check.C) {
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
-	copyFile(currFolder+"\\..\\..\\samples\\app.sb", wd+"\\app.sb")
+	copyFile(currFolder+"\\..\\samples\\app.sb", wd+"\\app.sb")
 	// generate application's files
-	c.Assert(s.Gen(), check.IsNil)
+	c.Assert(s.Code(), check.IsNil)
 }
 
 func copyFile(src, dst string) error {

@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/hashicorp/go-plugin"
 	"github.com/sapplications/sb/plugins"
 	"gopkg.in/check.v1"
 )
@@ -30,6 +31,11 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	sb := appSmartBuilder{}
 	sb.Builder = &plugins.BuilderPlugin{}
 	sb.ModManager = &smoduleManager{}
+	sb.PluginHandshake = plugin.HandshakeConfig{
+		ProtocolVersion:  1,
+		MagicCookieKey:   "SMART_PLUGIN",
+		MagicCookieValue: "sbuilder",
+	}
 
 	s.cmd = SmartBuilder{}
 	s.cmd.SilentErrors = true
@@ -38,6 +44,10 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.ModManager.Use = "mod"
 	s.cmd.ModManager.ModManager = &sb
 
+	s.cmd.Coder = CmdCoder{}
+	s.cmd.Coder.Use = "code"
+	s.cmd.Coder.Coder = &sb
+
 	s.cmd.Builder = CmdBuilder{}
 	s.cmd.Builder.Use = "build"
 	s.cmd.Builder.Builder = &sb
@@ -45,10 +55,6 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.Cleaner = CmdCleaner{}
 	s.cmd.Cleaner.Use = "clean"
 	s.cmd.Cleaner.Cleaner = &sb
-
-	s.cmd.Generator = CmdGenerator{}
-	s.cmd.Generator.Use = "gen"
-	s.cmd.Generator.Generator = &sb
 
 	s.cmd.ModAdder = CmdModAdder{}
 	s.cmd.ModAdder.Use = "add"
@@ -69,8 +75,8 @@ func (s *CmdSuite) Mod(args ...string) error {
 	return s.cmd.Execute()
 }
 
-func (s *CmdSuite) Gen(args ...string) error {
-	setCmd("gen", args...)
+func (s *CmdSuite) Code(args ...string) error {
+	setCmd("code", args...)
 	return s.cmd.Execute()
 }
 

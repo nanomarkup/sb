@@ -21,12 +21,14 @@ func (s *CmdSuite) TestModUnknownSubcmd(c *check.C) {
 // test the init subcommand
 
 func (s *CmdSuite) TestModInitKindMissing(c *check.C) {
+	// create a temporary folder and change the current working directory
+	wd, _ := os.Getwd()
+	defer os.Chdir(wd)
+	os.Chdir(c.MkDir())
 	s.Mod("init")
 }
 
 func (s *CmdSuite) TestModInit(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -54,8 +56,6 @@ func (s *CmdSuite) TestModAddModuleMissing(c *check.C) {
 }
 
 func (s *CmdSuite) TestModAddEmpty(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -125,7 +125,6 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 // test the del subcommand
 
 func (s *CmdSuite) TestModDelModuleMissing(c *check.C) {
-	c.Skip("Needs to fix...")
 	c.Assert(s.Mod("del", "helloItem"), check.IsNil)
 }
 
@@ -134,8 +133,6 @@ func (s *CmdSuite) TestModDelItemMissing(c *check.C) {
 }
 
 func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -150,8 +147,6 @@ func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {
 }
 
 func (s *CmdSuite) TestModDelItem(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
