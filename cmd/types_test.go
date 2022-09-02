@@ -5,16 +5,6 @@ import (
 	"github.com/sapplications/smod/lod"
 )
 
-var modType = struct {
-	sa string
-	sb string
-	sp string
-}{
-	"sa",
-	"sb",
-	"sp",
-}
-
 type appSmartBuilder struct {
 	app.SmartBuilder
 }

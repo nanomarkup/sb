@@ -6,14 +6,30 @@ generation of building applications using independent bussiness components.
 CONSTANTS
 
 const (
+	// application
 	AppName           string = "sb"
 	AppVersion        string = "1.0"
 	AppVersionString  string = AppName + " version " + AppVersion
 	DefaultModuleName string = "apps"
-	// error messages
-	ErrorMessageF        string = "Error: %v\n"
-	ApplicationIsMissing string = "does not found any application in the apps"
+	// errors
+	ErrorMessageF         string = "Error: %v\n"
+	AppIsMissing          string = "does not found any application in the apps"
+	AppIsMissingInSystemF string = "the system cannot find the \"%s\" application"
+	AppIsNotSpecified     string = "the application is not specified"
+	AttrIsMissingF        string = "the \"%s\" attribute is missing for \"%s\" application"
 )
+
+VARIABLES
+
+var ModKind = struct {
+	SA string
+	SB string
+	SP string
+}{
+	"sa",
+	"sb",
+	"sp",
+}
 
 TYPES
 

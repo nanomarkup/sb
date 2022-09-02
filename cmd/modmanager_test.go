@@ -32,10 +32,10 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
 	// initialize a new module
-	c.Assert(s.Mod("init", modType.sb), check.IsNil)
+	c.Assert(s.Mod("init", app.ModKind.SB), check.IsNil)
 	// read the created module
 	m := lod.Manager{}
-	_, err := m.ReadAll(modType.sb)
+	_, err := m.ReadAll(app.ModKind.SB)
 	if err != nil {
 		t, _ := ioutil.ReadFile(lod.GetModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
@@ -67,7 +67,7 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 	c.Assert(lod.IsModuleExists(modName), check.Equals, true)
 	// read the created module
 	m := lod.Manager{}
-	_, err = m.ReadAll(modType.sb)
+	_, err = m.ReadAll(app.ModKind.SB)
 	if err != nil {
 		t, _ := ioutil.ReadFile(lod.GetModuleFileName(modName))
 		fmt.Print(string(t))
@@ -83,7 +83,7 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
 	// initialize a new module
-	c.Assert(s.Mod("init", modType.sb), check.IsNil)
+	c.Assert(s.Mod("init", app.ModKind.SB), check.IsNil)
 	// add a new item use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
@@ -92,7 +92,7 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	c.Assert(err, check.IsNil)
 	// read the created module
 	mod := lod.Manager{}
-	r, err := mod.ReadAll(modType.sb)
+	r, err := mod.ReadAll(app.ModKind.SB)
 	if err != nil {
 		t, _ := ioutil.ReadFile(lod.GetModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
@@ -111,7 +111,7 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 	defer os.Chdir(wd)
 	os.Chdir(c.MkDir())
 	// initialize a new module
-	c.Assert(s.Mod("init", modType.sb), check.IsNil)
+	c.Assert(s.Mod("init", app.ModKind.SB), check.IsNil)
 	// add a new dependency item (application) to the apps item
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
@@ -143,7 +143,7 @@ func (s *CmdSuite) TestModDelItemMissing2(c *check.C) {
 	// initialize a new module use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
-	c.Assert(cmd.Mod("init", modType.sb), check.IsNil)
+	c.Assert(cmd.Mod("init", app.ModKind.SB), check.IsNil)
 	// try to delete the missing item
 	err := s.Mod("del", "helloItem")
 	c.Assert(err, check.IsNil)
@@ -159,7 +159,7 @@ func (s *CmdSuite) TestModDelItem(c *check.C) {
 	// initialize a new module use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
-	c.Assert(cmd.Mod("init", modType.sb), check.IsNil)
+	c.Assert(cmd.Mod("init", app.ModKind.SB), check.IsNil)
 	// add a new item use a new cmd
 	cmd = CmdSuite{}
 	cmd.SetUpTest(nil)
@@ -170,7 +170,7 @@ func (s *CmdSuite) TestModDelItem(c *check.C) {
 	err = s.Mod("del", name)
 	c.Assert(err, check.IsNil)
 	// check the item does not exist
-	found, _ := lod.IsItemExists(modType.sb, name)
+	found, _ := lod.IsItemExists(app.ModKind.SB, name)
 	c.Assert(found, check.Equals, false)
 }
 

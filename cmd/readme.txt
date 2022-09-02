@@ -13,9 +13,9 @@ const (
 	ModOrDepMissing         string = "module name or dependency name is missing"
 	ResolverMissing         string = "resolver is required"
 	DependencyMissing       string = "\"--dep\" parameter is required"
-	ItemDoesNotExistF       string = "\"%s\" item does not exist\n"
-	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist\n"
-	UnknownSubcmdF          string = "unknown \"%s\" subcommand\n"
+	ItemDoesNotExistF       string = "\"%s\" item does not exist"
+	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist"
+	UnknownSubcmdF          string = "unknown \"%s\" subcommand"
 )
 
 TYPES

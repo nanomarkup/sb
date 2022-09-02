@@ -5,20 +5,6 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-const (
-	// error messages
-	ErrorMessageF           string = "Error: %v\n"
-	AppNameMissing          string = "application name is required"
-	SubcmdMissing           string = "subcommand is required"
-	ItemMissing             string = "item name is required"
-	ModOrDepMissing         string = "module name or dependency name is missing"
-	ResolverMissing         string = "resolver is required"
-	DependencyMissing       string = "\"--dep\" parameter is required"
-	ItemDoesNotExistF       string = "\"%s\" item does not exist\n"
-	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist\n"
-	UnknownSubcmdF          string = "unknown \"%s\" subcommand\n"
-)
-
 // SmartBuilder includes all available commands and handles them.
 type SmartBuilder struct {
 	Starter      Starter
@@ -166,3 +152,17 @@ type CmdModIniter struct {
 	ModManager
 	cobra.Command
 }
+
+const (
+	// error messages
+	ErrorMessageF           string = "Error: %v\n"
+	AppNameMissing          string = "application name is required"
+	SubcmdMissing           string = "subcommand is required"
+	ItemMissing             string = "item name is required"
+	ModOrDepMissing         string = "module name or dependency name is missing"
+	ResolverMissing         string = "resolver is required"
+	DependencyMissing       string = "\"--dep\" parameter is required"
+	ItemDoesNotExistF       string = "\"%s\" item does not exist"
+	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist"
+	UnknownSubcmdF          string = "unknown \"%s\" subcommand"
+)

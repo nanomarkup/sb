@@ -27,9 +27,9 @@ func (s *CmdSuite) TestGenAppMissing(c *check.C) {
 	// initialize a new module use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
-	c.Assert(cmd.Mod("init", modType.sb), check.IsNil)
+	c.Assert(cmd.Mod("init", app.ModKind.SB), check.IsNil)
 	// try to generate the empty module
-	c.Assert(s.Gen(), check.ErrorMatches, app.ApplicationIsMissing)
+	c.Assert(s.Gen(), check.ErrorMatches, app.AppIsMissing)
 }
 
 func (s *CmdSuite) TestGenSbApp(c *check.C) {

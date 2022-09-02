@@ -24,7 +24,7 @@ func (b *SmartBuilder) Generate(application string) error {
 	b.logInfo(fmt.Sprintf("generating \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(modKind.sb)
+	mod, err := b.ModManager.ReadAll(ModKind.SB)
 	if err != nil {
 		return err
 	}
@@ -39,7 +39,7 @@ func (b *SmartBuilder) Generate(application string) error {
 	}
 	coder, found := info[coderAttrName]
 	if !found {
-		fmt.Errorf("The \"%s\" attribute is missing for \"%s\" application", coderAttrName, application)
+		return fmt.Errorf(AttrIsMissingF, coderAttrName, application)
 	}
 	// process application
 	client, raw, err := b.newPlugin(coder)
@@ -62,7 +62,7 @@ func (b *SmartBuilder) Build(application string) error {
 	b.logInfo(fmt.Sprintf("building \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(modKind.sb)
+	mod, err := b.ModManager.ReadAll(ModKind.SB)
 	if err != nil {
 		return err
 	}
@@ -76,7 +76,7 @@ func (b *SmartBuilder) Build(application string) error {
 	}
 	coder, found := info[coderAttrName]
 	if !found {
-		fmt.Errorf("The \"%s\" attribute is missing for \"%s\" application", coderAttrName, application)
+		return fmt.Errorf(AttrIsMissingF, coderAttrName, application)
 	}
 	// process application
 	client, raw, err := b.newPlugin(coder)
@@ -98,7 +98,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	b.logInfo(fmt.Sprintf("cleaning \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(modKind.sb)
+	mod, err := b.ModManager.ReadAll(ModKind.SB)
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	}
 	coder, found := info[coderAttrName]
 	if !found {
-		fmt.Errorf("The \"%s\" attribute is missing for \"%s\" application", coderAttrName, application)
+		return fmt.Errorf(AttrIsMissingF, coderAttrName, application)
 	}
 	// process application
 	client, raw, err := b.newPlugin(coder)
@@ -134,7 +134,7 @@ func (b *SmartBuilder) Run(application string) error {
 	b.logInfo(fmt.Sprintf("running \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(modKind.sb)
+	mod, err := b.ModManager.ReadAll(ModKind.SB)
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func (b *SmartBuilder) Run(application string) error {
 	application = fmt.Sprintf("%s.exe", application)
 	if _, err = os.Stat(filepath.Join(folder, application)); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("the system cannot find the \"%s\" application", application)
+			return fmt.Errorf(AppIsMissingInSystemF, application)
 		} else {
 			return err
 		}
@@ -174,7 +174,7 @@ func (b *SmartBuilder) Version() string {
 // Init creates a apps.sb module and initialize it with the apps item.
 // If the apps item is exist then do nothing.
 func (b *SmartBuilder) Init() error {
-	b.logInfo(fmt.Sprintf("initializing module"))
+	b.logInfo("initializing module")
 	b.ModManager.SetLogger(b.Logger)
 	return b.ModManager.Init(DefaultModuleName)
 }
@@ -266,10 +266,10 @@ func (b *SmartBuilder) checkApplication(application string, reader ModReader) (s
 		}
 		// check the number of existing applications
 		if len(apps) == 0 {
-			return "", errors.New(ApplicationIsMissing)
+			return "", errors.New(AppIsMissing)
 		}
 		if len(apps) != 1 {
-			return "", fmt.Errorf("the application is not specified")
+			return "", fmt.Errorf(AppIsNotSpecified)
 		}
 		// select the existing application
 		for key := range apps {
@@ -279,30 +279,35 @@ func (b *SmartBuilder) checkApplication(application string, reader ModReader) (s
 	return application, nil
 }
 
+//lint:ignore U1000 Ignore unused function
 func (b *SmartBuilder) logTrace(message string) {
 	if b.Logger != nil {
 		b.Logger.Trace(message)
 	}
 }
 
+//lint:ignore U1000 Ignore unused function
 func (b *SmartBuilder) logDebug(message string) {
 	if b.Logger != nil {
 		b.Logger.Debug(message)
 	}
 }
 
+//lint:ignore U1000 Ignore unused function
 func (b *SmartBuilder) logInfo(message string) {
 	if b.Logger != nil {
 		b.Logger.Info(message)
 	}
 }
 
+//lint:ignore U1000 Ignore unused function
 func (b *SmartBuilder) logWarn(message string) {
 	if b.Logger != nil {
 		b.Logger.Warn(message)
 	}
 }
 
+//lint:ignore U1000 Ignore unused function
 func (b *SmartBuilder) logError(message string) {
 	if b.Logger != nil {
 		b.Logger.Error(message)
