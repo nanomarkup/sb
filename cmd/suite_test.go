@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/go-plugin"
 	"github.com/sapplications/sb/plugins"
+	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )
 
@@ -88,4 +90,28 @@ func (s *CmdSuite) Build(args ...string) error {
 func (s *CmdSuite) Clean(args ...string) error {
 	setCmd("clean", args...)
 	return s.cmd.Execute()
+}
+
+func getModuleFileName(name string) string {
+	moduleExt := ".sb"
+	if strings.HasSuffix(name, moduleExt) {
+		return name
+	} else {
+		return name + moduleExt
+	}
+}
+
+func isItemExists(kind, item string) (found bool) {
+	m := lod.Manager{}
+	all, err := m.ReadAll(kind)
+	if err != nil {
+		return false
+	}
+	_, found = all.Items()[item]
+	return
+}
+
+func isModuleExists(name string) bool {
+	_, err := os.Stat(getModuleFileName(name))
+	return err == nil
 }

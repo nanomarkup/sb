@@ -85,8 +85,8 @@ func (b *SmartBuilder) Build(application string) error {
 	}
 	defer client.Kill()
 	builder := raw.(builder)
-	sources := mod.Items()
-	if err := builder.Build(application, &sources); err != nil {
+	b.logTrace(fmt.Sprintf("generating \"%s\" application using sgo plugin", application))
+	if err := builder.Build(application); err != nil {
 		return err
 	}
 	return nil
@@ -176,7 +176,7 @@ func (b *SmartBuilder) Version() string {
 func (b *SmartBuilder) Init() error {
 	b.logInfo("initializing module")
 	b.ModManager.SetLogger(b.Logger)
-	return b.ModManager.Init(DefaultModuleName)
+	return b.ModManager.Init(DefaultModuleName, ModKind.SB)
 }
 
 // ReadAll loads modules.

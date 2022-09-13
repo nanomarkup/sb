@@ -48,7 +48,7 @@ type Logger interface {
     Logger describes methods for logging messages.
 
 type ModManager interface {
-	Init(moduleName string) error
+	Init(moduleName, moduleKind string) error
 	AddItem(moduleName, itemName string) error
 	AddDependency(itemName, dependencyName, resolver string, update bool) error
 	DeleteItem(itemName string) error

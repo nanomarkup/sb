@@ -39,7 +39,7 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 	m := lod.Manager{}
 	_, err := m.ReadAll(app.ModKind.SB)
 	if err != nil {
-		t, _ := ioutil.ReadFile(lod.GetModuleFileName(app.DefaultModuleName))
+		t, _ := ioutil.ReadFile(getModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
 		c.Error(err)
 	}
@@ -64,20 +64,18 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 	modName := "new"
 	err := s.Mod("add", "helloItem", modName)
 	c.Assert(err, check.IsNil)
-	c.Assert(lod.IsModuleExists(modName), check.Equals, true)
+	c.Assert(isModuleExists(modName), check.Equals, true)
 	// read the created module
 	m := lod.Manager{}
 	_, err = m.ReadAll(app.ModKind.SB)
 	if err != nil {
-		t, _ := ioutil.ReadFile(lod.GetModuleFileName(modName))
+		t, _ := ioutil.ReadFile(getModuleFileName(modName))
 		fmt.Print(string(t))
 		c.Error(err)
 	}
 }
 
 func (s *CmdSuite) TestModAddItem(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -94,7 +92,7 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	mod := lod.Manager{}
 	r, err := mod.ReadAll(app.ModKind.SB)
 	if err != nil {
-		t, _ := ioutil.ReadFile(lod.GetModuleFileName(app.DefaultModuleName))
+		t, _ := ioutil.ReadFile(getModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
 		c.Error(err)
 	} else {
@@ -104,8 +102,6 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 }
 
 func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	wd, _ := os.Getwd()
 	defer os.Chdir(wd)
@@ -165,8 +161,7 @@ func (s *CmdSuite) TestModDelItem(c *check.C) {
 	err = s.Mod("del", name)
 	c.Assert(err, check.IsNil)
 	// check the item does not exist
-	found, _ := lod.IsItemExists(app.ModKind.SB, name)
-	c.Assert(found, check.Equals, false)
+	c.Assert(isItemExists(app.ModKind.SB, name), check.Equals, false)
 }
 
 // mod del|edit|list

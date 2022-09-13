@@ -17,6 +17,10 @@ type smoduleManager struct {
 	lod.Manager
 }
 
+func (m *smoduleManager) Init(moduleName, moduleKind string) error {
+	return m.Manager.Init(moduleName, app.ModKind.SB)
+}
+
 func (m *smoduleManager) AddItem(module, item string) error {
 	return m.Manager.AddItem(module, item)
 }

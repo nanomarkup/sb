@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/sapplications/sb/app"
-	sgo "github.com/sapplications/sgo/app"
 	"github.com/sapplications/smod/lod"
 	"github.com/spf13/viper"
 	"gopkg.in/check.v1"
@@ -26,7 +25,7 @@ func (s *CmdSuite) TestCodeAppMissing(c *check.C) {
 	cmd.SetUpTest(nil)
 	c.Assert(cmd.Mod("init", app.ModKind.SB), check.IsNil)
 	// try to generate the empty module
-	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(sgo.ItemIsMissingF, lod.AppsItemName))
+	c.Assert(s.Code(), check.ErrorMatches, app.AppIsMissing)
 }
 
 func (s *CmdSuite) TestCodeSbApp(c *check.C) {
