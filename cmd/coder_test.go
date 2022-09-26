@@ -7,7 +7,6 @@ import (
 
 	"github.com/sapplications/sb/app"
 	"github.com/sapplications/smod/lod"
-	"github.com/spf13/viper"
 	"gopkg.in/check.v1"
 )
 
@@ -29,12 +28,9 @@ func (s *CmdSuite) TestCodeAppMissing(c *check.C) {
 }
 
 func (s *CmdSuite) TestCodeSbApp(c *check.C) {
-	c.Skip("Needs to fix...")
-	return
 	// create a temporary folder and change the current working directory
 	currFolder, _ := os.Getwd()
 	defer os.Chdir(currFolder)
-	viper.Set("GOWD", currFolder)
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
@@ -47,7 +43,6 @@ func (s *CmdSuite) TestCodeHelloWorldApp(c *check.C) {
 	// create a temporary folder and change the current working directory
 	currFolder, _ := os.Getwd()
 	defer os.Chdir(currFolder)
-	viper.Set("GOWD", currFolder)
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
