@@ -113,7 +113,7 @@ func (s *CmdSuite) TestModAddItemDependency(c *check.C) {
 	cmd.SetUpTest(nil)
 	name := "hello"
 	resolver := "\"Hello World!\""
-	err := cmd.Mod("add", lod.AppsItemName, name, resolver)
+	err := cmd.Mod("add", app.AppsItemName, name, resolver)
 	c.Assert(err, check.IsNil)
 	// TODO verify the added dependency...
 }

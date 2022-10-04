@@ -5,6 +5,9 @@ Package cmd represents Command Line Interface.
 CONSTANTS
 
 const (
+	// application
+	AppsItemName      string = "apps"
+	DefaultModuleName string = "apps"
 	// error messages
 	ErrorMessageF           string = "Error: %v\n"
 	AppNameMissing          string = "application name is required"
@@ -126,7 +129,6 @@ type ModFormatter interface {
     it as a string.
 
 type ModManager interface {
-	Init() error
 	AddItem(module, item string) error
 	AddDependency(item, dependency, resolver string, update bool) error
 	DeleteItem(item string) error
@@ -139,7 +141,6 @@ type ModManager interface {
 type ModReader interface {
 	Items() map[string]map[string]string
 	Dependency(string, string) string
-	Apps() (map[string]string, error)
 }
     ModReader describes methods for getting module attributes.
 

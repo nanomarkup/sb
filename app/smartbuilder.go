@@ -33,7 +33,8 @@ func (b *SmartBuilder) Generate(application string) error {
 	if err != nil {
 		return err
 	}
-	info, err := mod.App(application)
+	sources := mod.Items()
+	info, err := getApp(application, sources)
 	if err != nil {
 		return err
 	}
@@ -48,7 +49,6 @@ func (b *SmartBuilder) Generate(application string) error {
 	}
 	defer client.Kill()
 	builder := raw.(builder)
-	sources := mod.Items()
 	b.logTrace(fmt.Sprintf("generating \"%s\" application using sgo plugin", application))
 	if err := builder.Generate(application, &sources); err != nil {
 		return err
@@ -70,7 +70,7 @@ func (b *SmartBuilder) Build(application string) error {
 	if err != nil {
 		return err
 	}
-	info, err := mod.App(application)
+	info, err := getApp(application, mod.Items())
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,8 @@ func (b *SmartBuilder) Clean(application string) error {
 	if err != nil {
 		return err
 	}
-	info, err := mod.App(application)
+	sources := mod.Items()
+	info, err := getApp(application, sources)
 	if err != nil {
 		return err
 	}
@@ -121,7 +122,6 @@ func (b *SmartBuilder) Clean(application string) error {
 	}
 	defer client.Kill()
 	builder := raw.(builder)
-	sources := mod.Items()
 	if err := builder.Clean(application, &sources); err != nil {
 		return err
 	}
@@ -176,7 +176,7 @@ func (b *SmartBuilder) Version() string {
 func (b *SmartBuilder) Init() error {
 	b.logInfo("initializing module")
 	b.ModManager.SetLogger(b.Logger)
-	return b.ModManager.Init(DefaultModuleName, ModKind.SB)
+	return b.ModManager.AddItem(DefaultModuleName, AppsItemName)
 }
 
 // ReadAll loads modules.
@@ -260,7 +260,7 @@ func (b *SmartBuilder) newPlugin(name string) (client *plugin.Client, raw interf
 func (b *SmartBuilder) checkApplication(application string, reader ModReader) (string, error) {
 	// read the current application if it is not specified and only one is exist
 	if application == "" {
-		apps, err := reader.Apps()
+		apps, err := getApps(reader.Items())
 		if err != nil {
 			return "", err
 		}

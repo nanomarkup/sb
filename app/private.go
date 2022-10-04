@@ -21,3 +21,29 @@ func handleError() {
 		fmt.Printf(ErrorMessageF, r)
 	}
 }
+
+func getApp(name string, items map[string]map[string]string) (map[string]string, error) {
+	apps, err := getApps(items)
+	if err != nil {
+		return nil, err
+	}
+	// check the applicatin is exist
+	if _, found := apps[name]; !found {
+		return nil, fmt.Errorf(AppIsMissingF, name)
+	}
+	// read application data
+	info, found := items[name]
+	if !found {
+		return nil, fmt.Errorf(ItemIsMissingF, name)
+	}
+	return info, nil
+}
+
+func getApps(items map[string]map[string]string) (map[string]string, error) {
+	apps := items[AppsItemName]
+	if apps == nil {
+		return nil, fmt.Errorf(ItemIsMissingF, AppsItemName)
+	} else {
+		return apps, nil
+	}
+}

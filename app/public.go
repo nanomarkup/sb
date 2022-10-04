@@ -19,7 +19,6 @@ type SmartGenerator struct{}
 
 // ModManager describes methods for managing a module.
 type ModManager interface {
-	Init(moduleName, moduleKind string) error
 	AddItem(moduleName, itemName string) error
 	AddDependency(itemName, dependencyName, resolver string, update bool) error
 	DeleteItem(itemName string) error
@@ -32,8 +31,6 @@ type ModManager interface {
 type ModReader interface {
 	Items() map[string]map[string]string
 	Dependency(itemName, dependencyName string) string
-	App(name string) (map[string]string, error)
-	Apps() (map[string]string, error)
 }
 
 // Logger describes methods for logging messages.
@@ -65,11 +62,14 @@ const (
 	AppName           string = "sb"
 	AppVersion        string = "1.0"
 	AppVersionString  string = AppName + " version " + AppVersion
+	AppsItemName      string = "apps"
 	DefaultModuleName string = "apps"
 	// errors
 	ErrorMessageF         string = "Error: %v\n"
 	AppIsMissing          string = "does not found any application in the apps"
+	AppIsMissingF         string = "the selected \"%s\" application is not found"
 	AppIsMissingInSystemF string = "the system cannot find the \"%s\" application"
 	AppIsNotSpecified     string = "the application is not specified"
+	ItemIsMissingF        string = "the %s item is not found"
 	AttrIsMissingF        string = "the \"%s\" attribute is missing for \"%s\" application"
 )

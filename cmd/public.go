@@ -113,7 +113,6 @@ type CmdManager struct {
 
 // ModManager describes methods for managing application items and dependencies.
 type ModManager interface {
-	Init() error
 	AddItem(module, item string) error
 	AddDependency(item, dependency, resolver string, update bool) error
 	DeleteItem(item string) error
@@ -125,7 +124,6 @@ type ModManager interface {
 type ModReader interface {
 	Items() map[string]map[string]string
 	Dependency(string, string) string
-	Apps() (map[string]string, error)
 }
 
 // ModFormatter describes methods for formatting module attributes and returns it as a string.
@@ -154,6 +152,9 @@ type CmdModIniter struct {
 }
 
 const (
+	// application
+	AppsItemName      string = "apps"
+	DefaultModuleName string = "apps"
 	// error messages
 	ErrorMessageF           string = "Error: %v\n"
 	AppNameMissing          string = "application name is required"

@@ -13,7 +13,7 @@ func (v *CmdModIniter) init() {
 			return nil
 		} else {
 			defer handleError()
-			return v.ModManager.Init()
+			return v.ModManager.AddItem(DefaultModuleName, AppsItemName)
 		}
 	}
 }
