@@ -15,6 +15,7 @@ type SmartBuilder struct {
 	Coder        CmdCoder
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
+	Printer      CmdPrinter
 	ModManager   CmdManager
 	ModAdder     CmdModAdder
 	ModDeler     CmdModDeler
@@ -102,6 +103,17 @@ type CmdRunner struct {
 // Runner describes methods for running the application.
 type Runner interface {
 	Run(string) error
+}
+
+// Printer describes methods for displaying all available applications.
+type Printer interface {
+	Apps() ([]string, error)
+}
+
+// CmdPrinter command displays all available applications.
+type CmdPrinter struct {
+	Printer
+	cobra.Command
 }
 
 // CmdManager command manages application items and dependencies.

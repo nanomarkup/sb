@@ -16,7 +16,7 @@ smart features
         - build the application
 
 tests
-    - list all tests
+    - list all tests (update the build system)
 
 help
     - .sa - smart application unit. Includes a declarative syntax for describing the application

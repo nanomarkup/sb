@@ -26,6 +26,7 @@ sb:
 	Coder {src}/cmd.CmdCoder	
 	Builder {src}/cmd.CmdBuilder
 	Cleaner {src}/cmd.CmdCleaner
+	Printer {src}/cmd.CmdPrinter
 	ModManager {src}/cmd.CmdManager
 	ModAdder {src}/cmd.CmdModAdder
 	ModDeler {src}/cmd.CmdModDeler
@@ -107,6 +108,12 @@ sb:
 	Long "Runs the application."
 	Runner *{src}/app.SmartBuilder
 
+{src}/cmd.CmdPrinter:
+	Use "list"
+	Short "Print all applications"
+	Long "Prints all available applications."
+	Printer *{src}/app.ModHelper
+
 {src}/cmd.CmdReader:
 	Use "version"
 	Short "Print Smart Builder version"
@@ -118,6 +125,9 @@ sb:
 	ModManager *github.com/sapplications/smod/lod.Manager
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger {src}/helper/hashicorp/hclog.NewStdOut("sb", {logInfo})
+
+{src}/app.ModHelper:
+	Manager *github.com/sapplications/smod/lod.Manager
 
 github.com/hashicorp/go-plugin.HandshakeConfig:
 	ProtocolVersion 1

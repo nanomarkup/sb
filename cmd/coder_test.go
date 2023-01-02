@@ -28,8 +28,6 @@ func (s *CmdSuite) TestCodeAppMissing(c *check.C) {
 }
 
 func (s *CmdSuite) TestCodeSbApp(c *check.C) {
-	c.Skip("Issue with lod.Manager (init method)")
-	return
 	// create a temporary folder and change the current working directory
 	currFolder, _ := os.Getwd()
 	defer os.Chdir(currFolder)

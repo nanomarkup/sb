@@ -50,6 +50,13 @@ type Logger interface {
 }
     Logger describes methods for logging messages.
 
+type ModHelper struct {
+	Manager ModManager
+}
+    ModHelper performs usuful methods.
+
+func (h *ModHelper) Apps() ([]string, error)
+
 type ModManager interface {
 	AddItem(moduleName, itemName string) error
 	AddDependency(itemName, dependencyName, resolver string, update bool) error

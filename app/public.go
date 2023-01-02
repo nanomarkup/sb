@@ -33,6 +33,11 @@ type ModReader interface {
 	Dependency(itemName, dependencyName string) string
 }
 
+// ModHelper performs usuful methods.
+type ModHelper struct {
+	Manager ModManager
+}
+
 // Logger describes methods for logging messages.
 type Logger interface {
 	Trace(msg string, args ...interface{})

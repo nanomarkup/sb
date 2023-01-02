@@ -92,6 +92,12 @@ type CmdModIniter struct {
     CmdModIniter command creates a apps.sb module and initialize it with the
     apps item. If the apps item is exist then do nothing.
 
+type CmdPrinter struct {
+	Printer
+	cobra.Command
+}
+    CmdPrinter command displays all available applications.
+
 type CmdReader struct {
 	Reader
 	cobra.Command
@@ -144,6 +150,11 @@ type ModReader interface {
 }
     ModReader describes methods for getting module attributes.
 
+type Printer interface {
+	Apps() ([]string, error)
+}
+    Printer describes methods for displaying all available applications.
+
 type Reader interface {
 	Version() string
 }
@@ -163,6 +174,7 @@ type SmartBuilder struct {
 	Coder        CmdCoder
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
+	Printer      CmdPrinter
 	ModManager   CmdManager
 	ModAdder     CmdModAdder
 	ModDeler     CmdModDeler
