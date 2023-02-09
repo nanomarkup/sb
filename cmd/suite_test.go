@@ -6,8 +6,9 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-plugin"
+	"github.com/sapplications/dl"
+	"github.com/sapplications/sb/app"
 	"github.com/sapplications/sb/plugins"
-	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )
 
@@ -30,9 +31,16 @@ type CmdSuite struct {
 var _ = check.Suite(&CmdSuite{})
 
 func (s *CmdSuite) SetUpTest(c *check.C) {
+	sc := app.SmartCreator{}
+	manager := &smoduleManager{}
+	manager.Kind = app.ModKind.SA
+	sc.ModManager = manager
+
 	sb := appSmartBuilder{}
 	sb.Builder = &plugins.BuilderPlugin{}
-	sb.ModManager = &smoduleManager{}
+	manager = &smoduleManager{}
+	manager.Kind = app.ModKind.SB
+	sb.ModManager = manager
 	sb.PluginHandshake = plugin.HandshakeConfig{
 		ProtocolVersion:  1,
 		MagicCookieKey:   "SMART_PLUGIN",
@@ -45,6 +53,10 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.ModManager = CmdManager{}
 	s.cmd.ModManager.Use = "mod"
 	s.cmd.ModManager.ModManager = &sb
+
+	s.cmd.Creator = CmdCreator{}
+	s.cmd.Creator.Use = "new"
+	s.cmd.Creator.Creator = &sc
 
 	s.cmd.Coder = CmdCoder{}
 	s.cmd.Coder.Use = "code"
@@ -77,6 +89,11 @@ func (s *CmdSuite) Mod(args ...string) error {
 	return s.cmd.Execute()
 }
 
+func (s *CmdSuite) New(args ...string) error {
+	setCmd("new", args...)
+	return s.cmd.Execute()
+}
+
 func (s *CmdSuite) Code(args ...string) error {
 	setCmd("code", args...)
 	return s.cmd.Execute()
@@ -102,8 +119,9 @@ func getModuleFileName(name string) string {
 }
 
 func isItemExists(kind, item string) (found bool) {
-	m := lod.Manager{}
-	all, err := m.ReadAll(kind)
+	m := dl.Manager{}
+	m.Kind = kind
+	all, err := m.ReadAll()
 	if err != nil {
 		return false
 	}

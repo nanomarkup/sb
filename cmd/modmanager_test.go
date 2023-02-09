@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/sapplications/dl"
 	"github.com/sapplications/sb/app"
-	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )
 
@@ -36,8 +36,9 @@ func (s *CmdSuite) TestModInit(c *check.C) {
 	// initialize a new module
 	c.Assert(s.Mod("init", app.ModKind.SB), check.IsNil)
 	// read the created module
-	m := lod.Manager{}
-	_, err := m.ReadAll(app.ModKind.SB)
+	m := dl.Manager{}
+	m.Kind = app.ModKind.SB
+	_, err := m.ReadAll()
 	if err != nil {
 		t, _ := ioutil.ReadFile(getModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))
@@ -66,8 +67,9 @@ func (s *CmdSuite) TestModAddEmpty(c *check.C) {
 	c.Assert(err, check.IsNil)
 	c.Assert(isModuleExists(modName), check.Equals, true)
 	// read the created module
-	m := lod.Manager{}
-	_, err = m.ReadAll(app.ModKind.SB)
+	m := dl.Manager{}
+	m.Kind = app.ModKind.SB
+	_, err = m.ReadAll()
 	if err != nil {
 		t, _ := ioutil.ReadFile(getModuleFileName(modName))
 		fmt.Print(string(t))
@@ -89,8 +91,9 @@ func (s *CmdSuite) TestModAddItem(c *check.C) {
 	err := cmd.Mod("add", name, app.DefaultModuleName)
 	c.Assert(err, check.IsNil)
 	// read the created module
-	mod := lod.Manager{}
-	r, err := mod.ReadAll(app.ModKind.SB)
+	mod := dl.Manager{}
+	mod.Kind = app.ModKind.SB
+	r, err := mod.ReadAll()
 	if err != nil {
 		t, _ := ioutil.ReadFile(getModuleFileName(app.DefaultModuleName))
 		fmt.Print(string(t))

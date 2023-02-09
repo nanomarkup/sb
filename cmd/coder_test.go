@@ -5,13 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/sapplications/dl"
 	"github.com/sapplications/sb/app"
-	"github.com/sapplications/smod/lod"
 	"gopkg.in/check.v1"
 )
 
 func (s *CmdSuite) TestCodeEmpty(c *check.C) {
-	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(lod.ModuleFilesMissingF, ".*"))
+	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(dl.ModuleFilesMissingF, app.ModKind.SB, ".*"))
 }
 
 func (s *CmdSuite) TestCodeAppMissing(c *check.C) {

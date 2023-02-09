@@ -9,7 +9,7 @@ import (
 )
 
 func (h *ModHelper) Apps() ([]string, error) {
-	mod, err := h.Manager.ReadAll("sb")
+	mod, err := h.Manager.ReadAll()
 	if err != nil {
 		return nil, err
 	}

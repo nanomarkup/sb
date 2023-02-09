@@ -6,6 +6,12 @@ package app
 
 import "github.com/hashicorp/go-plugin"
 
+// SmartCreator creates a new application.
+type SmartCreator struct {
+	ModManager ModManager
+	Logger     Logger
+}
+
 // SmartBuilder manages modules and builds the application.
 type SmartBuilder struct {
 	Builder         interface{}
@@ -23,7 +29,7 @@ type ModManager interface {
 	AddDependency(itemName, dependencyName, resolver string, update bool) error
 	DeleteItem(itemName string) error
 	DeleteDependency(itemName, dependencyName string) error
-	ReadAll(kind string) (ModReader, error)
+	ReadAll() (ModReader, error)
 	SetLogger(logger Logger)
 }
 
@@ -71,10 +77,12 @@ const (
 	DefaultModuleName string = "apps"
 	// errors
 	ErrorMessageF         string = "Error: %v\n"
+	AppIsExistF           string = "the specified %s application is exist"
 	AppIsMissing          string = "does not found any application in the apps"
 	AppIsMissingF         string = "the selected \"%s\" application is not found"
 	AppIsMissingInSystemF string = "the system cannot find the \"%s\" application"
 	AppIsNotSpecified     string = "the application is not specified"
 	ItemIsMissingF        string = "the %s item is not found"
 	AttrIsMissingF        string = "the \"%s\" attribute is missing for \"%s\" application"
+	ModuleFilesMissingF   string = "no .%s files in \""
 )

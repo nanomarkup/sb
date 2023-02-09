@@ -3,10 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sapplications/smod/lod"
+	"github.com/sapplications/dl"
+	"github.com/sapplications/sb/app"
 	"gopkg.in/check.v1"
 )
 
 func (s *CmdSuite) TestCleanEmpty(c *check.C) {
-	c.Assert(s.Clean(), check.ErrorMatches, fmt.Sprintf(lod.ModuleFilesMissingF, ".*"))
+	c.Assert(s.Clean(), check.ErrorMatches, fmt.Sprintf(dl.ModuleFilesMissingF, app.ModKind.SB, ".*"))
 }

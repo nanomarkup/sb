@@ -13,18 +13,13 @@ import (
 	"github.com/hashicorp/go-plugin"
 )
 
-// Create creates an application by generating smart application unit (.sa file).
-func (b *SmartBuilder) Create(application string) error {
-	return nil
-}
-
 // Generate generates smart builder unit (.sb) using smart application unit.
 func (b *SmartBuilder) Generate(application string) error {
 	defer handleError()
 	b.logInfo(fmt.Sprintf("generating \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(ModKind.SB)
+	mod, err := b.ModManager.ReadAll()
 	if err != nil {
 		return err
 	}
@@ -62,7 +57,7 @@ func (b *SmartBuilder) Build(application string) error {
 	b.logInfo(fmt.Sprintf("building \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(ModKind.SB)
+	mod, err := b.ModManager.ReadAll()
 	if err != nil {
 		return err
 	}
@@ -98,7 +93,7 @@ func (b *SmartBuilder) Clean(application string) error {
 	b.logInfo(fmt.Sprintf("cleaning \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(ModKind.SB)
+	mod, err := b.ModManager.ReadAll()
 	if err != nil {
 		return err
 	}
@@ -134,7 +129,7 @@ func (b *SmartBuilder) Run(application string) error {
 	b.logInfo(fmt.Sprintf("running \"%s\" application", application))
 	// load and check application
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(ModKind.SB)
+	mod, err := b.ModManager.ReadAll()
 	if err != nil {
 		return err
 	}
@@ -182,9 +177,9 @@ func (b *SmartBuilder) Init() error {
 // ReadAll loads modules.
 func (b *SmartBuilder) ReadAll(kind string) (ModReader, error) {
 	defer handleError()
-	b.logInfo(fmt.Sprintf("reading \"%s\" modules", kind))
+	b.logInfo(fmt.Sprint("reading modules"))
 	b.ModManager.SetLogger(b.Logger)
-	mod, err := b.ModManager.ReadAll(kind)
+	mod, err := b.ModManager.ReadAll()
 	if err != nil {
 		return nil, err
 	}

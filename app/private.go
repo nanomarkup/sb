@@ -47,3 +47,33 @@ func getApps(items map[string]map[string]string) (map[string]string, error) {
 		return apps, nil
 	}
 }
+
+func logTrace(logger Logger, message string) {
+	if logger != nil {
+		logger.Trace(message)
+	}
+}
+
+func logDebug(logger Logger, message string) {
+	if logger != nil {
+		logger.Debug(message)
+	}
+}
+
+func logInfo(logger Logger, message string) {
+	if logger != nil {
+		logger.Info(message)
+	}
+}
+
+func logWarn(logger Logger, message string) {
+	if logger != nil {
+		logger.Warn(message)
+	}
+}
+
+func logError(logger Logger, message string) {
+	if logger != nil {
+		logger.Error(message)
+	}
+}
