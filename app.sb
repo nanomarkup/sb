@@ -121,7 +121,7 @@ sb:
 	Reader *{src}/app.SmartBuilder
 
 {src}/app.SmartCreator:
-	ModManager *github.com/sapplications/dl.Manager
+	ModManager [Creator]*github.com/sapplications/dl.Manager
 	Logger {src}/helper/hashicorp/hclog.NewStdOut("sa", {logTrace})
 
 {src}/app.SmartBuilder:
@@ -135,6 +135,9 @@ sb:
 
 github.com/sapplications/dl.Manager:
 	Kind "sb"
+
+[Creator]github.com/sapplications/dl.Manager:
+	Kind "sa"
 
 github.com/hashicorp/go-plugin.HandshakeConfig:
 	ProtocolVersion 1

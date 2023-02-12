@@ -14,12 +14,14 @@ const (
 	DefaultModuleName string = "apps"
 	// errors
 	ErrorMessageF         string = "Error: %v\n"
+	AppIsExistF           string = "the specified %s application is exist"
 	AppIsMissing          string = "does not found any application in the apps"
 	AppIsMissingF         string = "the selected \"%s\" application is not found"
 	AppIsMissingInSystemF string = "the system cannot find the \"%s\" application"
 	AppIsNotSpecified     string = "the application is not specified"
 	ItemIsMissingF        string = "the %s item is not found"
 	AttrIsMissingF        string = "the \"%s\" attribute is missing for \"%s\" application"
+	ModuleFilesMissingF   string = "no .%s files in \""
 )
 
 VARIABLES
@@ -62,7 +64,7 @@ type ModManager interface {
 	AddDependency(itemName, dependencyName, resolver string, update bool) error
 	DeleteItem(itemName string) error
 	DeleteDependency(itemName, dependencyName string) error
-	ReadAll(kind string) (ModReader, error)
+	ReadAll() (ModReader, error)
 	SetLogger(logger Logger)
 }
     ModManager describes methods for managing a module.
@@ -93,10 +95,6 @@ func (b *SmartBuilder) Build(application string) error
 func (b *SmartBuilder) Clean(application string) error
     Clean removes generated/compiled files.
 
-func (b *SmartBuilder) Create(application string) error
-    Create creates an application by generating smart application unit (.sa
-    file).
-
 func (b *SmartBuilder) DeleteDependency(item, dependency string) error
     DeleteDependency deletes the dependency from the item.
 
@@ -118,6 +116,16 @@ func (b *SmartBuilder) Run(application string) error
 
 func (b *SmartBuilder) Version() string
     Version displays a version of the application.
+
+type SmartCreator struct {
+	ModManager ModManager
+	Logger     Logger
+}
+    SmartCreator creates a new application.
+
+func (c *SmartCreator) Create(application string) error
+    Create creates an application by generating smart application unit (.sa
+    file).
 
 type SmartGenerator struct{}
     SmartGenerator generates smart builder unit (.sb) using smart application
