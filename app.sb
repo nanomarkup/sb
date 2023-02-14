@@ -121,23 +121,23 @@ sb:
 	Reader *{src}/app.SmartBuilder
 
 {src}/app.SmartCreator:
-	ModManager [Creator]*github.com/sapplications/dl.Manager
+	ModManager *github.com/sapplications/dl.Manager {
+		Kind "sa"
+	}
 	Logger {src}/helper/hashicorp/hclog.NewStdOut("sa", {logTrace})
 
 {src}/app.SmartBuilder:
 	Builder *{src}/plugins.BuilderPlugin
-	ModManager *github.com/sapplications/dl.Manager
+	ModManager *github.com/sapplications/dl.Manager {
+		Kind "sb"
+	}
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger {src}/helper/hashicorp/hclog.NewStdOut("sb", {logOff})
 
 {src}/app.ModHelper:
-	Manager *github.com/sapplications/dl.Manager
-
-github.com/sapplications/dl.Manager:
-	Kind "sb"
-
-[Creator]github.com/sapplications/dl.Manager:
-	Kind "sa"
+	Manager *github.com/sapplications/dl.Manager {
+		Kind "sb"
+	}
 
 github.com/hashicorp/go-plugin.HandshakeConfig:
 	ProtocolVersion 1
