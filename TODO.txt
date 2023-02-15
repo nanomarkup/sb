@@ -1,6 +1,7 @@
 improvements & bugs
 
 core features
+	- add a new "gbuild" command to perform generate and build commands
     
 smart features
     - add metadata to a struct to describe its functionality (use it for generating apps!)

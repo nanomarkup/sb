@@ -69,7 +69,7 @@ task test {
 
 # Synopsis: Generate documentation
 task doc {
-    GenDoc -PackageName 'app'
+    GenDoc -PackageName '.'
     GenDoc -PackageName 'cmd'
     GenDoc -PackageName 'helper\hashicorp\hclog'
     GenDoc -PackageName 'plugins'

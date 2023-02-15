@@ -14,8 +14,7 @@ The Smart Builder chooses the best components for the application (.sb file/s), 
 4. Build the application
 
 ### Folder Structure
-- **.** includes the build scripts
-- **app** includes sources of this project
+- **.** includes sources of this project
 - **bin** includes binary files
 - **cmd** includes CLI implementation
 - **helper** includes helper packages
