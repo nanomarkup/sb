@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"github.com/sapplications/dl"
-	"github.com/sapplications/sb/app"
+	"github.com/sapplications/sb"
 )
 
 type appSmartBuilder struct {
-	app.SmartBuilder
+	sb.SmartBuilder
 }
 
 func (b *appSmartBuilder) ReadAll(kind string) (ModReader, error) {
@@ -33,9 +33,9 @@ func (m *smoduleManager) DeleteDependency(item, dependency string) error {
 	return m.Manager.DeleteDependency(item, dependency)
 }
 
-func (m *smoduleManager) ReadAll() (app.ModReader, error) {
+func (m *smoduleManager) ReadAll() (sb.ModReader, error) {
 	return m.Manager.ReadAll()
 }
 
-func (m *smoduleManager) SetLogger(logger app.Logger) {
+func (m *smoduleManager) SetLogger(logger sb.Logger) {
 }

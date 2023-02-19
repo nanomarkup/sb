@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/go-plugin"
 	"github.com/sapplications/dl"
-	"github.com/sapplications/sb/app"
+	"github.com/sapplications/sb"
 	"github.com/sapplications/sb/plugins"
 	"gopkg.in/check.v1"
 )
@@ -31,15 +31,15 @@ type CmdSuite struct {
 var _ = check.Suite(&CmdSuite{})
 
 func (s *CmdSuite) SetUpTest(c *check.C) {
-	sc := app.SmartCreator{}
+	sc := sb.SmartCreator{}
 	manager := &smoduleManager{}
-	manager.Kind = app.ModKind.SA
+	manager.Kind = sb.ModKind.SA
 	sc.ModManager = manager
 
 	sb := appSmartBuilder{}
 	sb.Builder = &plugins.BuilderPlugin{}
 	manager = &smoduleManager{}
-	manager.Kind = app.ModKind.SB
+	manager.Kind = "sb"
 	sb.ModManager = manager
 	sb.PluginHandshake = plugin.HandshakeConfig{
 		ProtocolVersion:  1,

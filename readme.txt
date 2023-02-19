@@ -1,7 +1,7 @@
-package app // import "github.com/sapplications/sb/app"
+package sb // import "github.com/sapplications/sb"
 
-Package app implements a Smart Builder application. It is the next
-generation of building applications using independent bussiness components.
+Package sb implements a Smart Builder application. It is the next generation
+of building applications using independent bussiness components.
 
 CONSTANTS
 

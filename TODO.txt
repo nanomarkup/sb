@@ -1,7 +1,51 @@
 improvements & bugs
 
+
+BAD IDEA: ADD THE ABILITY TO GENERATE SOME CODE BY THE COMPONENT - depends on the input parameter? Use the external application (code generator) for that?
+BETTER IDEA: use internal fields for matching them with the dependent params. The internal fields should be initialized before that. 
+So, describe the matching mechanism.
+Or use reflection? Better to avoid reflection!
+
+Use array of interface{} for initializing the struct. So, check each item and try to convert to the correct type.
+Or, push the above array to the dependent component?
+
+USE STRUCT META/TAG IN GOLANG FOR FIELDS!
+If dependent item includes required field, then the owner should initialize it using field tag
+Or field with tag should be used for item initialization
+If the field tag is an array then process all item fields using this tag array
+
+-------------------------
+
+do not limit the number of level for internal initialization the item/struct
+
+-------------------------
+
+Add the ability to internaly initialize parameters in function
+
+func(path/pkg.NewStruct {
+    ...initialization
+})
+
+-------------------------
+
+Execute functions use the following syntax
+
+[exec] FUNC_PATH.func()
+
+if FUNC_PATH is empty then perfrom the function of the current created object.
+if parameter starts with "." then use the current created object
+
+Example,
+
+sb.Starter.AddCommand(&sb.Creator.Command)
+>>
+[exec] .AddCommand(*.)
+
+-----------------------------
+
 core features
 	- add a new "gbuild" command to perform generate and build commands
+    - use field tag to mark the required fields?
     
 smart features
     - add metadata to a struct to describe its functionality (use it for generating apps!)

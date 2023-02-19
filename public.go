@@ -1,8 +1,8 @@
 // Copyright 2022 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
 
-// Package app implements a Smart Builder application.
+// Package sb implements a Smart Builder application.
 // It is the next generation of building applications using independent bussiness components.
-package app
+package sb
 
 import "github.com/hashicorp/go-plugin"
 

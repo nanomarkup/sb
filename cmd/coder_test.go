@@ -6,12 +6,12 @@ import (
 	"os"
 
 	"github.com/sapplications/dl"
-	"github.com/sapplications/sb/app"
+	"github.com/sapplications/sb"
 	"gopkg.in/check.v1"
 )
 
 func (s *CmdSuite) TestCodeEmpty(c *check.C) {
-	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(dl.ModuleFilesMissingF, app.ModKind.SB, ".*"))
+	c.Assert(s.Code(), check.ErrorMatches, fmt.Sprintf(dl.ModuleFilesMissingF, sb.ModKind.SB, ".*"))
 }
 
 func (s *CmdSuite) TestCodeAppMissing(c *check.C) {
@@ -22,9 +22,9 @@ func (s *CmdSuite) TestCodeAppMissing(c *check.C) {
 	// initialize a new module use a new cmd
 	cmd := CmdSuite{}
 	cmd.SetUpTest(nil)
-	c.Assert(cmd.Mod("init", app.ModKind.SB), check.IsNil)
+	c.Assert(cmd.Mod("init", sb.ModKind.SB), check.IsNil)
 	// try to generate the empty module
-	c.Assert(s.Code(), check.ErrorMatches, app.AppIsMissing)
+	c.Assert(s.Code(), check.ErrorMatches, sb.AppIsMissing)
 }
 
 func (s *CmdSuite) TestCodeSbApp(c *check.C) {

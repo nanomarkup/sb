@@ -43,6 +43,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/sapplications/dl v0.0.0-20230212191049-4bbd25e3a608 h1:JekLW5QdCZsr7MOdtfMmJKIDUtCpMDH/OfaYKBIXg3M=
 github.com/sapplications/dl v0.0.0-20230212191049-4bbd25e3a608/go.mod h1:JUFgPiOW3ytDURbA41F6IzvpXDkQlhK4dgfFzl4+ht0=
+github.com/sapplications/dl v0.0.0-20230219214614-c3614323a8a7 h1:SaSsSZN7eta3z7cT9C3v8IbWMa6J0wc5PGV4kMiASI8=
+github.com/sapplications/dl v0.0.0-20230219214614-c3614323a8a7/go.mod h1:cKN8erhWWJMw5CTRuykpCdtF8wXqS1GyLsJSkXxsWgc=
 github.com/spf13/cobra v1.6.1 h1:o94oiPyS4KD1mPy2fmcYYHHfCxLqYjJOhGsCHFZtEzA=
 github.com/spf13/cobra v1.6.1/go.mod h1:IOw/AERYS7UzyrGinqmz6HLUo219MORXGxhbaJUqzrY=
 github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=
@@ -67,6 +69,8 @@ golang.org/x/text v0.7.0/go.mod h1:mrYo+phRRbMaCq/xk9113O4dZlRixOauAjOtrjsXDZ8=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 google.golang.org/genproto v0.0.0-20230209215440-0dfe4f8abfcc h1:ijGwO+0vL2hJt5gaygqP2j6PfflOBrRot0IczKbmtio=
 google.golang.org/genproto v0.0.0-20230209215440-0dfe4f8abfcc/go.mod h1:RGgjbofJ8xD9Sq1VVhDM1Vok1vRONV+rg+CjzG4SZKM=
+google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44 h1:EfLuoKW5WfkgVdDy7dTK8qSbH37AX5mj/MFh+bGPz14=
+google.golang.org/genproto v0.0.0-20230216225411-c8e22ba71e44/go.mod h1:8B0gmkoRebU8ukX6HP+4wrVQUY1+6PkQ44BSyIlflHA=
 google.golang.org/grpc v1.53.0 h1:LAv2ds7cmFV/XTS3XG1NneeENYrXGmorPxsBbptIjNc=
 google.golang.org/grpc v1.53.0/go.mod h1:OnIrk0ipVdj4N5d9IUoFUx72/VlD7+jUsHwZgwSMQpw=
 google.golang.org/protobuf v1.26.0-rc.1/go.mod h1:jlhhOSvTdKEhbULTjvd4ARK9grFBp09yW+WbY/TyQbw=

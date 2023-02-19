@@ -1,6 +1,6 @@
 // Copyright 2023 Vitalii Noha vitalii.noga@gmail.com. All rights reserved.
 
-package app
+package sb
 
 import (
 	"fmt"
