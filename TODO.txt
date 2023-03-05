@@ -16,10 +16,6 @@ If the field tag is an array then process all item fields using this tag array
 
 -------------------------
 
-do not limit the number of level for internal initialization the item/struct
-
--------------------------
-
 Add the ability to internaly initialize parameters in function
 
 func(path/pkg.NewStruct {
@@ -28,18 +24,22 @@ func(path/pkg.NewStruct {
 
 -------------------------
 
-Execute functions use the following syntax
+Execute function of the current instance use the following syntax
 
-[exec] FUNC_PATH.func()
+. FUNC_NAME()
 
-if FUNC_PATH is empty then perfrom the function of the current created object.
-if parameter starts with "." then use the current created object
+If the field name starts with dot then the resolver must be a function of the current instance. 
+This function should be performed. Try to keep the order of dependency items.
 
 Example,
 
 sb.Starter.AddCommand(&sb.Creator.Command)
 >>
-[exec] .AddCommand(*.)
+. AddCommand(*path/pkg.sb.Creator.Command)
+OR
+. AddCommand(*path/pkg.NewStruct {
+    ...initialization
+})
 
 -----------------------------
 
