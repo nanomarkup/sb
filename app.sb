@@ -19,52 +19,52 @@ sb:
 
 {src}/cmd.SmartBuilder:
 	Starter {src}/cmd.Starter
-	Reader {src}/cmd.CmdReader
-	Runner {src}/cmd.CmdRunner
-	Generator {src}/cmd.CmdGenerator
-	Builder {src}/cmd.CmdBuilder
-	Cleaner {src}/cmd.CmdCleaner
-	Printer {src}/cmd.CmdPrinter
-	ModManager {src}/cmd.CmdManager
-	ModAdder {src}/cmd.CmdModAdder
-	ModDeler {src}/cmd.CmdModDeler
-	ModIniter {src}/cmd.CmdModIniter
-
-{src}/cmd.CmdManager:
-	Use "mod"
-	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
-	Short "Manage modules"
-	Long "Manages application items and dependencies."
-	ModManager *{src}.SmartBuilder
-	ModFormatter *github.com/sapplications/dl.Formatter
-
-{src}/cmd.CmdModAdder:
-	Use "add"
-	Example "  mod add hello - add 'hello' item\n  mod add hello Writer ConsoleWriter - add 'Writer' dependency item to 'hello' item"
-	Short "Add item or dependency"
-	Long "Adds items or dependencies to the exsiting item."
-	ModManager *{src}.SmartBuilder
-
-{src}/cmd.ModDeler:
-	Use "del"
-	Example "  mod del hello - delete 'hello' item with all dependencies\n  mod del hello Writer - delete 'Writer' dependency item from 'hello' item"
-	Short "Delete item or dependency"
-	Long "Deletes items or dependencies from the exsiting item."
-	ModManager *{src}.SmartBuilder
-
-{src}/cmd.ModIniter:
-	Use "init"
-	Example "  init go - generate a apps.sb module
-	Short "Add the apps item"
-	Long "Creates a apps.sb module and initialize it with the apps item. If the apps item is exist then do nothing."
-	ModManager *{src}.SmartBuilder
-
+	
 {src}/cmd.Starter:
 	Use "sb"
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."
 	. AddCommand([Creator]*github.com/spf13/cobra.Command)
+	. AddCommand([Generator]*github.com/spf13/cobra.Command)
 	. AddCommand([Coder]*github.com/spf13/cobra.Command)
+	. AddCommand([Builder]*github.com/spf13/cobra.Command)
+	. AddCommand([Cleaner]*github.com/spf13/cobra.Command)
+	. AddCommand([Runner]*github.com/spf13/cobra.Command)
+	. AddCommand([ModManager]*github.com/spf13/cobra.Command)
+	. AddCommand([AppsPrinter]*github.com/spf13/cobra.Command)
+	. AddCommand([VersionPrinter]*github.com/spf13/cobra.Command)
+
+[ModManager]github.com/spf13/cobra.Command:
+	Use "mod"
+	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
+	Short "Manage modules"
+	Long "Manages application items and dependencies."
+	RunE .{src}/cmd.CmdManageMod(*{src}.SmartBuilder, *github.com/sapplications/dl.Formatter)
+	. AddCommand([ModIniter]*github.com/spf13/cobra.Command)
+	. AddCommand([ModAdder]*github.com/spf13/cobra.Command)
+	. AddCommand([ModDeler]*github.com/spf13/cobra.Command)
+	//SilenceUsage true
+
+[ModIniter]*github.com/spf13/cobra.Command:
+	Use "init"
+	Example "  init go - generate a apps.sb module
+	Short "Add the apps item"
+	Long "Creates a apps.sb module and initialize it with the apps item. If the apps item is exist then do nothing."
+	RunE .{src}/cmd.CmdInitMod(*{src}.SmartBuilder)
+
+[ModAdder]*github.com/spf13/cobra.Command:
+	Use "add"
+	Example "  mod add hello - add 'hello' item\n  mod add hello Writer ConsoleWriter - add 'Writer' dependency item to 'hello' item"
+	Short "Add item or dependency"
+	Long "Adds items or dependencies to the exsiting item."
+	RunE .{src}/cmd.CmdAddToMod(*{src}.SmartBuilder)
+
+[ModDeler]*github.com/spf13/cobra.Command:
+	Use "del"
+	Example "  mod del hello - delete 'hello' item with all dependencies\n  mod del hello Writer - delete 'Writer' dependency item from 'hello' item"
+	Short "Delete item or dependency"
+	Long "Deletes items or dependencies from the exsiting item."
+	RunE .{src}/cmd.CmdDelFromMod(*{src}.SmartBuilder)
 
 [Creator]github.com/spf13/cobra.Command:
 	Use "new [application]"
@@ -72,6 +72,14 @@ sb:
 	Short "Create new application"
 	Long "Creates an application by generating smart application unit (.sa file)."
 	RunE .{src}/cmd.CmdCreate(*{src}.SmartCreator)
+	//SilenceUsage true
+
+[Generator]github.com/spf13/cobra.Command:
+	Use "gen [application]"
+	Example "  generate hello - generate 'hello' application"
+	Short "Generate smart units"
+	Long "Generates smart builder unit (.sb) using smart application unit."
+	RunE .{src}/cmd.CmdGen(*{src}.SmartGenerator)
 	//SilenceUsage true
 
 [Coder]github.com/spf13/cobra.Command:
@@ -82,45 +90,43 @@ sb:
 	RunE .{src}/cmd.CmdCode(*{src}.SmartBuilder)
 	//SilenceUsage true
 
-{src}/cmd.CmdGenerator:
-	Use "gen [application]"
-	Example "  generate hello - generate 'hello' application"
-	Short "Generate smart units"
-	Long "Generates smart builder unit (.sb) using smart application unit."
-	Generator *{src}.SmartGenerator
-
-{src}/cmd.CmdBuilder:
+[Builder]github.com/spf13/cobra.Command:
 	Use "build [application]"
 	Example "  build - build the current application\n  build hello - build 'hello' application"
 	Short "Build application"
 	Long "Builds an application using the generated items."
-	Builder *{src}.SmartBuilder
+	RunE .{src}/cmd.CmdBuild(*{src}.SmartBuilder)
+	//SilenceUsage true
 
-{src}/cmd.CmdCleaner:
+[Cleaner]github.com/spf13/cobra.Command:
 	Use "clean [application]"
 	Example "  clean - remove files for the current application\n  clean hello - remove files for 'hello' application"
 	Short "Remove generated files"
 	Long "Removes generated/compiled files."
-	Cleaner *{src}.SmartBuilder
+	RunE .{src}/cmd.CmdClean(*{src}.SmartBuilder)
+	//SilenceUsage true
 
-{src}/cmd.CmdRunner:
+[Runner]github.com/spf13/cobra.Command:
 	Use "run [application]"
 	Example "  run - run the current application\n  run hello - run 'hello' application"
 	Short "Run application"
 	Long "Runs the application."
-	Runner *{src}.SmartBuilder
+	RunE .{src}/cmd.CmdRun(*{src}.SmartBuilder)
+	//SilenceUsage true
 
-{src}/cmd.CmdPrinter:
+[AppsPrinter]github.com/spf13/cobra.Command:
 	Use "list"
 	Short "Print all applications"
 	Long "Prints all available applications."
-	Printer *{src}.ModHelper
+	RunE .{src}/cmd.CmdList(*{src}.ModHelper)
+	//SilenceUsage true
 
-{src}/cmd.CmdReader:
+[VersionPrinter]github.com/spf13/cobra.Command:
 	Use "version"
 	Short "Print Smart Builder version"
 	Long "Prints the current Smart Builder version."
-	Reader *{src}.SmartBuilder
+	Run .{src}/cmd.CmdVersion(*{src}.SmartBuilder)
+	//SilenceUsage true
 
 {src}.SmartCreator:
 	ModManager *github.com/sapplications/dl.Manager {

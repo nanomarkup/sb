@@ -4,8 +4,11 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
+	"github.com/sapplications/dl"
 	"github.com/sapplications/sb"
 	"github.com/spf13/cobra"
 )
@@ -13,16 +16,6 @@ import (
 // SmartBuilder includes all available commands and handles them.
 type SmartBuilder struct {
 	Starter      Starter
-	Reader       CmdReader
-	Runner       CmdRunner
-	Generator    CmdGenerator
-	Builder      CmdBuilder
-	Cleaner      CmdCleaner
-	Printer      CmdPrinter
-	ModManager   CmdManager
-	ModAdder     CmdModAdder
-	ModDeler     CmdModDeler
-	ModIniter    CmdModIniter
 	SilentErrors bool
 }
 
@@ -31,26 +24,9 @@ type Starter struct {
 	cobra.Command
 }
 
-// CmdReader command displays a version of the application.
-type CmdReader struct {
-	Reader
-	cobra.Command
-}
-
-// Reader describes methods for displaying a version of the application.
-type Reader interface {
-	Version() string
-}
-
 // Creator describes methods for creating an application by generating smart application unit (.sa file).
 type Creator interface {
 	Create(string) error
-}
-
-// CmdGenerator command generates smart builder unit (.sb) using smart application unit.
-type CmdGenerator struct {
-	Generator
-	cobra.Command
 }
 
 // Generator describes methods for generating smart builder unit (.sb) using smart application unit.
@@ -63,21 +39,9 @@ type Coder interface {
 	Generate(string) error
 }
 
-// CmdBuilder command builds an application using the generated items.
-type CmdBuilder struct {
-	Builder
-	cobra.Command
-}
-
 // Builder describes methods for building an application using the generated items.
 type Builder interface {
 	Build(string) error
-}
-
-// CmdCleaner command removes generated/compiled files.
-type CmdCleaner struct {
-	Cleaner
-	cobra.Command
 }
 
 // Cleaner describes methods for removing generated/compiled files.
@@ -85,33 +49,19 @@ type Cleaner interface {
 	Clean(string) error
 }
 
-// CmdRunner command runs the application.
-type CmdRunner struct {
-	Runner
-	cobra.Command
-}
-
 // Runner describes methods for running the application.
 type Runner interface {
 	Run(string) error
 }
 
-// Printer describes methods for displaying all available applications.
-type Printer interface {
+// AppsPrinter describes methods for displaying all available applications.
+type AppsPrinter interface {
 	Apps() ([]string, error)
 }
 
-// CmdPrinter command displays all available applications.
-type CmdPrinter struct {
-	Printer
-	cobra.Command
-}
-
-// CmdManager command manages application items and dependencies.
-type CmdManager struct {
-	ModManager
-	ModFormatter
-	cobra.Command
+// VersionPrinter describes methods for displaying a version of the application.
+type VersionPrinter interface {
+	Version() string
 }
 
 // ModManager describes methods for managing application items and dependencies.
@@ -133,25 +83,6 @@ type ModReader interface {
 type ModFormatter interface {
 	Item(string, [][]string) string
 	String(module ModReader) string
-}
-
-// CmdModAdder command adds item or dependency to the exsiting item.
-type CmdModAdder struct {
-	ModManager
-	cobra.Command
-}
-
-// CmdModDeler command deletes item or dependency from the exsiting item.
-type CmdModDeler struct {
-	ModManager
-	cobra.Command
-}
-
-// CmdModIniter command creates a apps.sb module and initialize it with the apps item.
-// If the apps item is exist then do nothing.
-type CmdModIniter struct {
-	ModManager
-	cobra.Command
 }
 
 const (
@@ -185,6 +116,20 @@ func CmdCreate(c *sb.SmartCreator) func(cmd *cobra.Command, args []string) error
 	}
 }
 
+func CmdGen(c *sb.SmartGenerator) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return c.Generate(args[0])
+			} else {
+				return c.Generate("")
+			}
+		}
+	}
+}
+
 func CmdCode(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
 	if c == nil {
 		return nil
@@ -194,6 +139,213 @@ func CmdCode(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
 				return c.Generate(args[0])
 			} else {
 				return c.Generate("")
+			}
+		}
+	}
+}
+
+func CmdBuild(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return c.Build(args[0])
+			} else {
+				return c.Build("")
+			}
+		}
+	}
+}
+
+func CmdClean(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return c.Clean(args[0])
+			} else {
+				return c.Clean("")
+			}
+		}
+	}
+}
+
+func CmdRun(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return c.Run(args[0])
+			} else {
+				return c.Run("")
+			}
+		}
+	}
+}
+
+func CmdList(c *sb.ModHelper) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			apps, err := c.Apps()
+			if err != nil {
+				return err
+			}
+			for _, app := range apps {
+				fmt.Println(app)
+			}
+			return nil
+		}
+	}
+}
+
+func CmdVersion(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) {
+			fmt.Println(c.Version())
+		}
+	}
+}
+
+func CmdManageMod(c *sb.SmartBuilder, f *dl.Formatter) func(cmd *cobra.Command, args []string) error {
+	if c == nil || f == nil {
+		return nil
+	} else {
+		// depFlags.mod = v.Command.Flags().StringP("mod", "m", "", "module name")
+		// depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
+		// depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
+		// depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
+		// depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return errors.New(SubcmdMissing)
+			}
+			defer handleError()
+			var subCmd = args[0]
+			var modStr = strings.Trim(*depFlags.mod, "\t \n")
+			var itemStr = strings.Trim(*depFlags.item, "\t \n")
+			var depStr = strings.Trim(*depFlags.dep, "\t \n")
+			var resolverStr = strings.Trim(*depFlags.resolver, "\t \n")
+			// handle subcommands
+			switch subCmd {
+			case subCmds.del:
+				// if modStr == "" {
+				// 	// return errors.New(ModuleMissing)
+				// }
+				// if itemStr == "" {
+				// 	return errors.New(ItemMissing)
+				// }
+				// if depStr == "" {
+				// 	return v.Manager.DeleteItem(modStr, itemStr)
+				// } else {
+				// 	return v.Manager.DeleteDependency(modStr, itemStr, depStr)
+				// }
+			case subCmds.edit:
+				if modStr == "" {
+					// return errors.New(ModuleMissing)
+				}
+				if itemStr == "" {
+					return errors.New(ItemMissing)
+				}
+				if depStr == "" {
+					return errors.New(DependencyMissing)
+				}
+				if resolverStr == "" {
+					return errors.New(ResolverMissing)
+				}
+				return c.AddDependency(itemStr, depStr, resolverStr, true)
+			case subCmds.list:
+				if depStr != "" && itemStr == "" {
+					return errors.New(ItemMissing)
+				}
+				mod, err := c.ReadAll("sb")
+				if err != nil {
+					return err
+				} else if *depFlags.all {
+					fmt.Println(f.String(mod))
+				} else if itemStr != "" {
+					var item = mod.Items()[itemStr]
+					if item == nil {
+						return fmt.Errorf(ItemDoesNotExistF, itemStr)
+					} else {
+						if depStr == "" {
+							fmt.Print(f.Item(itemStr, item))
+						} else {
+							found := false
+							for _, row := range item {
+								if row[0] == depStr {
+									found = true
+									break
+								}
+							}
+							if found {
+								fmt.Print(mod.Dependency(itemStr, depStr))
+							} else {
+								return fmt.Errorf(DependencyDoesNotExistF, depStr)
+							}
+						}
+					}
+				}
+			default:
+				return fmt.Errorf(UnknownSubcmdF, args[0])
+			}
+			return nil
+		}
+	}
+}
+
+func CmdInitMod(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			defer handleError()
+			return c.AddItem(DefaultModuleName, AppsItemName)
+		}
+	}
+}
+
+func CmdAddToMod(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			defer handleError()
+			if len(args) < 1 {
+				return errors.New(ItemMissing)
+			} else if len(args) < 2 {
+				return errors.New(ModOrDepMissing)
+			} else if len(args) == 2 {
+				return c.AddItem(args[1], args[0])
+			} else if len(args) > 2 {
+				return c.AddDependency(args[0], args[1], args[2], false)
+			} else {
+				return nil
+			}
+		}
+	}
+}
+
+func CmdDelFromMod(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			defer handleError()
+			if len(args) < 1 {
+				return errors.New(ItemMissing)
+			} else if len(args) == 1 {
+				return c.DeleteItem(args[0])
+			} else if len(args) == 2 {
+				return c.DeleteDependency(args[1], args[0])
+			} else {
+				return nil
 			}
 		}
 	}

@@ -50,9 +50,9 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd = SmartBuilder{}
 	s.cmd.SilentErrors = true
 
-	s.cmd.ModManager = CmdManager{}
-	s.cmd.ModManager.Use = "mod"
-	s.cmd.ModManager.ModManager = &sb
+	// s.cmd.ModManager = CmdManager{}
+	// s.cmd.ModManager.Use = "mod"
+	// s.cmd.ModManager.ModManager = &sb
 
 	// s.cmd.Creator = CmdCreator{}
 	// s.cmd.Creator.Use = "new"
@@ -62,25 +62,26 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	// s.cmd.Coder.Use = "code"
 	// s.cmd.Coder.Coder = &sb
 
-	s.cmd.Builder = CmdBuilder{}
-	s.cmd.Builder.Use = "build"
-	s.cmd.Builder.Builder = &sb
+	// s.cmd.Builder = CmdBuilder{}
+	// s.cmd.Builder.Use = "build"
+	// s.cmd.Builder.Builder = &sb
 
-	s.cmd.Cleaner = CmdCleaner{}
-	s.cmd.Cleaner.Use = "clean"
-	s.cmd.Cleaner.Cleaner = &sb
+	// s.cmd.Cleaner = CmdCleaner{}
+	// s.cmd.Cleaner.Use = "clean"
+	// s.cmd.Cleaner.Cleaner = &sb
 
-	s.cmd.ModAdder = CmdModAdder{}
-	s.cmd.ModAdder.Use = "add"
-	s.cmd.ModAdder.ModManager = &sb
+	// s.cmd.ModAdder = CmdModAdder{}
+	// s.cmd.ModAdder.Use = "add"
+	// s.cmd.ModAdder.ModManager = &sb
 
-	s.cmd.ModDeler = CmdModDeler{}
-	s.cmd.ModDeler.Use = "del"
-	s.cmd.ModDeler.ModManager = &sb
+	// s.cmd.ModDeler = CmdModDeler{}
+	// s.cmd.ModDeler.Use = "del"
+	// s.cmd.ModDeler.ModManager = &sb
 
-	s.cmd.ModIniter = CmdModIniter{}
-	s.cmd.ModIniter.Use = "init"
-	s.cmd.ModIniter.ModManager = &sb
+	// s.cmd.ModIniter = CmdModIniter{}
+	// s.cmd.ModIniter.Use = "init"
+	// s.cmd.ModIniter.ModManager = &sb
+
 	s.cmd.Starter.SilenceErrors = true
 }
 
