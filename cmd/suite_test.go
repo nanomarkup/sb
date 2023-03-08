@@ -54,13 +54,13 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	s.cmd.ModManager.Use = "mod"
 	s.cmd.ModManager.ModManager = &sb
 
-	s.cmd.Creator = CmdCreator{}
-	s.cmd.Creator.Use = "new"
-	s.cmd.Creator.Creator = &sc
+	// s.cmd.Creator = CmdCreator{}
+	// s.cmd.Creator.Use = "new"
+	// s.cmd.Creator.Creator = &sc
 
-	s.cmd.Coder = CmdCoder{}
-	s.cmd.Coder.Use = "code"
-	s.cmd.Coder.Coder = &sb
+	// s.cmd.Coder = CmdCoder{}
+	// s.cmd.Coder.Use = "code"
+	// s.cmd.Coder.Coder = &sb
 
 	s.cmd.Builder = CmdBuilder{}
 	s.cmd.Builder.Use = "build"

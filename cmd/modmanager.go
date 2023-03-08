@@ -95,7 +95,14 @@ func (v *CmdManager) init() {
 					if depStr == "" {
 						fmt.Print(v.ModFormatter.Item(itemStr, item))
 					} else {
-						if _, found := item[depStr]; found {
+						found := false
+						for _, row := range item {
+							if row[0] == depStr {
+								found = true
+								break
+							}
+						}
+						if found {
 							fmt.Print(mod.Dependency(itemStr, depStr))
 						} else {
 							return fmt.Errorf(DependencyDoesNotExistF, depStr)

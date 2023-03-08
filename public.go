@@ -35,7 +35,7 @@ type ModManager interface {
 
 // ModReader describes methods for getting module attributes.
 type ModReader interface {
-	Items() map[string]map[string]string
+	Items() map[string][][]string
 	Dependency(itemName, dependencyName string) string
 }
 

@@ -21,6 +21,11 @@ const (
 	UnknownSubcmdF          string = "unknown \"%s\" subcommand"
 )
 
+FUNCTIONS
+
+func CmdCode(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error
+func CmdCreate(c *sb.SmartCreator) func(cmd *cobra.Command, args []string) error
+
 TYPES
 
 type Builder interface {
@@ -45,19 +50,6 @@ type CmdCleaner struct {
 	cobra.Command
 }
     CmdCleaner command removes generated/compiled files.
-
-type CmdCoder struct {
-	Coder
-	cobra.Command
-}
-    CmdCoder command generates code to build the application.
-
-type CmdCreator struct {
-	Creator
-	cobra.Command
-}
-    CmdCreator command creates an application by generating smart application
-    unit (.sa file).
 
 type CmdGenerator struct {
 	Generator
@@ -128,7 +120,7 @@ type Generator interface {
     smart application unit.
 
 type ModFormatter interface {
-	Item(string, map[string]string) string
+	Item(string, [][]string) string
 	String(module ModReader) string
 }
     ModFormatter describes methods for formatting module attributes and returns
@@ -145,7 +137,7 @@ type ModManager interface {
     dependencies.
 
 type ModReader interface {
-	Items() map[string]map[string]string
+	Items() map[string][][]string
 	Dependency(string, string) string
 }
     ModReader describes methods for getting module attributes.
@@ -169,9 +161,7 @@ type SmartBuilder struct {
 	Starter      Starter
 	Reader       CmdReader
 	Runner       CmdRunner
-	Creator      CmdCreator
 	Generator    CmdGenerator
-	Coder        CmdCoder
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
 	Printer      CmdPrinter

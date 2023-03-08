@@ -3,16 +3,19 @@
 // Package cmd represents Command Line Interface.
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+
+	"github.com/sapplications/sb"
+	"github.com/spf13/cobra"
+)
 
 // SmartBuilder includes all available commands and handles them.
 type SmartBuilder struct {
 	Starter      Starter
 	Reader       CmdReader
 	Runner       CmdRunner
-	Creator      CmdCreator
 	Generator    CmdGenerator
-	Coder        CmdCoder
 	Builder      CmdBuilder
 	Cleaner      CmdCleaner
 	Printer      CmdPrinter
@@ -39,12 +42,6 @@ type Reader interface {
 	Version() string
 }
 
-// CmdCreator command creates an application by generating smart application unit (.sa file).
-type CmdCreator struct {
-	Creator
-	cobra.Command
-}
-
 // Creator describes methods for creating an application by generating smart application unit (.sa file).
 type Creator interface {
 	Create(string) error
@@ -59,12 +56,6 @@ type CmdGenerator struct {
 // Generator describes methods for generating smart builder unit (.sb) using smart application unit.
 type Generator interface {
 	Generate(string) error
-}
-
-// CmdCoder command generates code to build the application.
-type CmdCoder struct {
-	Coder
-	cobra.Command
 }
 
 // Coder describes methods for generating code to build the application.
@@ -134,13 +125,13 @@ type ModManager interface {
 
 // ModReader describes methods for getting module attributes.
 type ModReader interface {
-	Items() map[string]map[string]string
+	Items() map[string][][]string
 	Dependency(string, string) string
 }
 
 // ModFormatter describes methods for formatting module attributes and returns it as a string.
 type ModFormatter interface {
-	Item(string, map[string]string) string
+	Item(string, [][]string) string
 	String(module ModReader) string
 }
 
@@ -179,3 +170,31 @@ const (
 	DependencyDoesNotExistF string = "\"%s\" dependency item does not exist"
 	UnknownSubcmdF          string = "unknown \"%s\" subcommand"
 )
+
+func CmdCreate(c *sb.SmartCreator) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return c.Create(args[0])
+			} else {
+				return fmt.Errorf(AppNameMissing)
+			}
+		}
+	}
+}
+
+func CmdCode(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) error {
+	if c == nil {
+		return nil
+	} else {
+		return func(cmd *cobra.Command, args []string) error {
+			if len(args) > 0 {
+				return c.Generate(args[0])
+			} else {
+				return c.Generate("")
+			}
+		}
+	}
+}

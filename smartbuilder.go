@@ -33,7 +33,17 @@ func (b *SmartBuilder) Generate(application string) error {
 	if err != nil {
 		return err
 	}
-	coder, found := info[coderAttrName]
+	coder := ""
+	found := false
+	for _, row := range info {
+		if row[0] == coderAttrName {
+			found = true
+			if len(row) > 1 {
+				coder = row[1]
+			}
+			break
+		}
+	}
 	if !found {
 		return fmt.Errorf(AttrIsMissingF, coderAttrName, application)
 	}
@@ -69,7 +79,17 @@ func (b *SmartBuilder) Build(application string) error {
 	if err != nil {
 		return err
 	}
-	coder, found := info[coderAttrName]
+	coder := ""
+	found := false
+	for _, row := range info {
+		if row[0] == coderAttrName {
+			found = true
+			if len(row) > 1 {
+				coder = row[1]
+			}
+			break
+		}
+	}
 	if !found {
 		return fmt.Errorf(AttrIsMissingF, coderAttrName, application)
 	}
@@ -106,7 +126,17 @@ func (b *SmartBuilder) Clean(application string) error {
 	if err != nil {
 		return err
 	}
-	coder, found := info[coderAttrName]
+	coder := ""
+	found := false
+	for _, row := range info {
+		if row[0] == coderAttrName {
+			found = true
+			if len(row) > 1 {
+				coder = row[1]
+			}
+			break
+		}
+	}
 	if !found {
 		return fmt.Errorf(AttrIsMissingF, coderAttrName, application)
 	}
@@ -267,9 +297,7 @@ func (b *SmartBuilder) checkApplication(application string, reader ModReader) (s
 			return "", fmt.Errorf(AppIsNotSpecified)
 		}
 		// select the existing application
-		for key := range apps {
-			application = key
-		}
+		application = apps[0][0]
 	}
 	return application, nil
 }

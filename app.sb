@@ -21,9 +21,7 @@ sb:
 	Starter {src}/cmd.Starter
 	Reader {src}/cmd.CmdReader
 	Runner {src}/cmd.CmdRunner
-	Creator {src}/cmd.CmdCreator
 	Generator {src}/cmd.CmdGenerator
-	Coder {src}/cmd.CmdCoder	
 	Builder {src}/cmd.CmdBuilder
 	Cleaner {src}/cmd.CmdCleaner
 	Printer {src}/cmd.CmdPrinter
@@ -65,13 +63,24 @@ sb:
 	Use "sb"
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."
+	. AddCommand([Creator]*github.com/spf13/cobra.Command)
+	. AddCommand([Coder]*github.com/spf13/cobra.Command)
 
-{src}/cmd.CmdCreator:
+[Creator]github.com/spf13/cobra.Command:
 	Use "new [application]"
 	Example "  create hello - create 'hello' application"
 	Short "Create new application"
 	Long "Creates an application by generating smart application unit (.sa file)."
-	Creator *{src}.SmartCreator
+	RunE .{src}/cmd.CmdCreate(*{src}.SmartCreator)
+	//SilenceUsage true
+
+[Coder]github.com/spf13/cobra.Command:
+	Use "code [application]"
+	Example "  code - generate sources to build the application\n  code hello - generate sources for 'hello' application"
+	Short "Generate code"
+	Long "Generates code to build the application."
+	RunE .{src}/cmd.CmdCode(*{src}.SmartBuilder)
+	//SilenceUsage true
 
 {src}/cmd.CmdGenerator:
 	Use "gen [application]"
@@ -79,13 +88,6 @@ sb:
 	Short "Generate smart units"
 	Long "Generates smart builder unit (.sb) using smart application unit."
 	Generator *{src}.SmartGenerator
-
-{src}/cmd.CmdCoder:
-	Use "code [application]"
-	Example "  code - generate sources to build the application\n  code hello - generate sources for 'hello' application"
-	Short "Generate code"
-	Long "Generates code to build the application."
-	Coder *{src}.SmartBuilder
 
 {src}/cmd.CmdBuilder:
 	Use "build [application]"

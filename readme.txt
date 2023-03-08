@@ -1,7 +1,7 @@
 package sb // import "github.com/sapplications/sb"
 
-Package sb implements a Smart Builder application. It is the next generation
-of building applications using independent bussiness components.
+Package sb implements a Smart Builder application. It is the next generation of
+building applications using independent bussiness components.
 
 CONSTANTS
 
@@ -70,7 +70,7 @@ type ModManager interface {
     ModManager describes methods for managing a module.
 
 type ModReader interface {
-	Items() map[string]map[string]string
+	Items() map[string][][]string
 	Dependency(itemName, dependencyName string) string
 }
     ModReader describes methods for getting module attributes.

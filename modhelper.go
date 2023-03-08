@@ -4,8 +4,6 @@ package sb
 
 import (
 	"fmt"
-
-	"golang.org/x/exp/maps"
 )
 
 func (h *ModHelper) Apps() ([]string, error) {
@@ -17,6 +15,10 @@ func (h *ModHelper) Apps() ([]string, error) {
 	if item == nil {
 		return nil, fmt.Errorf(ItemIsMissingF, AppsItemName)
 	} else {
-		return maps.Keys(item), nil
+		res := []string{}
+		for _, row := range item {
+			res = append(res, row[0])
+		}
+		return res, nil
 	}
 }

@@ -24,8 +24,10 @@ func (c *SmartCreator) Create(application string) error {
 		return err
 	}
 	if apps != nil {
-		if _, ok := apps[application]; ok {
-			return fmt.Errorf(AppIsExistF, application)
+		for _, row := range apps {
+			if row[0] == application {
+				return fmt.Errorf(AppIsExistF, application)
+			}
 		}
 	}
 	if _, ok := items[AppsItemName]; !ok {
