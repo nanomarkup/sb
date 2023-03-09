@@ -5,6 +5,8 @@ apps:
 
 defines:
 	src github.com/sapplications/sb
+	srcLog github.com/hashicorp/go-hclog
+	pluginVersion 1
 	logDefault 0
 	logTrace 1
 	logDebug 2
@@ -131,7 +133,7 @@ sb:
 	ModManager *github.com/sapplications/dl.Manager {
 		Kind "sa"
 	}
-	Logger {src}/helper/hashicorp/hclog.NewStdOut("sa", {logTrace})
+	Logger .{srcLog}.New([CreatorLogger]*{srcLog}.LoggerOptions)
 
 {src}.SmartBuilder:
 	Builder *{src}/plugins.BuilderPlugin
@@ -139,14 +141,24 @@ sb:
 		Kind "sb"
 	}
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
-	Logger {src}/helper/hashicorp/hclog.NewStdOut("sb", {logOff})
+	Logger .{srcLog}.New([BuilderLogger]*{srcLog}.LoggerOptions)
 
 {src}.ModHelper:
 	Manager *github.com/sapplications/dl.Manager {
 		Kind "sb"
 	}
 
+[CreatorLogger]{srcLog}.LoggerOptions:
+	Name "sa"
+	Level {logTrace}
+	Output .{src}/cmd.OSStdout()	
+
+[BuilderLogger]{srcLog}.LoggerOptions:
+	Name "sb"
+	Level {logOff}
+	Output .{src}/cmd.OSStdout()
+
 github.com/hashicorp/go-plugin.HandshakeConfig:
-	ProtocolVersion 1
+	ProtocolVersion {pluginVersion}
 	MagicCookieKey "SMART_PLUGIN"
 	MagicCookieValue "sbuilder"

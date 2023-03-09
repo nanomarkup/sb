@@ -6,6 +6,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/sapplications/dl"
@@ -343,4 +344,8 @@ func CmdDelFromMod(c *sb.SmartBuilder) func(cmd *cobra.Command, args []string) e
 			}
 		}
 	}
+}
+
+func OSStdout() *os.File {
+	return os.Stdout
 }
