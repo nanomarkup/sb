@@ -48,7 +48,7 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	}
 
 	s.cmd = SmartBuilder{}
-	s.cmd.SilentErrors = true
+	// s.cmd.SilentErrors = true
 
 	// s.cmd.ModManager = CmdManager{}
 	// s.cmd.ModManager.Use = "mod"
@@ -82,7 +82,7 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 	// s.cmd.ModIniter.Use = "init"
 	// s.cmd.ModIniter.ModManager = &sb
 
-	s.cmd.Starter.SilenceErrors = true
+	// s.cmd.Starter.SilenceErrors = true
 }
 
 func (s *CmdSuite) Mod(args ...string) error {

@@ -16,14 +16,13 @@ defines:
 sb: 
 	coder sgo
 	entry {src}/cmd.SmartBuilder
-
-{src}/cmd.SmartBuilder:
-	Starter {src}/cmd.Starter
 	
-{src}/cmd.Starter:
+{src}/cmd.SmartBuilder:
 	Use "sb"
 	Short "Smart Builder (c)"
 	Long "Smart Builder is the next generation of building applications using independent bussiness components."
+	SilenceUsage true
+	CompletionOptions.DisableDefaultCmd true
 	. AddCommand([Creator]*github.com/spf13/cobra.Command)
 	. AddCommand([Generator]*github.com/spf13/cobra.Command)
 	. AddCommand([Coder]*github.com/spf13/cobra.Command)
@@ -40,10 +39,10 @@ sb:
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
 	RunE .{src}/cmd.CmdManageMod(*{src}.SmartBuilder, *github.com/sapplications/dl.Formatter)
+	SilenceUsage true
 	. AddCommand([ModIniter]*github.com/spf13/cobra.Command)
 	. AddCommand([ModAdder]*github.com/spf13/cobra.Command)
 	. AddCommand([ModDeler]*github.com/spf13/cobra.Command)
-	//SilenceUsage true
 
 [ModIniter]*github.com/spf13/cobra.Command:
 	Use "init"
@@ -72,7 +71,7 @@ sb:
 	Short "Create new application"
 	Long "Creates an application by generating smart application unit (.sa file)."
 	RunE .{src}/cmd.CmdCreate(*{src}.SmartCreator)
-	//SilenceUsage true
+	SilenceUsage true
 
 [Generator]github.com/spf13/cobra.Command:
 	Use "gen [application]"
@@ -80,7 +79,7 @@ sb:
 	Short "Generate smart units"
 	Long "Generates smart builder unit (.sb) using smart application unit."
 	RunE .{src}/cmd.CmdGen(*{src}.SmartGenerator)
-	//SilenceUsage true
+	SilenceUsage true
 
 [Coder]github.com/spf13/cobra.Command:
 	Use "code [application]"
@@ -88,7 +87,7 @@ sb:
 	Short "Generate code"
 	Long "Generates code to build the application."
 	RunE .{src}/cmd.CmdCode(*{src}.SmartBuilder)
-	//SilenceUsage true
+	SilenceUsage true
 
 [Builder]github.com/spf13/cobra.Command:
 	Use "build [application]"
@@ -96,7 +95,7 @@ sb:
 	Short "Build application"
 	Long "Builds an application using the generated items."
 	RunE .{src}/cmd.CmdBuild(*{src}.SmartBuilder)
-	//SilenceUsage true
+	SilenceUsage true
 
 [Cleaner]github.com/spf13/cobra.Command:
 	Use "clean [application]"
@@ -104,7 +103,7 @@ sb:
 	Short "Remove generated files"
 	Long "Removes generated/compiled files."
 	RunE .{src}/cmd.CmdClean(*{src}.SmartBuilder)
-	//SilenceUsage true
+	SilenceUsage true
 
 [Runner]github.com/spf13/cobra.Command:
 	Use "run [application]"
@@ -112,21 +111,21 @@ sb:
 	Short "Run application"
 	Long "Runs the application."
 	RunE .{src}/cmd.CmdRun(*{src}.SmartBuilder)
-	//SilenceUsage true
+	SilenceUsage true
 
 [AppsPrinter]github.com/spf13/cobra.Command:
 	Use "list"
 	Short "Print all applications"
 	Long "Prints all available applications."
 	RunE .{src}/cmd.CmdList(*{src}.ModHelper)
-	//SilenceUsage true
+	SilenceUsage true
 
 [VersionPrinter]github.com/spf13/cobra.Command:
 	Use "version"
 	Short "Print Smart Builder version"
 	Long "Prints the current Smart Builder version."
 	Run .{src}/cmd.CmdVersion(*{src}.SmartBuilder)
-	//SilenceUsage true
+	SilenceUsage true
 
 {src}.SmartCreator:
 	ModManager *github.com/sapplications/dl.Manager {

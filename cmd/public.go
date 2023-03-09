@@ -15,12 +15,6 @@ import (
 
 // SmartBuilder includes all available commands and handles them.
 type SmartBuilder struct {
-	Starter      Starter
-	SilentErrors bool
-}
-
-// Starter command is the apps command contains all commands to display.
-type Starter struct {
 	cobra.Command
 }
 
