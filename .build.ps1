@@ -26,8 +26,13 @@ task cbuild code, build
 
 # Synopsis: Remove generated files
 task clean {
-    $Status = Start-Process -FilePath 'sb' -ArgumentList 'clean' -NoNewWindow -PassThru -Wait 
-    Assert($Status.ExitCode -eq 0) 'The "clean" command failed'
+    $AppPath = './sb/sb'
+    if ($PSVersionTable.Platform -ne 'Unix') {
+        $AppPath += '.exe'
+    }
+    if (Test-Path -Path $AppPath) {
+        Remove-Item -Path $AppPath
+    }
 }
 
 # Synopsis: Build samples
@@ -51,10 +56,16 @@ task clean-all clean, clean-samples
 
 # Synopsis: Install application
 task install {
-    $GoPath = "${Env:GOPATH}".TrimEnd(';')
+    $AppName = 'sb'
+    if ($PSVersionTable.Platform -eq 'Unix') {
+        $GoPath = "${Env:HOME}/go"
+    } else {        
+        $GoPath = "${Env:GOPATH}".TrimEnd(';')
+        $AppName += '.exe'
+    }
     Set-Location -Path 'sb'
-    Copy-Item -Path 'sb.exe' -Destination '..\bin\'    
-    Copy-Item -Path 'sb.exe' -Destination "$GoPath\bin\"
+    Copy-Item -Path $AppName -Destination '../bin/'    
+    Copy-Item -Path $AppName -Destination "$GoPath/bin/"
 }
 
 # Synopsis: Generate, build & install application
@@ -71,7 +82,6 @@ task test {
 task doc {
     GenDoc -PackageName '.'
     GenDoc -PackageName 'cmd'
-    GenDoc -PackageName 'helper\hashicorp\hclog'
     GenDoc -PackageName 'plugins'
 }
 

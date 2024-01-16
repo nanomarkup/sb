@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-plugin"
@@ -170,7 +171,9 @@ func (b *SmartBuilder) Run(application string) error {
 	// run an application
 	folder, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	folder = filepath.Join(folder, application)
-	application = fmt.Sprintf("%s.exe", application)
+	if runtime.GOOS == "windows" {
+		application += ".exe"
+	}
 	if _, err = os.Stat(filepath.Join(folder, application)); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return fmt.Errorf(AppIsMissingInSystemF, application)
@@ -265,10 +268,14 @@ func (b *SmartBuilder) newPlugin(name string) (client *plugin.Client, raw interf
 	pluginMap := map[string]plugin.Plugin{
 		name: b.Builder.(plugin.Plugin),
 	}
+	cmd := name
+	if runtime.GOOS == "windows" {
+		cmd += ".exe"
+	}
 	client = plugin.NewClient(&plugin.ClientConfig{
 		HandshakeConfig: b.PluginHandshake,
 		Plugins:         pluginMap,
-		Cmd:             exec.Command(fmt.Sprintf("%s.exe", name)),
+		Cmd:             exec.Command(cmd),
 		Logger:          logger,
 	})
 	rpcClient, err := client.Client()
