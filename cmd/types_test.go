@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/sapplications/dl"
-	"github.com/sapplications/sb"
+	"github.com/nanomarkup/dl"
+	"github.com/nanomarkup/sb"
 )
 
 type appSmartBuilder struct {

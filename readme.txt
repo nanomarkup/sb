@@ -1,4 +1,4 @@
-package sb // import "github.com/sapplications/sb"
+package sb // import "github.com/nanomarkup/sb"
 Package sb implements a Smart Builder application. It is the next generation of
 building applications using independent bussiness components.
 CONSTANTS

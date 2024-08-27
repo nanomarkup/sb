@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sapplications/dl"
-	"github.com/sapplications/sb"
+	"github.com/nanomarkup/dl"
+	"github.com/nanomarkup/sb"
 	"gopkg.in/check.v1"
 )
 

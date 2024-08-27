@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sapplications/dl"
-	"github.com/sapplications/sb"
+	"github.com/nanomarkup/dl"
+	"github.com/nanomarkup/sb"
 	"github.com/spf13/cobra"
 )
 

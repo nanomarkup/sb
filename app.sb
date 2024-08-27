@@ -4,7 +4,7 @@ apps:
 	sb
 
 defines:
-	src github.com/sapplications/sb
+	src github.com/nanomarkup/sb
 	srcLog github.com/hashicorp/go-hclog
 	pluginVersion 1
 	logDefault 0
@@ -40,7 +40,7 @@ sb:
 	Example "  mod edit --name hello --dep Writer --resolver FileWriter - add/update 'Writer' dependency item to/in 'hello' item\n  mod list --name hello - print 'hello' item data\n  mod list --name hello --dep Writer - print 'Writer' dependency item data\n  mod list --all - print all data"
 	Short "Manage modules"
 	Long "Manages application items and dependencies."
-	RunE .{src}/cmd.CmdManageMod(*{src}.SmartBuilder, *github.com/sapplications/dl.Formatter)
+	RunE .{src}/cmd.CmdManageMod(*{src}.SmartBuilder, *github.com/nanomarkup/dl.Formatter)
 	SilenceUsage true
 	. AddCommand([ModIniter]*github.com/spf13/cobra.Command)
 	. AddCommand([ModAdder]*github.com/spf13/cobra.Command)
@@ -130,21 +130,21 @@ sb:
 	SilenceUsage true
 
 {src}.SmartCreator:
-	ModManager *github.com/sapplications/dl.Manager {
+	ModManager *github.com/nanomarkup/dl.Manager {
 		Kind "sa"
 	}
 	Logger .{srcLog}.New([CreatorLogger]*{srcLog}.LoggerOptions)
 
 {src}.SmartBuilder:
 	Builder *{src}/plugins.BuilderPlugin
-	ModManager *github.com/sapplications/dl.Manager {
+	ModManager *github.com/nanomarkup/dl.Manager {
 		Kind "sb"
 	}
 	PluginHandshake github.com/hashicorp/go-plugin.HandshakeConfig
 	Logger .{srcLog}.New([BuilderLogger]*{srcLog}.LoggerOptions)
 
 {src}.ModHelper:
-	Manager *github.com/sapplications/dl.Manager {
+	Manager *github.com/nanomarkup/dl.Manager {
 		Kind "sb"
 	}
 

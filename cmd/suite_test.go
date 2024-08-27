@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-plugin"
-	"github.com/sapplications/dl"
-	"github.com/sapplications/sb"
-	"github.com/sapplications/sb/plugins"
+	"github.com/nanomarkup/dl"
+	"github.com/nanomarkup/sb"
+	"github.com/nanomarkup/sb/plugins"
 	"gopkg.in/check.v1"
 )
 

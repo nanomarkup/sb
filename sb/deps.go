@@ -2,12 +2,12 @@ package main
 
 import (
 	p6 "github.com/hashicorp/go-hclog"
-	p7 "github.com/sapplications/sb"
-	p1 "github.com/spf13/cobra"
-	p2 "github.com/sapplications/sb/cmd"
-	p3 "github.com/sapplications/dl"
-	p4 "github.com/sapplications/sb/plugins"
 	p5 "github.com/hashicorp/go-plugin"
+	p3 "github.com/nanomarkup/dl"
+	p7 "github.com/nanomarkup/sb"
+	p2 "github.com/nanomarkup/sb/cmd"
+	p4 "github.com/nanomarkup/sb/plugins"
+	p1 "github.com/spf13/cobra"
 )
 
 func Execute() {
@@ -290,4 +290,3 @@ func UseGen3GroupDlManagerSbModManagerAdapterRef() *Gen3GroupDlManagerSbModManag
 	v.Manager = *UseGen3GroupDlManagerRef()
 	return v
 }
-
