@@ -9,6 +9,7 @@ import (
 	"github.com/nanomarkup/dl"
 	"github.com/nanomarkup/sb"
 	"github.com/nanomarkup/sb/plugins"
+	"github.com/spf13/cobra"
 	"gopkg.in/check.v1"
 )
 
@@ -47,42 +48,50 @@ func (s *CmdSuite) SetUpTest(c *check.C) {
 		MagicCookieValue: "sbuilder",
 	}
 
+	f := dl.Formatter{}
+
 	s.cmd = SmartBuilder{}
-	// s.cmd.SilentErrors = true
+	s.cmd.SilenceErrors = true
 
-	// s.cmd.ModManager = CmdManager{}
-	// s.cmd.ModManager.Use = "mod"
-	// s.cmd.ModManager.ModManager = &sb
+	modManager := cobra.Command{}
+	modManager.Use = "mod"
+	modManager.RunE = CmdManageMod(&sb.SmartBuilder, &f)
+	s.cmd.AddCommand(&modManager)
 
-	// s.cmd.Creator = CmdCreator{}
-	// s.cmd.Creator.Use = "new"
-	// s.cmd.Creator.Creator = &sc
+	modAdder := cobra.Command{}
+	modAdder.Use = "add"
+	modAdder.RunE = CmdAddToMod(&sb.SmartBuilder)
+	modManager.AddCommand(&modAdder)
 
-	// s.cmd.Coder = CmdCoder{}
-	// s.cmd.Coder.Use = "code"
-	// s.cmd.Coder.Coder = &sb
+	modDeler := cobra.Command{}
+	modDeler.Use = "del"
+	modDeler.RunE = CmdDelFromMod(&sb.SmartBuilder)
+	modManager.AddCommand(&modDeler)
 
-	// s.cmd.Builder = CmdBuilder{}
-	// s.cmd.Builder.Use = "build"
-	// s.cmd.Builder.Builder = &sb
+	modIniter := cobra.Command{}
+	modIniter.Use = "init"
+	modIniter.RunE = CmdInitMod(&sb.SmartBuilder)
+	modManager.AddCommand(&modIniter)
 
-	// s.cmd.Cleaner = CmdCleaner{}
-	// s.cmd.Cleaner.Use = "clean"
-	// s.cmd.Cleaner.Cleaner = &sb
+	creator := cobra.Command{}
+	creator.Use = "new"
+	creator.RunE = CmdCreate(&sc)
+	s.cmd.AddCommand(&creator)
 
-	// s.cmd.ModAdder = CmdModAdder{}
-	// s.cmd.ModAdder.Use = "add"
-	// s.cmd.ModAdder.ModManager = &sb
+	coder := cobra.Command{}
+	coder.Use = "code"
+	coder.RunE = CmdCode(&sb.SmartBuilder)
+	s.cmd.AddCommand(&coder)
 
-	// s.cmd.ModDeler = CmdModDeler{}
-	// s.cmd.ModDeler.Use = "del"
-	// s.cmd.ModDeler.ModManager = &sb
+	builder := cobra.Command{}
+	builder.Use = "build"
+	builder.RunE = CmdBuild(&sb.SmartBuilder)
+	s.cmd.AddCommand(&builder)
 
-	// s.cmd.ModIniter = CmdModIniter{}
-	// s.cmd.ModIniter.Use = "init"
-	// s.cmd.ModIniter.ModManager = &sb
-
-	// s.cmd.Starter.SilenceErrors = true
+	cleaner := cobra.Command{}
+	cleaner.Use = "clean"
+	cleaner.RunE = CmdClean(&sb.SmartBuilder)
+	s.cmd.AddCommand(&cleaner)
 }
 
 func (s *CmdSuite) Mod(args ...string) error {

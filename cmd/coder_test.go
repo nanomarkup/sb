@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/nanomarkup/dl"
@@ -34,7 +33,7 @@ func (s *CmdSuite) TestCodeSbApp(c *check.C) {
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
-	copyFile(currFolder+"\\..\\app.sb", wd+"\\app.sb")
+	copyFile(currFolder+"/../app.sb", wd+"/app.sb")
 	// generate application's files
 	c.Assert(s.Code("sb"), check.IsNil)
 }
@@ -46,15 +45,15 @@ func (s *CmdSuite) TestCodeHelloWorldApp(c *check.C) {
 	os.Chdir(c.MkDir())
 	// copy sb files
 	wd, _ := os.Getwd()
-	copyFile(currFolder+"\\..\\samples\\app.sb", wd+"\\app.sb")
+	copyFile(currFolder+"/../samples/app.sb", wd+"/app.sb")
 	// generate application's files
 	c.Assert(s.Code(), check.IsNil)
 }
 
 func copyFile(src, dst string) error {
-	input, err := ioutil.ReadFile(src)
+	input, err := os.ReadFile(src)
 	if err == nil {
-		return ioutil.WriteFile(dst, input, 0644)
+		return os.WriteFile(dst, input, 0644)
 	} else {
 		return err
 	}

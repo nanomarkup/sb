@@ -212,16 +212,16 @@ func CmdManageMod(c *sb.SmartBuilder, f *dl.Formatter) func(cmd *cobra.Command, 
 	if c == nil || f == nil {
 		return nil
 	} else {
-		// depFlags.mod = v.Command.Flags().StringP("mod", "m", "", "module name")
-		// depFlags.item = v.Command.Flags().StringP("name", "n", "", "item name")
-		// depFlags.dep = v.Command.Flags().StringP("dep", "d", "", "dependency name")
-		// depFlags.resolver = v.Command.Flags().StringP("resolver", "r", "", "resolver")
-		// depFlags.all = v.Command.Flags().BoolP("all", "a", false, "print module")
 		return func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return errors.New(SubcmdMissing)
 			}
 			defer handleError()
+			depFlags.mod = cmd.Flags().StringP("mod", "m", "", "module name")
+			depFlags.item = cmd.Flags().StringP("name", "n", "", "item name")
+			depFlags.dep = cmd.Flags().StringP("dep", "d", "", "dependency name")
+			depFlags.resolver = cmd.Flags().StringP("resolver", "r", "", "resolver")
+			depFlags.all = cmd.Flags().BoolP("all", "a", false, "print module")
 			var subCmd = args[0]
 			var modStr = strings.Trim(*depFlags.mod, "\t \n")
 			var itemStr = strings.Trim(*depFlags.item, "\t \n")

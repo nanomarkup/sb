@@ -1,4 +1,4 @@
-package cmd // import "github.com/sapplications/sb/cmd"
+package cmd // import "github.com/nanomarkup/sb/cmd"
 Package cmd represents Command Line Interface.
 CONSTANTS
 const (
